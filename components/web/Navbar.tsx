@@ -6,10 +6,6 @@ import { ThemeToggle } from "./ThemeToggle";
 
 
 export function Navbar() {
-
-
-
-
     return (
         <nav className="w-full py-5 flex items-center justify-between">
             <div className="flex items-center gap-8">
@@ -18,9 +14,11 @@ export function Navbar() {
            
                     </h1></Link>
                 <div className="flex items-center gap-2">
-                    <Link className={buttonVariants({ variant: "ghost" })} href={'/'}>Stock</Link>
-                    <Link className={buttonVariants({ variant: "ghost" })} href={'/explore'}>Tickets</Link>
-                    <Link className={buttonVariants({ variant: "ghost" })} href={'/create'}>Requests</Link>
+                    <Link className={buttonVariants({ variant: "ghost" })} href={'/stock'}>Stock</Link>
+                    <Link className={buttonVariants({ variant: "ghost" })} href={'/requests'}>Requests</Link>
+                    <Link className={buttonVariants({ variant: "ghost" })} href={'/purchases'}>Purchases</Link>
+                    <Link className={buttonVariants({ variant: "ghost" })} href={'/vendors'}>Vendors</Link>
+       
           
 
                 </div>
