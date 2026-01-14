@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/web/tables/DataTable";
 import { VendorColumns } from "@/components/web/tables/VendorColumns";
-import prisma from "@/lib/prisma";
 import { Vendor } from "@/lib/types";
 import Link from "next/link";
 
@@ -22,9 +21,7 @@ import Link from "next/link";
     }
 export default async function VendorPage(){
 
-    const vendors = await prisma.vendor.findMany();
 
-    console.log(vendors);
     
 
       const data = await getData();
