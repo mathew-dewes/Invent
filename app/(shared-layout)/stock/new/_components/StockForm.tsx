@@ -9,185 +9,193 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
-export const categories = ['All' ,'Food & Drink', 'Cafes', 'Restaurants', 'Bars & Pubs', 'Attractions', 'Outdoor & Nature', 'Activities & Experiences', 'Shopping & Retail', 'Accommodation', 'Events & Venues'] as const
+export const categories = ['All', 'Food & Drink', 'Cafes', 'Restaurants', 'Bars & Pubs', 'Attractions', 'Outdoor & Nature', 'Activities & Experiences', 'Shopping & Retail', 'Accommodation', 'Events & Venues'] as const
 
-export default function StockForm(){
-const [isPending, startTransition] = useTransition();
+export default function StockForm() {
+    const [isPending, startTransition] = useTransition();
 
     const form = useForm({
         resolver: zodResolver(stockSchema),
-        defaultValues:{
-            name:"",
+        defaultValues: {
+            name: "",
             brand: "",
             location: "",
+            partNumber: "",
+            vendor: "",
+            unitCost: "",
+            quantity: "",
+            maxStock: "",
+            reorderPoint: ""
 
         }
     });
 
-        function onSubmit(values: z.infer<typeof stockSchema>) {
+    function onSubmit(values: z.infer<typeof stockSchema>) {
+        console.log(values);
+        
         startTransition(async () => {
-              console.log(values);
-              
+            console.log(values);
+
 
         })
 
 
     }
     return (
-       <Card className="w-full max-w-xl mx-auto">
-        <CardHeader>
-            <CardTitle>Add new stock item</CardTitle>
-            <CardDescription>Create an item</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FieldGroup>
-                    <Controller name="name" control={form.control}
-                    render={({field, fieldState}) =>(
-                        <Field>
-                            <FieldLabel>Name</FieldLabel>
-                            <Input aria-invalid={fieldState.invalid} placeholder="Stock item name" {...field}/>
-                            {fieldState.invalid && 
-                            <FieldError errors={[fieldState.error]}/>
-                            }
-                        </Field>
-                    )}
-                    />
-                    <Controller name="brand" control={form.control}
-                    render={({field, fieldState}) =>(
-                        <Field>
-                            <FieldLabel>Brand / Model</FieldLabel>
-                            <Input aria-invalid={fieldState.invalid} placeholder="Stock item name" {...field}/>
-                            {fieldState.invalid && 
-                            <FieldError errors={[fieldState.error]}/>
-                            }
-                        </Field>
-                    )}
-                    />
-                    <Controller name="brand" control={form.control}
-                    render={({field, fieldState}) =>(
-                        <Field>
-                            <FieldLabel>Part number / SKU</FieldLabel>
-                            <Input aria-invalid={fieldState.invalid} placeholder="Stock item name" {...field}/>
-                            {fieldState.invalid && 
-                            <FieldError errors={[fieldState.error]}/>
-                            }
-                        </Field>
-                    )}
-                    />
-     
-                         <Controller name="location" control={form.control}
-                                    render={({ field, fieldState }) => (
-                                        <Field >
-                                            <FieldLabel>Vendor</FieldLabel>
-                                            <Select 
-                                            
-                                            
-                                                value={field.value}
-                                                onValueChange={(value) => {
-                                                    field.onChange(value)
-                                                }}
-                                                
-                                            >
-                                                <SelectTrigger className="w-45">
-                                                    <SelectValue placeholder="Location" />
-                                                </SelectTrigger>
-                                                <SelectContent> 
-                                                    <SelectGroup >
-                                                        <SelectLabel>Location</SelectLabel>
-                                                        {categories.map((location, key) => {
-                                                            return <SelectItem key={key} value={location}>{location}</SelectItem>
-                                                        })}
-                                                    </SelectGroup>
-                                                </SelectContent>
-                                            </Select>
-                                            {fieldState.invalid &&
-                                                <FieldError errors={[fieldState.error]} />}
-                                        </Field>
-                                    )} />
-                    
-                    <div className="flex gap-10">
-        <Controller name="category" control={form.control}
-                    render={({field, fieldState}) =>(
-                        <Field>
-                            <FieldLabel>Bin Location</FieldLabel>
-                            <Input aria-invalid={fieldState.invalid} placeholder="Stock item category" {...field}/>
-                            {fieldState.invalid && 
-                            <FieldError errors={[fieldState.error]}/>
-                            }
-                        </Field>
-                    )}
-                    />
-                            <Controller name="category" control={form.control}
-                    render={({field, fieldState}) =>(
-                        <Field>
-                            <FieldLabel>Unit cost</FieldLabel>
-                            <Input aria-invalid={fieldState.invalid} placeholder="Stock item category" {...field}/>
-                            {fieldState.invalid && 
-                            <FieldError errors={[fieldState.error]}/>
-                            }
-                        </Field>
-                    )}
-                    />
-                    </div>
+        <Card className="w-full max-w-xl mx-auto mt-15">
+            <CardHeader className="text-center">
+                <CardTitle className="text-xl">Create Stock</CardTitle>
+                <CardDescription>Please fill out the required fields to save a stock item to the system.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FieldGroup>
+                        <Controller name="name" control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field>
+                                    <FieldLabel>Name</FieldLabel>
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Stock item name" {...field} />
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />
+                                    }
+                                </Field>
+                            )}
+                        />
+                        <Controller name="brand" control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field>
+                                    <FieldLabel>Brand / Model</FieldLabel>
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Brand or model name" {...field} />
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />
+                                    }
+                                </Field>
+                            )}
+                        />
+                        <Controller name="partNumber" control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field>
+                                    <FieldLabel>Part number / SKU</FieldLabel>
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Stock item name" {...field} />
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />
+                                    }
+                                </Field>
+                            )}
+                        />
 
-                    <div className="flex gap-10">
-        <Controller name="category" control={form.control}
-                    render={({field, fieldState}) =>(
-                        <Field>
-                            <FieldLabel>Quantity (Current)</FieldLabel>
-                            <Input aria-invalid={fieldState.invalid} placeholder="Stock item category" {...field}/>
-                            {fieldState.invalid && 
-                            <FieldError errors={[fieldState.error]}/>
-                            }
-                        </Field>
-                    )}
-                    />
-                            <Controller name="category" control={form.control}
-                    render={({field, fieldState}) =>(
-                        <Field>
-                            <FieldLabel>Max holding amount</FieldLabel>
-                            <Input aria-invalid={fieldState.invalid} placeholder="Stock item category" {...field}/>
-                            {fieldState.invalid && 
-                            <FieldError errors={[fieldState.error]}/>
-                            }
-                        </Field>
-                    )}
-                    />
-                    </div>
-                    <div className="flex gap-10">
-        <Controller name="category" control={form.control}
-                    render={({field, fieldState}) =>(
-                        <Field>
-                            <FieldLabel>Reorder point</FieldLabel>
-                            <Input aria-invalid={fieldState.invalid} placeholder="Stock item category" {...field}/>
-                            {fieldState.invalid && 
-                            <FieldError errors={[fieldState.error]}/>
-                            }
-                        </Field>
-                    )}
-                    />
-                            <Controller name="category" control={form.control}
-                    render={({field, fieldState}) =>(
-                        <Field>
-                            <FieldLabel>Max holding amount</FieldLabel>
-                            <Input aria-invalid={fieldState.invalid} placeholder="Stock item category" {...field}/>
-                            {fieldState.invalid && 
-                            <FieldError errors={[fieldState.error]}/>
-                            }
-                        </Field>
-                    )}
-                    />
-                    </div>
-                             
-            
+                        <Controller name="vendor" control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field >
+                                    <FieldLabel>Vendor</FieldLabel>
+                                    <Select
 
-           
-                </FieldGroup>
-            </form>
-        </CardContent>
 
-       </Card>
+                                        value={field.value}
+                                        onValueChange={(value) => {
+                                            field.onChange(value)
+                                        }}
+
+                                    >
+                                        <SelectTrigger className="w-45">
+                                            <SelectValue placeholder="Location" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup >
+                                                <SelectLabel>Location</SelectLabel>
+                                                {categories.map((location, key) => {
+                                                    return <SelectItem key={key} value={location}>{location}</SelectItem>
+                                                })}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />}
+                                </Field>
+                            )} />
+
+                        <div className="flex gap-10">
+                            <Controller name="location" control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field>
+                                        <FieldLabel>Bin Location</FieldLabel>
+                                        <Input aria-invalid={fieldState.invalid} placeholder="Bin location" {...field} />
+                                        {fieldState.invalid &&
+                                            <FieldError errors={[fieldState.error]} />
+                                        }
+                                    </Field>
+                                )}
+                            />
+                            <Controller name="unitCost" control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field>
+                                        <FieldLabel>Unit cost</FieldLabel>
+                                        <Input type="number" aria-invalid={fieldState.invalid} placeholder="$ cost per unit" {...field} />
+                                        {fieldState.invalid &&
+                                            <FieldError errors={[fieldState.error]} />
+                                        }
+                                    </Field>
+                                )}
+                            />
+                        </div>
+
+                        <div className="flex gap-10">
+                            <Controller name="quantity" control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field>
+                                        <FieldLabel>Quantity (Current)</FieldLabel>
+                                        <Input type="number" aria-invalid={fieldState.invalid} placeholder="Stock quantity" {...field} />
+                                        {fieldState.invalid &&
+                                            <FieldError errors={[fieldState.error]} />
+                                        }
+                                    </Field>
+                                )}
+                            />
+                            <Controller name="maxStock" control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field>
+                                        <FieldLabel>Max holding amount</FieldLabel>
+                                        <Input type="number" aria-invalid={fieldState.invalid} placeholder="Max holding amount" {...field} />
+                                        {fieldState.invalid &&
+                                            <FieldError errors={[fieldState.error]} />
+                                        }
+                                    </Field>
+                                )}
+                            />
+                        </div>
+
+                        <Controller name="reorderPoint" control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field>
+                                    <FieldLabel>Reorder point</FieldLabel>
+                                    <Input type="number" aria-invalid={fieldState.invalid} placeholder="Stock item category" {...field} />
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />
+                                    }
+                                </Field>
+                            )}
+                        />
+
+
+
+                        <Button className="mt-3" disabled={isPending}>
+                            {isPending ? (
+                                <>
+                                    <Loader2 className="size-4 animate-spin" />
+                                    <span>Loading...</span>
+                                </>
+                            ) : (<span>Create Stock</span>)}
+                        </Button>
+
+
+                    </FieldGroup>
+         
+                </form>
+            </CardContent>
+
+        </Card>
     )
 }
