@@ -1,7 +1,36 @@
-export default function RequestsPage(){
+import { DataTable } from "@/components/web/tables/DataTable";
+import { Requestcolumns } from "@/components/web/tables/RequestColumns";
+import { Request } from "@/lib/types";
+
+    async function getData(): Promise<Request[]> {
+      // Fetch data from your API here.
+      return [
+     {
+    requestNumber: 1334,
+    requestDate: "12/12/12",
+    requestee: "Bob Marley",
+    status: "Open",
+    group: "Mobile",
+    forfilled: false,
+    id: "ddd",
+    notes: "Awaiting stock",
+    quantity: 2,
+    item: "Hammer",
+    plant: 126
+     }
+  
+
+      ]
+    }
+
+
+export default async function RequestsPage(){
+
+    const data = await getData()
     return (
         <div>
-            <h1>Request page</h1>
+        <h1 className="font-bold text-2xl" >Requests</h1>
+            <DataTable data={data} columns={Requestcolumns} filter="requestee"/>
         </div>
     )
 }

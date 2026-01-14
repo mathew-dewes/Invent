@@ -10,27 +10,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal, ArrowUpDown } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Request } from "@/lib/types"
 
-import StockStatusBadge from "@/components/web/StockStatusBadge"
+
 import { StockStatus } from "@/lib/types"
+import StockStatusBadge from "../badges/StockStatusBadge"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Stock = {
-  id: string
-  name: string
-  status: StockStatus | string
-  quantity: number
-  category: string
-  location: string
-  vendor: string
-  brand: string
-  unitCost: number
-}
 
-export const columns: ColumnDef<Stock>[] = [
+
+
+export const Requestcolumns: ColumnDef<Request>[] = [
       {
     id: "select",
     header: ({ table }) => (
@@ -54,14 +47,24 @@ export const columns: ColumnDef<Stock>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "requestNumber",
 
-    header: "Name",
+    header: "#",
   },
   {
-    accessorKey: "status",
-    cell:({row}) => <StockStatusBadge status={row.getValue("status") as StockStatus}/>,
-    header: "Status",
+    accessorKey: "requestDate",
+
+    header: "Date",
+  },
+  {
+    accessorKey: "requestee",
+
+    header: "Customer",
+  },
+  {
+    accessorKey: "item",
+
+    header: "Item",
   },
       {
     accessorKey: "quantity",
@@ -71,50 +74,27 @@ export const columns: ColumnDef<Stock>[] = [
       return <div className="font-medium">{amount}</div>
     },
   },
+  {
+    accessorKey: "status",
+    cell:({row}) => <StockStatusBadge status={row.getValue("status") as StockStatus}/>,
+    header: "Status",
+  },
+  
 
   {
-    accessorKey: "category",
-    header: "Category",
+    accessorKey: "group",
+    header: "Group",
   },
         {
-    accessorKey: "location",
-    header: "location",
+    accessorKey: "plant",
+    header: "Plant",
   },
-    {
-    accessorKey: "brand",
-    header: "Brand",
-    
-  },
-  {
-    accessorKey: "vendor",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Vendor
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    
+        {
+    accessorKey: "notes",
+    header: "Notes",
   },
 
 
-    {
-    accessorKey: "unitCost",
-      header: () => <div>Unit Cost</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("unitCost"))
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
- 
-      return <div className="font-medium">{formatted}</div>
-    },
-  },
 
 
   {

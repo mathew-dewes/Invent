@@ -1,6 +1,7 @@
 
+import { Badge } from "@/components/ui/badge";
 import { StockStatus } from "@/lib/types";
-import { Badge } from "../ui/badge";
+
 import { cn, setStatusColor } from "@/lib/utils";
 
 export default function StockStatusBadge({ status }: {

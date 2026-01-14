@@ -7,7 +7,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
     return (
-        <nav className="w-full py-5 flex items-center justify-between">
+        <nav className="w-full py-5 flex items-center justify-between mb-4">
             <div className="flex items-center gap-8">
                 <Link href={'/'}>
                     <h1 className="text-3xl font-bold">Invent

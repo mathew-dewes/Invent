@@ -1,6 +1,8 @@
-import prisma from "@/lib/prisma";
-import { columns, Stock, } from "./columns"
-import { DataTable } from "./data-table"
+// import prisma from "@/lib/prisma";
+
+import { DataTable } from "@/components/web/tables/DataTable";
+import { Stock, Stockcolumns } from "@/components/web/tables/StockColumns";
+
 
 async function getData(): Promise<Stock[]> {
   // Fetch data from your API here.
@@ -45,14 +47,14 @@ async function getData(): Promise<Stock[]> {
 export default async function DemoPage() {
   const data = await getData();
 
-  const post = await prisma.post.findMany();
-  console.log(post[0].title);
+  // const post = await prisma.post.findMany();
+  // console.log(post[0].title);
   
 
   return (
-    <div className="container mx-auto py-10">
-      <p>{post[0].title}</p>
-      <DataTable columns={columns} data={data} />
+    <div>
+      <h1 className="font-bold text-2xl" >Inventory</h1>
+      <DataTable filter="name" columns={Stockcolumns} data={data} />
     </div>
   )
 }
