@@ -57,7 +57,7 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
   {
     accessorKey: "name",
 
-    header: "Name",
+    header: "Item",
   },
   {
     accessorKey: "status",

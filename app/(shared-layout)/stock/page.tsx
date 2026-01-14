@@ -1,7 +1,9 @@
 // import prisma from "@/lib/prisma";
 
+import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/web/tables/DataTable";
 import { Stock, Stockcolumns } from "@/components/web/tables/StockColumns";
+import Link from "next/link";
 
 
 async function getData(): Promise<Stock[]> {
@@ -53,7 +55,12 @@ export default async function DemoPage() {
 
   return (
     <div>
-      <h1 className="font-bold text-2xl" >Inventory</h1>
+
+      <div className="flex justify-between">
+      <h1 className="font-bold text-2xl" >Stock</h1>
+      <Link href={'/stock/new'}><Button>Create Stock</Button></Link>
+      
+      </div>
       <DataTable filter="name" columns={Stockcolumns} data={data} />
     </div>
   )
