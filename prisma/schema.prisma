@@ -22,6 +22,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  vendors Vendor[]
 
   @@unique([email])
   @@map("user")
@@ -70,4 +71,17 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+
+model Vendor {
+  id String @id @default(cuid())
+  name String
+  address String?
+  phone String?
+  email String
+  contactName String
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
 }

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { createVendor } from "@/lib/actions/vendor";
 import { vendorSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
@@ -28,10 +29,11 @@ export default function VendorForm(){
         });
 
             function onSubmit(values: z.infer<typeof vendorSchema>) {
-                console.log(values);
+
                 
                 startTransition(async () => {
                     console.log(values);
+                    await createVendor(values)
         
         
                 })
