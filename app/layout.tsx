@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 
 const montserrat = Montserrat({
@@ -36,7 +37,7 @@ export default function RootLayout({
 
         {children}
           </main>
-
+ <Toaster closeButton/>
         </ThemeProvider>
 
       </body>
