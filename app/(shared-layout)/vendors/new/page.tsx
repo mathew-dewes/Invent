@@ -1,7 +1,9 @@
+import VendorForm from "./_components/VendorForm";
+
 export default function Page(){
     return (
         <div>
-            <h1>Create new Vendor</h1>
+            <VendorForm/>
         </div>
     )
 }
