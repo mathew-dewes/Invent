@@ -15,7 +15,7 @@ export async function createVendor(values: z.infer<typeof vendorSchema>){
     try {
         const parsed = vendorSchema.safeParse(values);
     if (!parsed.success) {
-           console.error('Validation errors:', parsed.error.format());
+           console.error('Validation errors:', parsed.error);
             throw new Error('Validation failed');
         };
 

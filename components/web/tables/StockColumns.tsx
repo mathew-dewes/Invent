@@ -10,26 +10,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal, ArrowUpDown } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 
 
-import { StockStatus } from "@/lib/types"
+import { Stock, StockStatus } from "@/lib/types"
 import StockStatusBadge from "../badges/StockStatusBadge"
+import { generateStockStatus } from "@/lib/helpers"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Stock = {
-  id: string
-  name: string
-  status: StockStatus | string
-  quantity: number
-  category: string
-  location: string
-  vendor: string
-  brand: string
-  unitCost: number
-}
+
 
 export const Stockcolumns: ColumnDef<Stock>[] = [
       {
@@ -60,8 +51,11 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
     header: "Item",
   },
   {
-    accessorKey: "status",
-    cell:({row}) => <StockStatusBadge status={row.getValue("status") as StockStatus}/>,
+    cell:({row}) => {
+      const quantity = row.getValue("quantity") as number;
+      const reorderAmount = row.getValue("reorderPoint") as number;
+    <StockStatusBadge status={generateStockStatus(quantity, reorderAmount)  as StockStatus}/>
+    },
     header: "Status",
   },
       {
@@ -73,10 +67,6 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
     },
   },
 
-  {
-    accessorKey: "category",
-    header: "Category",
-  },
         {
     accessorKey: "location",
     header: "location",
@@ -87,18 +77,18 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
     
   },
   {
-    accessorKey: "vendor",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Vendor
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    accessorKey: "vendor.name",
+     header: "Vendor",
+    
+  },
+  {
+    accessorKey: "maxStock",
+     header: "Max QTY",
+    
+  },
+  {
+    accessorKey: "reorderPoint",
+     header: "Reorder QTY",
     
   },
 
@@ -116,6 +106,7 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
       return <div className="font-medium">{formatted}</div>
     },
   },
+
 
 
   {

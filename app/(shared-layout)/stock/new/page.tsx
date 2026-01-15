@@ -1,10 +1,13 @@
+import { getVendors } from "@/lib/queries/vendor";
 import StockForm from "./_components/StockForm";
 
-export default function Page(){
+export default async function Page(){
+  const vendors = await getVendors();
 
+  console.log(vendors);
     return (
         <div>
-            <StockForm/>
+            <StockForm vendors={vendors}/>
         </div>
     )
 }

@@ -12,6 +12,8 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+
 model User {
   id            String    @id
   name          String
@@ -23,6 +25,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   vendors Vendor[]
+  stock Stock[]
 
   @@unique([email])
   @@map("user")
@@ -76,12 +79,35 @@ model Verification {
 
 model Vendor {
   id String @id @default(cuid())
+  createdAt DateTime @default(now())
   name String
   address String?
   phone String?
   email String
   contactName String
   userId String
+  stock Stock[]
   user User @relation(fields: [userId], references: [id])
+  @@unique([userId, name])
+
+}
+
+
+model Stock {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  name String
+  quantity Int
+  partNumber String
+  location String
+  vendorId String
+  userId String
+  vendor Vendor @relation(fields: [vendorId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  brand String
+  unitCost Int
+  maxStock Int
+  reorderPoint Int
+
 
 }

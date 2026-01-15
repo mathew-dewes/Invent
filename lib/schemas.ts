@@ -12,9 +12,8 @@ export const stockSchema = z.object({
 
     partNumber: z.string().min(1, "Part or SKU number is required").min(3, "Part or SKU number must be 3 or more characters"),
     location: z.string().min(1, "Bin location is required").min(3, "Bin location must be 3 or more characters"),
-    vendor: z.string().min(1, "Vendor is required"),
+    vendorId: z.string(),
     brand: z.string().min(1, "Brand or model is required").min(3, "Brand or model name must be 3 more than characters"),
-
     unitCost: z.string().min(1, "Unit cost is required")
         .refine((val) => {
             const num = Number(val);

@@ -11,10 +11,14 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { Vendor } from "@/lib/types";
+import { createStock } from "@/lib/actions/stock";
 
 export const categories = ['All', 'Food & Drink', 'Cafes', 'Restaurants', 'Bars & Pubs', 'Attractions', 'Outdoor & Nature', 'Activities & Experiences', 'Shopping & Retail', 'Accommodation', 'Events & Venues'] as const
 
-export default function StockForm() {
+export default function StockForm({vendors}:
+    {vendors: Vendor[]}
+) {
     const [isPending, startTransition] = useTransition();
 
     const form = useForm({
@@ -24,7 +28,6 @@ export default function StockForm() {
             brand: "",
             location: "",
             partNumber: "",
-            vendor: "",
             unitCost: "",
             quantity: "",
             maxStock: "",
@@ -38,6 +41,7 @@ export default function StockForm() {
         
         startTransition(async () => {
             console.log(values);
+            await createStock(values);
 
 
         })
@@ -87,7 +91,7 @@ export default function StockForm() {
                             )}
                         />
 
-                        <Controller name="vendor" control={form.control}
+                        <Controller name="vendorId" control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field >
                                     <FieldLabel>Vendor</FieldLabel>
@@ -106,8 +110,8 @@ export default function StockForm() {
                                         <SelectContent>
                                             <SelectGroup >
                                                 <SelectLabel>Location</SelectLabel>
-                                                {categories.map((location, key) => {
-                                                    return <SelectItem key={key} value={location}>{location}</SelectItem>
+                                                {vendors?.map((vendor, key) => {
+                                                    return <SelectItem key={key} value={vendor.id}>{vendor.name}</SelectItem>
                                                 })}
                                             </SelectGroup>
                                         </SelectContent>
