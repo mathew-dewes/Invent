@@ -5,8 +5,6 @@ import { getStock } from "@/lib/queries/stock";
 export default async function StockTable(){
     
       const stock = await getStock();
-
-      console.log(stock);
       
     return (
          <DataTable filter="name" columns={Stockcolumns} data={stock} />

@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { Vendor } from "@/lib/types";
 import { createStock } from "@/lib/actions/stock";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export const categories = ['All', 'Food & Drink', 'Cafes', 'Restaurants', 'Bars & Pubs', 'Attractions', 'Outdoor & Nature', 'Activities & Experiences', 'Shopping & Retail', 'Accommodation', 'Events & Venues'] as const
 
@@ -20,6 +22,7 @@ export default function StockForm({vendors}:
     {vendors: Vendor[]}
 ) {
     const [isPending, startTransition] = useTransition();
+    const router = useRouter()
 
     const form = useForm({
         resolver: zodResolver(stockSchema),
@@ -40,8 +43,16 @@ export default function StockForm({vendors}:
         console.log(values);
         
         startTransition(async () => {
-            console.log(values);
-            await createStock(values);
+            try {
+        await createStock(values);
+        toast.success(`${values.name} was added`);
+        router.push('/stock')
+        
+            } catch (error) {
+            console.log(error);
+            toast.error("There was error. Please advise admin")
+            }
+       
 
 
         })

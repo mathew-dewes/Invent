@@ -17,6 +17,9 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Stock, StockStatus } from "@/lib/types"
 import StockStatusBadge from "../badges/StockStatusBadge"
 import { generateStockStatus } from "@/lib/helpers"
+import { deleteStock } from "@/lib/actions/stock"
+import { startTransition } from "react"
+import { toast } from "sonner"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -50,11 +53,13 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
 
     header: "Item",
   },
-  {
+  { 
+
     cell:({row}) => {
       const quantity = row.getValue("quantity") as number;
       const reorderAmount = row.getValue("reorderPoint") as number;
-    <StockStatusBadge status={generateStockStatus(quantity, reorderAmount)  as StockStatus}/>
+      
+    return <StockStatusBadge status={generateStockStatus(quantity, reorderAmount)  as StockStatus}/>
     },
     header: "Status",
   },
@@ -112,8 +117,9 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original
- 
+      const stockId = row.original.id;
+
+   
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -124,13 +130,33 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+                      <DropdownMenuItem>Update Stock</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+
+
+              <form action={
+                (formData)=>{
+                  startTransition(async()=>{
+                    try {
+                        await deleteStock(formData);
+                        toast.success(`${row.original.name} was deleted`);
+                    } catch (error) {
+                      console.log(error);
+                      toast.error("There was error deleting this stock item")
+                      
+                    }
+                  })
+          
+                }
+                }>
+                  <input type="hidden" name="id" value={stockId} />
+              <button type="submit">Delete stock</button>
+              </form>
+
+              
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>Copy vendor email</DropdownMenuItem>
             <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
