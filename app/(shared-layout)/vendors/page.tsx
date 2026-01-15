@@ -1,13 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/web/tables/DataTable";
-import { VendorColumns } from "@/components/web/tables/VendorColumns";
-import { getVendors } from "@/lib/queries/vendor";
 
 import Link from "next/link";
+import VendorTable from "./_components/VendorTable";
+import { Suspense } from "react";
 
-export default async function VendorPage(){
-
-const vendors = await getVendors();
+export default  function VendorPage(){
 
 
     return(
@@ -17,7 +14,11 @@ const vendors = await getVendors();
       <Link href={'/vendors/new'}><Button>Create Vendor</Button></Link>
         
       </div>
-            <DataTable filter="name" data={vendors} columns={VendorColumns}/>
+      <Suspense fallback={"Loading vendors..."}>
+        {/* Loading Skeleton to put here */}
+  <VendorTable/>
+      </Suspense>
+          
         </div>
     )
 }
