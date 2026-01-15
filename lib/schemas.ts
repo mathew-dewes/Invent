@@ -1,3 +1,4 @@
+import { RequestStatus } from '@/generated/prisma/enums';
 import z from 'zod'
 
 export const loginSchema = z.object({
@@ -66,7 +67,7 @@ export const requestSchema = z.object({
         }, {
             message: "Quantity must be greater than 0",
         }),
-    status:z.string(),
+    status: z.enum(RequestStatus),
     plant: z.string().min(1, "Plant number is required").max(20, "Customer name must be 20 characters or less"),
     notes: z.string().max(200, "Note must be 200 characters or less").optional()
 

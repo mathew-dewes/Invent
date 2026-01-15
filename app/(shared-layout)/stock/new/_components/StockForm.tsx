@@ -38,7 +38,6 @@ export default function StockForm({vendors}:
     });
 
     function onSubmit(values: z.infer<typeof stockSchema>) {
-        console.log(values);
         
         startTransition(async () => {
             try {

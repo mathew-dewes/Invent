@@ -1,0 +1,38 @@
+"use server";
+
+import { getUserId } from "../actions/auth";
+import prisma from "../prisma";
+
+export async function getRequests(){
+const userId = await getUserId();
+const stock = await prisma.request.findMany({
+    where: {
+        userId
+    },
+
+
+    orderBy: {
+        createdAt: "desc"
+    },
+
+    select:{
+        id: true,
+        requestNumber: true,
+        createdAt: true,
+        customer: true,
+        stockItem:{
+            select:{
+                name:true
+            }
+        },
+        quantity: true,
+        status: true,
+        plantNumber: true,
+        note: true
+    }
+
+});
+
+
+return stock;
+}

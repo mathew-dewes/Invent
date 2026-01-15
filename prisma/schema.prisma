@@ -26,6 +26,7 @@ model User {
   accounts      Account[]
   vendors Vendor[]
   stock Stock[]
+  requests Request[]
 
   @@unique([email])
   @@map("user")
@@ -108,6 +109,31 @@ model Stock {
   unitCost Int
   maxStock Int
   reorderPoint Int
+  requests Request[]
 
 
+}
+
+
+model Request {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  customer String
+  requestNumber Int @unique
+  quantity Int
+  status RequestStatus
+  plantNumber String
+  note String?
+  stockItem Stock @relation(fields: [stockId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  stockId String
+  userId String
+
+
+}
+
+enum RequestStatus {
+  OPEN
+  PENDING
+  COMPLETE
 }

@@ -52,17 +52,26 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     header: "#",
   },
   {
-    accessorKey: "requestDate",
-
+    accessorKey: "createdAt",
     header: "Date",
+        cell: ({ getValue }) => {
+      const date = new Date(getValue() as string);
+      return date.toLocaleString("en-NZ", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
   },
+},
   {
-    accessorKey: "requestee",
+    accessorKey: "customer",
 
     header: "Customer",
   },
   {
-    accessorKey: "item",
+    accessorKey: "stockItem.name",
 
     header: "Item",
   },
@@ -81,11 +90,11 @@ export const Requestcolumns: ColumnDef<Request>[] = [
   },
   
         {
-    accessorKey: "plant",
+    accessorKey: "plantNumber",
     header: "Plant",
   },
         {
-    accessorKey: "notes",
+    accessorKey: "note",
     header: "Notes",
   },
 

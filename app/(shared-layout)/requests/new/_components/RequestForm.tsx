@@ -7,18 +7,28 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { RequestStatus } from "@/generated/prisma/enums";
+import { createRequest } from "@/lib/actions/request";
 import { requestSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
+
+
+
+const requestStatuses = Object.values(RequestStatus)
+
 
 
 export default function RequestForm({stock}:
     {stock: {id: string, name: string}[]}
 ){
         const [isPending, startTransition] = useTransition();
+         const router = useRouter()
 
         
         const form = useForm({
@@ -27,7 +37,7 @@ export default function RequestForm({stock}:
                 customer:"",
                 stockItem: "",
                 quantity: "",
-                status: "Open",
+                status: "OPEN",
                 plant: "",
                 notes: ""
     
@@ -39,11 +49,19 @@ export default function RequestForm({stock}:
 
                 
                 startTransition(async () => {
-                    console.log(values);
-              
+            try {
+        await createRequest(values);
+        toast.success(`Request was placed successfully`);
+        router.push('/requests')
         
-        
-                })
+            } catch (error) {
+            console.log(error);
+            toast.error("There was error. Please advise admin")
+            }
+       
+
+
+        })
         
         
             }
@@ -139,7 +157,7 @@ export default function RequestForm({stock}:
                                         <SelectContent>
                                             <SelectGroup >
                                                 <SelectLabel>Status (Default open)</SelectLabel>
-                                                {['Open', 'Pending', 'Complete']?.map((status, key) => {
+                                                {requestStatuses?.map((status, key) => {
                                                     return <SelectItem key={key} value={status}>{status}</SelectItem>
                                                 })}
                                             </SelectGroup>

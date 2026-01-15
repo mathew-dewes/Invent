@@ -1,25 +1,27 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { RequestStatus, StockStatus } from "./types";
+import { StockStatus } from "./types";
+import { RequestStatus } from "@/generated/prisma/enums";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 };
 
+
 export function setStatusColor(status: StockStatus | RequestStatus){
    let style;
           switch (status) {
   
-              case "Open":
+              case "OPEN":
               style = "bg-blue-400"
               break;
             
               case "In Stock":
-              case "Complete":
+              case "COMPLETE":
                   style = 'bg-green-400'
                   break;
               case 'Low Stock':
-              case 'Pending':
+              case 'PENDING':
                   style = 'bg-yellow-400'
                   break;
               default:
