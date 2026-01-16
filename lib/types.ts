@@ -40,7 +40,6 @@ export type Request = {
     quantity: number
   }
   quantity: number
-  status: RequestStatus
   plantNumber: string
   note?: string | null
 }

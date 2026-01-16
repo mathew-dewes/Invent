@@ -1,6 +1,6 @@
 "use server";
 
-import z from "zod";
+import z, { success } from "zod";
 import { stockSchema } from "../schemas";
 import { getUserId } from "./auth";
 import { revalidatePath } from "next/cache";
@@ -80,4 +80,57 @@ export async function deleteStock(formData: FormData) {
         console.error('Delete stock error:', error);
         throw error;
     }
+}
+
+
+export async function adjustInventory(id: string, requestedQuantity: number, requestId: string){
+
+    
+    const request = await prisma.request.findFirst({
+        where:{id: requestId},
+        include:{stockItem:true}
+    });
+
+    if (request){
+        
+        if (request.status == "COMPLETE"){
+            return {
+                success: false, message: "Request already marked complete"
+            }
+        }
+
+        if (request.quantity <= request.stockItem.quantity){
+
+       await prisma.stock.update({
+            data:{
+                quantity:{
+                    decrement: requestedQuantity
+                }
+            },
+            where:{id}
+        });
+
+        revalidatePath('/requests');
+
+        return {
+            success: true, message:"Inventory has been updated"
+        }
+
+
+        } else {
+  return {
+            success: false, message: "Request not found"
+        }
+
+        }
+    
+ 
+    } else {
+
+        return {
+            success: false, message: "Request not found"
+        }
+    }
+
+
 }

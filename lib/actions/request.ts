@@ -73,7 +73,7 @@ export async function generateRequestNumber(): Promise<number>{
 
 export async function changeRequestStatus(formData: FormData, status: RequestStatus){
 
-    
+
     const requestId = formData.get("requestId") as string;
     const userId = await getUserId();
 

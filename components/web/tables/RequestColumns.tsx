@@ -20,6 +20,7 @@ import StockStatusBadge from "../badges/StockStatusBadge"
 import { startTransition } from "react"
 import { changeRequestStatus } from "@/lib/actions/request"
 import { toast } from "sonner"
+import { adjustInventory } from "@/lib/actions/stock"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -27,7 +28,7 @@ import { toast } from "sonner"
 
 
 export const Requestcolumns: ColumnDef<Request>[] = [
-      {
+  {
     id: "select",
     header: ({ table }) => (
       <Checkbox
@@ -57,7 +58,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
   {
     accessorKey: "createdAt",
     header: "Date",
-        cell: ({ getValue }) => {
+    cell: ({ getValue }) => {
       const date = new Date(getValue() as string);
       return date.toLocaleString("en-NZ", {
         year: "numeric",
@@ -66,8 +67,8 @@ export const Requestcolumns: ColumnDef<Request>[] = [
         hour: "2-digit",
         minute: "2-digit",
       });
+    },
   },
-},
   {
     accessorKey: "customer",
 
@@ -78,25 +79,25 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
     header: "Item",
   },
-      {
+  {
     accessorKey: "quantity",
-      header: () => <div>Quantity</div>,
+    header: () => <div>Quantity</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("quantity")) 
+      const amount = parseFloat(row.getValue("quantity"))
       return <div className="font-medium">{amount}</div>
     },
   },
   {
     accessorKey: "status",
-    cell:({row}) => <StockStatusBadge status={row.getValue("status") as StockStatus}/>,
+    cell: ({ row }) => <StockStatusBadge status={row.getValue("status") as StockStatus} />,
     header: "Status",
   },
-  
-        {
+
+  {
     accessorKey: "plantNumber",
     header: "Plant",
   },
-        {
+  {
     accessorKey: "note",
     header: "Notes",
   },
@@ -106,14 +107,20 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => {      
-      
+    cell: ({ row }) => {
+
       const requestId = row.original.id;
+      const stockId = row.original.stockItem.id;
+      const stockQuantity = row.original.stockItem.quantity;
+      const requestQuantity = row.original.quantity;
+      const stockItem = row.original.stockItem.name;
 
-      
 
-  
- 
+
+
+
+
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -124,122 +131,60 @@ export const Requestcolumns: ColumnDef<Request>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem asChild>
+
+
+            <DropdownMenuItem asChild>
 
 
               <form action={
-                (formData)=>{
-                  startTransition(async()=>{
-                    
+                (formData) => {
+                  startTransition(async () => {
+
+
                     try {
-                      const result =  await changeRequestStatus(formData, 'READY');
-                      if (result?.success){
-                           toast.success(`Request updated`);
+
+                      const inventory = await adjustInventory(stockId, requestQuantity, requestId);
+
+                      if (inventory?.success) {
+
+                        const result = await changeRequestStatus(formData, 'COMPLETE');
+
+
+                        if (result?.success) {
+                          toast.success(`Request updated`);
+                        } else {
+                          toast.error("Inventory too low")
+                        }
+
                       } else {
-                           toast.error("Inventory too low")
+
+                        toast.error(inventory?.message)
+
                       }
-                   
-                        
-                 
-        
-                  
+
+
+
+
+
+
+
+
+
+
                     } catch (error) {
                       console.log(error);
                       toast.error("There was error deleting this stock item")
-                      
+
                     }
                   })
-          
+
                 }
-                }>
-                  <input type="hidden" name="requestId" value={requestId} />
-              <button type="submit">Mark as Ready</button>
+              }>
+                <input type="hidden" name="requestId" value={requestId} />
+                <button type="submit">Mark as Complete</button>
               </form>
 
-              
-            </DropdownMenuItem>
-            
-              <DropdownMenuItem asChild>
 
-
-              <form action={
-                (formData)=>{
-                  startTransition(async()=>{
-                    
-                    try {
-                      
-      
-                    const result =  await changeRequestStatus(formData, 'COMPLETE');
-                      if (result?.success){
-                           toast.success(`Request updated`);
-                      } else {
-                           toast.error("Inventory too low")
-                      }
-           
-                    } catch (error) {
-                      console.log(error);
-                      toast.error("There was error deleting this stock item")
-                      
-                    }
-                  })
-          
-                }
-                }>
-                  <input type="hidden" name="requestId" value={requestId} />
-              <button type="submit">Mark as Complete</button>
-              </form>
-
-              
-            </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-
-
-              <form action={
-                (formData)=>{
-                  startTransition(async()=>{
-                    
-                    try {
-                        await changeRequestStatus(formData, 'PENDING');
-                        toast.success(`Request ${row.original.requestNumber} was updated`);
-                    } catch (error) {
-                      console.log(error);
-                      toast.error("There was error deleting this stock item")
-                      
-                    }
-                  })
-          
-                }
-                }>
-                  <input type="hidden" name="requestId" value={requestId} />
-              <button type="submit">Mark as pending</button>
-              </form>
-
-              
-            </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-
-
-              <form action={
-                (formData)=>{
-                  startTransition(async()=>{
-                    
-                    try {
-                        await changeRequestStatus(formData, 'OPEN');
-                        toast.success(`Request ${row.original.requestNumber} was updated`);
-                    } catch (error) {
-                      console.log(error);
-                      toast.error("There was error deleting this stock item")
-                      
-                    }
-                  })
-          
-                }
-                }>
-                  <input type="hidden" name="requestId" value={requestId} />
-              <button type="submit">Mark as open</button>
-              </form>
-
-              
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Edit request</DropdownMenuItem>

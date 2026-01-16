@@ -5,9 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Combobox } from "@/components/ui/comboBox";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { RequestStatus } from "@/generated/prisma/enums";
 import { createRequest } from "@/lib/actions/request";
 import { requestSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,10 +15,6 @@ import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-
-
-
-const requestStatuses = Object.values(RequestStatus)
 
 
 
@@ -138,35 +132,7 @@ export default function RequestForm({stock}:
                             </div>
 
                             
-                        <Controller name="status" control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field >
-                                    <FieldLabel>Request status</FieldLabel>
-                                    <Select
-
-
-                                        value={field.value}
-                                        onValueChange={(value) => {
-                                            field.onChange(value)
-                                        }}
-
-                                    >
-                                        <SelectTrigger className="w-45">
-                                            <SelectValue placeholder="Status" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup >
-                                                <SelectLabel>Status (Default open)</SelectLabel>
-                                                {requestStatuses?.map((status, key) => {
-                                                    return <SelectItem key={key} value={status}>{status}</SelectItem>
-                                                })}
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                    {fieldState.invalid &&
-                                        <FieldError errors={[fieldState.error]} />}
-                                </Field>
-                            )} />
+                    
 
         
 
