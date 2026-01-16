@@ -58,3 +58,10 @@ const stock = await prisma.stock.findMany({
 
 return stock;
 }
+
+
+export async function checkInventory(id: string){
+      return await prisma.stock.count({
+        where:{id}
+      })
+}

@@ -22,7 +22,9 @@ const stock = await prisma.request.findMany({
         customer: true,
         stockItem:{
             select:{
-                name:true
+                id: true,
+                name:true,
+                quantity:true
             }
         },
         quantity: true,

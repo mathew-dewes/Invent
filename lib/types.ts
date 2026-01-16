@@ -35,7 +35,9 @@ export type Request = {
   requestNumber: number,
   customer: string
   stockItem: {
+    id: string
     name: string
+    quantity: number
   }
   quantity: number
   status: RequestStatus

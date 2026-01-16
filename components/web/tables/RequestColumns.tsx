@@ -17,6 +17,9 @@ import { Request } from "@/lib/types"
 
 import { StockStatus } from "@/lib/types"
 import StockStatusBadge from "../badges/StockStatusBadge"
+import { startTransition } from "react"
+import { changeRequestStatus } from "@/lib/actions/request"
+import { toast } from "sonner"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -103,8 +106,13 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => {
-      const payment = row.original
+    cell: ({ row }) => {      
+      
+      const requestId = row.original.id;
+
+      
+
+  
  
       return (
         <DropdownMenu>
@@ -116,15 +124,122 @@ export const Requestcolumns: ColumnDef<Request>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Mark as complete
+                    <DropdownMenuItem asChild>
+
+
+              <form action={
+                (formData)=>{
+                  startTransition(async()=>{
+                    
+                    try {
+                      const result =  await changeRequestStatus(formData, 'READY');
+                      if (result?.success){
+                           toast.success(`Request updated`);
+                      } else {
+                           toast.error("Inventory too low")
+                      }
+                   
+                        
+                 
+        
+                  
+                    } catch (error) {
+                      console.log(error);
+                      toast.error("There was error deleting this stock item")
+                      
+                    }
+                  })
+          
+                }
+                }>
+                  <input type="hidden" name="requestId" value={requestId} />
+              <button type="submit">Mark as Ready</button>
+              </form>
+
+              
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Mark as pending
+            
+              <DropdownMenuItem asChild>
+
+
+              <form action={
+                (formData)=>{
+                  startTransition(async()=>{
+                    
+                    try {
+                      
+      
+                    const result =  await changeRequestStatus(formData, 'COMPLETE');
+                      if (result?.success){
+                           toast.success(`Request updated`);
+                      } else {
+                           toast.error("Inventory too low")
+                      }
+           
+                    } catch (error) {
+                      console.log(error);
+                      toast.error("There was error deleting this stock item")
+                      
+                    }
+                  })
+          
+                }
+                }>
+                  <input type="hidden" name="requestId" value={requestId} />
+              <button type="submit">Mark as Complete</button>
+              </form>
+
+              
+            </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+
+
+              <form action={
+                (formData)=>{
+                  startTransition(async()=>{
+                    
+                    try {
+                        await changeRequestStatus(formData, 'PENDING');
+                        toast.success(`Request ${row.original.requestNumber} was updated`);
+                    } catch (error) {
+                      console.log(error);
+                      toast.error("There was error deleting this stock item")
+                      
+                    }
+                  })
+          
+                }
+                }>
+                  <input type="hidden" name="requestId" value={requestId} />
+              <button type="submit">Mark as pending</button>
+              </form>
+
+              
+            </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+
+
+              <form action={
+                (formData)=>{
+                  startTransition(async()=>{
+                    
+                    try {
+                        await changeRequestStatus(formData, 'OPEN');
+                        toast.success(`Request ${row.original.requestNumber} was updated`);
+                    } catch (error) {
+                      console.log(error);
+                      toast.error("There was error deleting this stock item")
+                      
+                    }
+                  })
+          
+                }
+                }>
+                  <input type="hidden" name="requestId" value={requestId} />
+              <button type="submit">Mark as open</button>
+              </form>
+
+              
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Edit request</DropdownMenuItem>

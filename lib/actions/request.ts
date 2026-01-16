@@ -5,6 +5,8 @@ import { requestSchema } from "../schemas";
 import { getUserId } from "./auth";
 import prisma from "../prisma";
 import { revalidatePath } from "next/cache";
+import { RequestStatus } from "@/generated/prisma/enums";
+
 
 export async function createRequest(values: z.infer<typeof requestSchema>) {
 
@@ -66,4 +68,36 @@ export async function generateRequestNumber(): Promise<number>{
 
 
     return requestNumber
+};
+
+
+export async function changeRequestStatus(formData: FormData, status: RequestStatus){
+
+    
+    const requestId = formData.get("requestId") as string;
+    const userId = await getUserId();
+
+    if (!requestId || !userId) return;
+
+    try {
+        await prisma.request.update({
+            where:{id: requestId},
+            data:{status}
+        });
+
+        revalidatePath('/requests')
+        return {
+            success: true
+        }
+    } catch (error) {
+         console.error('Request update error:', error);
+        throw error;
+    }
+
+         
+    
+    
+
+
+          
 }
