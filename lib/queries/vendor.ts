@@ -26,3 +26,22 @@ return vendors;
 
 
 }
+
+export async function getVendorNames(){
+    const userId = await getUserId();
+const vendors = await prisma.vendor.findMany({
+    where: {
+        userId
+    },
+    select:{
+        id: true,
+        name: true,
+    
+    },
+    orderBy:{
+        createdAt: "desc"
+    }
+});
+
+return vendors;
+}

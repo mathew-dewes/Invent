@@ -71,5 +71,21 @@ export const requestSchema = z.object({
     plant: z.string().min(1, "Plant number is required").max(20, "Customer name must be 20 characters or less"),
     notes: z.string().max(200, "Note must be 200 characters or less").optional()
 
+});
+
+
+export const purchaseSchema = z.object({
+   item: z.string(),
+    quantity: z.string().min(1, "Quantity is required")
+        .refine((val) => {
+            const num = Number(val); return !isNaN(num) && num > 0;
+        }, {
+            message: "Quantity must be greater than 0",
+        }),
+    vendor: z.string(),
+    notes: z.string().optional(),
+    poNumber: z.string(),
+
+    
 })
 

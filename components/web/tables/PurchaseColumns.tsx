@@ -45,14 +45,23 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "orderNumber",
+    accessorKey: "purchaseNumber",
 
-    header: "Order",
+    header: "ID",
   },
   {
-    accessorKey: "purchaseDate",
+    accessorKey: "createdAt",
 
     header: "Date",
+            cell: ({ getValue }) => {
+      const date = new Date(getValue() as string);
+      return date.toLocaleString("en-NZ", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+    
+      });
+  },
   },
   {
     accessorKey: "status",
@@ -60,7 +69,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     header: "Status",
   },
    {
-    accessorKey: "stock",
+    accessorKey: "stockItem.name",
     header: "Item",
   },
       {
@@ -75,7 +84,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
 
 
   {
-    accessorKey: "vendor",
+    accessorKey: "vendor.name",
     header: ({ column }) => {
       return (
         <Button
@@ -90,12 +99,18 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     
   },
 
-
     {
-    accessorKey: "cost",
-      header: () => <div>Unit Cost</div>,
+    accessorKey: "PO",
+
+    header: "PO#",
+  },
+
+
+   {
+    accessorKey: "totalCost",
+      header: () => <div>Cost</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("cost"))
+      const amount = parseFloat(row.getValue("totalCost"))
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",

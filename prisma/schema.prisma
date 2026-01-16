@@ -13,7 +13,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
 model User {
   id            String    @id
   name          String
@@ -24,9 +23,10 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
-  vendors Vendor[]
-  stock Stock[]
-  requests Request[]
+  vendors       Vendor[]
+  stock         Stock[]
+  requests      Request[]
+  purchases Purchase[]
 
   @@unique([email])
   @@map("user")
@@ -77,59 +77,74 @@ model Verification {
   @@map("verification")
 }
 
-
 model Vendor {
-  id String @id @default(cuid())
-  createdAt DateTime @default(now())
-  name String
-  address String?
-  phone String?
-  email String
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  name        String
+  address     String?
+  phone       String?
+  email       String
   contactName String
-  userId String
-  stock Stock[]
-  user User @relation(fields: [userId], references: [id])
+  userId      String
+  stock       Stock[]
+  purchases   Purchase[]
+  user        User       @relation(fields: [userId], references: [id])
+
   @@unique([userId, name])
-
 }
-
 
 model Stock {
-  id String @id @default(cuid())
-  createdAt DateTime @default(now())
-  name String
-  quantity Int
-  partNumber String
-  location String
-  vendorId String
-  userId String
-  vendor Vendor @relation(fields: [vendorId], references: [id])
-  user User @relation(fields: [userId], references: [id])
-  brand String
-  unitCost Int
-  maxStock Int
+  id           String     @id @default(cuid())
+  createdAt    DateTime   @default(now())
+  name         String
+  quantity     Int
+  partNumber   String
+  location     String
+  vendorId     String
+  userId       String
+  vendor       Vendor     @relation(fields: [vendorId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+  brand        String
+  unitCost     Int
+  maxStock     Int
   reorderPoint Int
-  requests Request[]
-
-
+  requests     Request[]
+  purchases    Purchase[]
 }
 
-
 model Request {
-  id String @id @default(cuid())
-  createdAt DateTime @default(now())
-  customer String
-  requestNumber Int @unique
+  id            String        @id @default(cuid())
+  createdAt     DateTime      @default(now())
+  customer      String
+  requestNumber Int           @unique
+  quantity      Int
+  status        RequestStatus
+  plantNumber   String
+  note          String?
+  stockItem     Stock         @relation(fields: [stockId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+  stockId       String
+  userId        String
+}
+
+model Purchase {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  PO String
+  purchaseNumber Int @unique
+  status PurchaseStatus
+  notes String?
+
+  stockId  String
   quantity Int
-  status RequestStatus
-  plantNumber String
-  note String?
-  stockItem Stock @relation(fields: [stockId], references: [id])
-  user User @relation(fields: [userId], references: [id])
-  stockId String
+
+  vendorId  String
+  totalCost Int
   userId String
 
-
+  user User @relation(fields: [userId], references: [id])
+  stockItem Stock  @relation(fields: [stockId], references: [id])
+  vendor    Vendor @relation(fields: [vendorId], references: [id])
 }
 
 enum RequestStatus {
@@ -137,4 +152,10 @@ enum RequestStatus {
   PENDING
   READY
   COMPLETE
+}
+
+enum PurchaseStatus {
+  PLACED
+  RECEIVED
+  DELAYED
 }
