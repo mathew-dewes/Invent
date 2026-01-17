@@ -7,7 +7,10 @@ export async function getRequests(){
 const userId = await getUserId();
 const stock = await prisma.request.findMany({
     where: {
-        userId
+        userId,
+        status:{
+            not: "COMPLETE"
+        }
     },
 
 

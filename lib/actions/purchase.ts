@@ -4,6 +4,8 @@ import z from "zod";
 import { purchaseSchema } from "../schemas";
 import { getUserId } from "./auth";
 import prisma from "../prisma";
+import { PurchaseStatus } from "@/generated/prisma/enums";
+import { revalidatePath } from "next/cache";
 
 
 export async function createPurchase(values: z.infer<typeof purchaseSchema>){
@@ -77,4 +79,37 @@ export async function generatePurchaseNumber(): Promise<number>{
 
 
     return purchaseNumber
+};
+
+export async function changePurchaseStatus(formData: FormData, status: PurchaseStatus){
+ const purchaseId = formData.get("purchaseId") as string;
+ const purchaseQuantity = formData.get("purchaseQuantity") as string;
+
+ console.log(purchaseQuantity);
+ 
+ 
+
+    try {
+        await prisma.purchase.update({
+            where:{id: purchaseId},
+            data:{status, stockItem:{
+                update:{
+                    quantity:{
+                        increment:Number(purchaseQuantity)
+                    }
+                }
+            }}
+        });
+
+        revalidatePath('/purchases')
+
+        return {
+            success: true
+        }
+    } catch (error) {
+        console.error('Purchase failed:', error);
+        throw error;
+    }
+    
+
 }

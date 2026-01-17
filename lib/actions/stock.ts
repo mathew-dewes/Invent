@@ -1,6 +1,6 @@
 "use server";
 
-import z, { success } from "zod";
+import z from "zod";
 import { stockSchema } from "../schemas";
 import { getUserId } from "./auth";
 import { revalidatePath } from "next/cache";
@@ -119,7 +119,7 @@ export async function adjustInventory(id: string, requestedQuantity: number, req
 
         } else {
   return {
-            success: false, message: "Request not found"
+            success: false, message: "Inventory level is tow"
         }
 
         }

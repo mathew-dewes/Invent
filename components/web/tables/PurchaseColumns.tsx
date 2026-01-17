@@ -16,6 +16,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 import { Purchase, StockStatus } from "@/lib/types"
 import StockStatusBadge from "../badges/StockStatusBadge"
+import { startTransition } from "react"
+import { changePurchaseStatus } from "@/lib/actions/purchase"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -124,8 +126,13 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original
- 
+
+      const purchaseId = row.original.id;
+      const purchaseQuantity = row.original.quantity;
+
+
+      
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -136,10 +143,32 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+            <DropdownMenuItem asChild>
+
+
+              <form action={
+                (formData) => {
+                  startTransition(async () => {
+
+                    try {
+                      await changePurchaseStatus(formData, "RECEIVED");
+                    } catch (error) {
+                      console.log(error);
+                      
+                    }
+
+            
+                    
+                  
+
+                })}
+              }>
+                <input type="hidden" name="purchaseId" value={purchaseId} />
+                <input type="hidden" name="purchaseQuantity" value={purchaseQuantity} />
+                <button type="submit">Mark Received</button>
+              </form>
+
+
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View customer</DropdownMenuItem>

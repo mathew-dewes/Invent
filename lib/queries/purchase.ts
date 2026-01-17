@@ -27,7 +27,8 @@ export async function getPurchases(){
             status: true,
             stockItem: {
                 select:{
-                    name: true
+                    name: true,
+                    quantity: true
                 }
             }
 
