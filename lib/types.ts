@@ -18,6 +18,22 @@ export type Stock = {
   unitCost: number
 }
 
+export type SingleStockItem = {
+   id: string;
+    name: string;
+    quantity: number;
+    location: string;
+    brand: string;
+    unitCost: number;
+    maxStock: number;
+    reorderPoint: number;
+    partNumber: string
+    vendor: {
+        name: string;
+        id: string
+    };
+}
+
 
 export type Vendor = {
   id: string
