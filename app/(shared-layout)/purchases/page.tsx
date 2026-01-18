@@ -7,9 +7,6 @@ import PurchaseTable from "./_components/PurchaseTable";
 
 export default  function RequestsPage(){
 
-    console.log("Test");
-    
-
     
     return (
         <div>

@@ -6,9 +6,14 @@ import { Suspense } from "react";
 
 
 
-export default async function StockPage() {
+export default async function StockPage({searchParams}:
+  {searchParams: Promise<{stock: string}>}
+) {
 
+  const filters = ((await searchParams).stock);
 
+  console.log(filters);
+  
 
   return (
     <div>
@@ -19,7 +24,7 @@ export default async function StockPage() {
       
       </div>
       <Suspense fallback="Loading stock...">
-      <StockTable/>
+      <StockTable filter={filters}/>
       </Suspense>
 
     </div>

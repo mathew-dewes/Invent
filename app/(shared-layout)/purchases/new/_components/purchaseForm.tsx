@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Combobox } from "@/components/ui/comboBox";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { createPurchase } from "@/lib/actions/purchase";
 import { purchaseSchema } from "@/lib/schemas";
@@ -24,8 +23,8 @@ import z from "zod";
 
 
 
-export default function PurchaseForm({stock, vendors}:
-    {stock: {id: string, name: string}[], vendors: {id: string, name: string}[]}
+export default function PurchaseForm({stock}:
+    {stock: {id: string, name: string}[]}
 ){
         const [isPending, startTransition] = useTransition();
          const router = useRouter()
@@ -34,7 +33,6 @@ export default function PurchaseForm({stock, vendors}:
         const form = useForm({
             resolver: zodResolver(purchaseSchema),
             defaultValues: {
-                vendor:"",
                 item: "",
                 quantity: "",
                 poNumber: "",
@@ -118,36 +116,6 @@ console.log(values);
                             )}
                         />
                             </div>
-
-                <Controller name="vendor" control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field >
-                                    <FieldLabel>Vendor</FieldLabel>
-                                    <Select
-
-
-                                        value={field.value}
-                                        onValueChange={(value) => {
-                                            field.onChange(value)
-                                        }}
-
-                                    >
-                                        <SelectTrigger className="w-45">
-                                            <SelectValue placeholder="Select vendor" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup >
-                                                <SelectLabel>Select vendor</SelectLabel>
-                                                {vendors?.map((vendor, key) => {
-                                                    return <SelectItem key={key} value={vendor.id}>{vendor.name}</SelectItem>
-                                                })}
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                    {fieldState.invalid &&
-                                        <FieldError errors={[fieldState.error]} />}
-                                </Field>
-                            )} />
 
 
                         <Controller name="notes" control={form.control}

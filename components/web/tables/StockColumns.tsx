@@ -20,6 +20,7 @@ import { generateStockStatus } from "@/lib/helpers"
 import { deleteStock } from "@/lib/actions/stock"
 import { startTransition } from "react"
 import { toast } from "sonner"
+import Link from "next/link"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -130,7 +131,8 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>Update Stock</DropdownMenuItem>
+            <Link href={`/stock/${stockId}/edit`}><DropdownMenuItem>Edit Stock</DropdownMenuItem></Link>
+                      
             <DropdownMenuItem asChild>
 
 

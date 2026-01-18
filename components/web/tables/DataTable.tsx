@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import TableFilters from "../TableFilters"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -67,6 +68,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
         <div className="flex items-center py-4 mt-2">
+          <div className="flex gap-3">
         <Input
           placeholder={`Filter ${filter}...`}
           value={(table.getColumn(filter)?.getFilterValue() as string) ?? ""}
@@ -75,6 +77,10 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+ <TableFilters/>
+   
+          </div>
+
                 <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

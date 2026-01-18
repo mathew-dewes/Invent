@@ -1,11 +1,10 @@
 import { DataTable } from "@/components/web/tables/DataTable";
 import { Requestcolumns } from "@/components/web/tables/RequestColumns";
-import { getRequests } from "@/lib/queries/request";
+import { getCompletedRequests } from "@/lib/queries/request";
 
-export default async function RequestTable(){
-    
+export default async function CompletedRequestsTable(){
 
-    const requests = await getRequests();
+    const requests = await getCompletedRequests();
     return (
         <DataTable filter="customer" columns={Requestcolumns} data={requests}/>
     )
