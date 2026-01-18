@@ -87,7 +87,6 @@ model Vendor {
   contactName String
   userId      String
   stock       Stock[]
-  purchases   Purchase[]
   user        User       @relation(fields: [userId], references: [id])
 
   @@unique([userId, name])
@@ -137,14 +136,12 @@ model Purchase {
 
   stockId  String
   quantity Int
-
-  vendorId  String
   totalCost Int
   userId String
 
   user User @relation(fields: [userId], references: [id])
   stockItem Stock  @relation(fields: [stockId], references: [id])
-  vendor    Vendor @relation(fields: [vendorId], references: [id])
+
 }
 
 enum RequestStatus {

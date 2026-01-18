@@ -16,11 +16,6 @@ export async function getPurchases(){
             createdAt: true,
             purchaseNumber: true,
             
-            vendor: {
-                select:{
-                    name: true
-                }
-            },
             quantity: true,
             PO: true,
             totalCost: true,

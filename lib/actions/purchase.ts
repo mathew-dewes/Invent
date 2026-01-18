@@ -27,7 +27,7 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>){
         };
             const purchaseNumber = await generatePurchaseNumber();
             
-                const {item, quantity, vendor, poNumber, notes} = parsed.data;
+                const {item, quantity, poNumber, notes} = parsed.data;
 
 
                 const stockItem = await prisma.stock.findUnique({
@@ -39,7 +39,6 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>){
 
         await prisma.purchase.create({
             data:{
-                vendorId: vendor,
                 stockId: item,
                 quantity: Number(quantity),
                 purchaseNumber,

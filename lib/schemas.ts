@@ -82,7 +82,6 @@ export const purchaseSchema = z.object({
         }, {
             message: "Quantity must be greater than 0",
         }),
-    vendor: z.string(),
     notes: z.string().optional(),
     poNumber: z.string(),
 

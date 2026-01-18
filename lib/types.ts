@@ -1,4 +1,4 @@
-import { PurchaseStatus, RequestStatus } from "@/generated/prisma/enums";
+import { PurchaseStatus } from "@/generated/prisma/enums";
 
 export type StockStatus = "In Stock" | "Low Stock" | "Out of Stock";
 
@@ -49,9 +49,6 @@ export type Purchase = {
   status: PurchaseStatus
   stockItem: { name: string },
   quantity: number
-  vendor: {
-    name: string
-  },
   PO: string
   totalCost: number
 }
