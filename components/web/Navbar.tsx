@@ -28,7 +28,7 @@ export function Navbar() {
      console.log(pathname);
 
      const generateStyling = (link: string) =>{
-        if (pathname !== link){
+        if (!pathname.startsWith(link)){
             return buttonVariants({ variant: "ghost" })
         } else {
             return buttonVariants({ variant: "secondary" })

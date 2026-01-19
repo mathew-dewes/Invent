@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import StockTable from "./_components/StockTable";
 import { Suspense } from "react";
+import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 
 
@@ -22,7 +23,9 @@ export default async function StockPage({searchParams}:
       <Link href={'/stock/new'}><Button>Create Stock</Button></Link>
       
       </div>
-      <Suspense fallback="Loading stock...">
+  
+
+      <Suspense fallback={<TableSkeleton/>}>
       <StockTable filter={filters}/>
       </Suspense>
 

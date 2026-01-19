@@ -5,7 +5,7 @@ import { getAllStock, getStockByStatusCount } from "@/lib/queries/stock";
 export default async function StockTable({filter}:
      {filter: string | undefined}
 ){
-    
+
 const stock = await getAllStock(filter);
 const statusCounts = await getStockByStatusCount();
 

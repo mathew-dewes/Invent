@@ -19,3 +19,5 @@ export const getFilterKey = (pathname: string) =>{
         if (pathname ==="/requests" || "/purchases") return "status"
 
       }
+
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

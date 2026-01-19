@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import PurchaseTable from "./_components/PurchaseTable";
 import { PurchaseStatus } from "@/generated/prisma/enums";
+import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 
 
@@ -20,7 +21,7 @@ export default  async function RequestsPage({searchParams}:
       <Link href={'/purchases/new'}><Button>Create Purchase</Button></Link>
        
       </div>
-      <Suspense fallback={"Loading purchases..."}>
+      <Suspense fallback={<TableSkeleton/>}>
         <PurchaseTable filter={filters} />
       </Suspense>
         </div>

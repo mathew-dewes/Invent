@@ -19,8 +19,10 @@ import { useRouter } from "next/navigation";
 export default function StockForm({vendors}:
     {vendors: Vendor[]}
 ) {
+
+
     const [isPending, startTransition] = useTransition();
-    const router = useRouter()
+    const router = useRouter();
 
     const form = useForm({
         resolver: zodResolver(stockSchema),
@@ -36,6 +38,7 @@ export default function StockForm({vendors}:
 
         }
     });
+
 
     function onSubmit(values: z.infer<typeof stockSchema>) {
         

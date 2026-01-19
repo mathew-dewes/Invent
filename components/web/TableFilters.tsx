@@ -78,15 +78,16 @@ export default function TableFilters({
         f => (queryCounts[f.filter as keyof typeof queryCounts] ?? 0) > 0
       ): filters;
 
-      console.log(visibleFilters.length);
-      
+      const filterLength = visibleFilters.length;
 
+
+  
       
     return (
         <div className="flex gap-4">
-          {visibleFilters.length > 1 && <Button variant={activeQuery ? "outline" : "default"} onClick={clearQuery}>All</Button>}
+          {filterLength > 1 && <Button variant={activeQuery ? "outline" : "default"} onClick={clearQuery}>All</Button>}
 
-      {visibleFilters?.map((filter, key)=>{     
+      {visibleFilters.length > 1 && visibleFilters?.map((filter, key)=>{     
         const query = filter.filter;
       
 
