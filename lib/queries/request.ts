@@ -1,16 +1,14 @@
 "use server";
 
+import { RequestStatus } from "@/generated/prisma/enums";
 import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
 
-export async function getRequests(){
+export async function getRequests(filter?: RequestStatus){
 const userId = await getUserId();
-const stock = await prisma.request.findMany({
+const requests = await prisma.request.findMany({
     where: {
         userId,
-        status:{
-            not: "COMPLETE"
-        }
     },
 
 
@@ -38,8 +36,33 @@ const stock = await prisma.request.findMany({
 
 });
 
+const openRequests = requests.filter(
+    item => item.status === "OPEN"
+);
+const pendingRequests = requests.filter(
+    item => item.status === "PENDING"
+);
+const readyRequests = requests.filter(
+    item => item.status === "READY"
+);
+const completeRequests = requests.filter(
+    item => item.status === "COMPLETE"
+);
 
-return stock;
+if (filter === "OPEN"){
+    return openRequests;
+} else if (filter === "PENDING"){
+    return pendingRequests;
+} else if (filter === "COMPLETE"){
+    return completeRequests;
+} else if (filter === "READY"){
+    return readyRequests;
+} else {
+    return requests;
+}
+
+
+
 }
 
 export async function getCompletedRequests(){

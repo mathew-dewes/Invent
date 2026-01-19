@@ -30,7 +30,6 @@ export default function TableFilters(){
 
       const activeQuery = !!searchParams.get(filterKey);
 
-      console.log(activeQuery);
       
 
       const generateFilters = (pathname: string) =>{

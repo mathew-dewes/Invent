@@ -16,6 +16,6 @@ export function generateStockStatus(currentStock: number, reorderPointAmount: nu
 
 export const getFilterKey = (pathname: string) =>{
         if (pathname ==='/stock') return "stock"
-        if (pathname ==="/requests") return "request-status"
-        if (pathname === "/purchases") return "purchase-status"
+        if (pathname ==="/requests" || "/purchases") return "status"
+
       }
