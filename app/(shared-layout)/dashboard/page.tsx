@@ -1,7 +1,9 @@
 import { Suspense } from "react";
-import StockHealth from "./_components/StockHealth";
-import Operations from "./_components/Operations";
-import RequestsFlow from "./_components/RequestsFlow";
+
+import Inventory from "./_components/Inventory";
+import Requests from "./_components/Requests";
+import Purchases from "./_components/Purchases";
+import MonthlySpend from "./_components/MonthlySpend";
 
 export default function page() {
 
@@ -11,9 +13,12 @@ export default function page() {
             <Suspense fallback={'Loading Stock health data...'}>
                 <div className="flex flex-col gap-6">
                
-                         <StockHealth />
-                        <RequestsFlow/>
-                         <Operations />
+                        <Inventory />
+                        <Requests />
+                        <Purchases/>
+                        <MonthlySpend/>
+                      
+               
                
          
            

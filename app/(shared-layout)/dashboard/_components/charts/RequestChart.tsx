@@ -35,7 +35,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function RequestFlowChart() {
+export function RequestChart() {
   return (
     <Card>
       <CardHeader>

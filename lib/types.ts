@@ -96,3 +96,5 @@ export type Purchase = {
         quantity: number;
     };
 }
+
+export type InventoryStatus = "out" | "low" | "good"
