@@ -1,19 +1,35 @@
 import { Suspense } from "react";
-import StockHealth from "./_components/StockHealth";
 
-export default function page(){
-    
+import Inventory from "./_components/Inventory";
+import Requests from "./_components/Requests";
+import Purchases from "./_components/Purchases";
+import MonthlySpend from "./_components/MonthlySpend";
+
+export default function page() {
+
     return (
         <div>
 
             <Suspense fallback={'Loading Stock health data...'}>
-                     <StockHealth/>
-            </Suspense>
-            
-
-
+                <div className="flex flex-col gap-6">
+               
+                        <Inventory />
+                        <Requests />
+                        <Purchases/>
+                        <MonthlySpend/>
+                      
+               
+               
          
-       
+           
+                </div>
+
+            </Suspense>
+
+
+
+
+
         </div>
     )
 }

@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { StatusCircle } from "@/components/web/StatusCircle";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -20,7 +21,7 @@ type Props = {
 
 }
 
-export async function StockHealthCard({title, values, cardType, href }:Props){
+export async function InventoryCard({title, values, cardType, href }:Props){
 
   const totalQuantity = values.reduce((sum, item)=>{
 return sum + item.quantity
@@ -39,10 +40,19 @@ return sum + item.quantity
   }
 
 
+
+
+
     return (
                 <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle className="text-xl">{title}</CardTitle>
+        <CardTitle className="text-xl">
+          <div className="flex items-center gap-2">
+           <StatusCircle status={cardType}/>
+            <p>{title}</p>
+    
+            </div>
+       </CardTitle>
         <CardDescription>
           {values.map((value, key)=>{
             return <p className="flex gap-1" key={key}><span className="font-semibold text-white/80">{value.name}</span>{totalQuantity > 1 && "- " + value.quantity + " units"}
@@ -59,9 +69,9 @@ return sum + item.quantity
         </div>
 
       </CardContent>
-      <CardFooter className="flex-col gap-2">
+      <CardFooter className="flex-col gap-2 items-start">
       
-            <Link className={cn(buttonVariants({variant: "default"}), 'w-full') } href={href}>View stock</Link>
+            <Link className={cn(buttonVariants({variant: "outline"}),) } href={href}>View stock</Link>
    
       
 
