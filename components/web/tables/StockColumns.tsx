@@ -11,9 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { MoreHorizontal } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
-
-
 import { Stock, StockStatus } from "@/lib/types"
 import StockStatusBadge from "../badges/StockStatusBadge"
 import { generateStockStatus } from "@/lib/helpers"
@@ -31,26 +28,6 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
       {
     id: "select",
     
-    header: ({ table }) => (
-      
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
   },
   {
     accessorKey: "name",

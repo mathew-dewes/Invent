@@ -54,7 +54,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
   {
     accessorKey: "requestNumber",
 
-    header: "#",
+    header: "ID",
   },
   {
     accessorKey: "createdAt",
