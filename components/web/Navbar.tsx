@@ -12,6 +12,7 @@ const { useSession } = authClient;
 
 
 const links = [
+    {href: '/dashboard', label: "Dashboard"},
     {href: '/stock', label: "Stock"},
     {href: '/requests', label: "Requests"},
     {href: '/purchases', label: "Puchases"},

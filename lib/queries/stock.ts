@@ -61,6 +61,14 @@ export async function getAllStock(filter?: string) {
 
 };
 
+export async function getTotalStockCount(){
+      const userId = await getUserId();
+      const stockCount = await prisma.stock.count(
+        {where: {userId}}
+      );
+      return stockCount;
+}
+
 export async function getStockById(id: string) {
     const userId = await getUserId();
     const stock = await prisma.stock.findUnique({
@@ -117,6 +125,27 @@ const stock = await prisma.stock.findMany({
   return queryCounts
    
 
+};
+
+
+export async function getStockHealthData(){
+          const userId = await getUserId();
+       const data = await prisma.stock.findMany({
+      select:{
+        quantity: true,
+        reorderPoint: true,
+        name:true,
+      },
+      where:{userId}
+    });
+
+      const results = {
+    out: data.filter(s => s.quantity === 0),
+    low: data.filter(s => s.quantity > 0 && s.quantity < s.reorderPoint),
+    good: data.filter(s => s.quantity > s.reorderPoint),
+  };
+
+  return results
 }
 
 export async function getStockNames() {
