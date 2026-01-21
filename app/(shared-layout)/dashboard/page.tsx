@@ -14,9 +14,10 @@ export default function page() {
                 <div className="flex flex-col gap-6">
                
                         <Inventory />
-                        {/* <Requests /> */}
+                        <Requests />
+                        <MonthlySpend/>
                         <Purchases/>
-                        {/* <MonthlySpend/> */}
+            
        
                 </div>
 

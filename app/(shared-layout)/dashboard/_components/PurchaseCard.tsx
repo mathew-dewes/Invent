@@ -40,7 +40,6 @@ const formatNames = (names: string[]) => {
 
 const vendors = getVendors()
 
-console.log(vendors);
 
 
     return (

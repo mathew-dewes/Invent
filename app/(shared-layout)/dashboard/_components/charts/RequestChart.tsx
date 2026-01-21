@@ -30,14 +30,14 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 
-const data = [
-  { name: "Open", requests: 21, status: "OPEN" as RequestStatus  },
-  { name: "Pending", requests: 5, status: "PENDING" as RequestStatus  },
-  { name: "Ready", requests: 11, status: "READY" as RequestStatus  },
+// const data = [
+//   { name: "Open", requests: 21, status: "OPEN" as RequestStatus  },
+//   { name: "Pending", requests: 5, status: "PENDING" as RequestStatus  },
+//   { name: "Ready", requests: 11, status: "READY" as RequestStatus  },
 
 
  
-];
+// ];
 
 function getBarColor(status: RequestStatus) {
   switch (status) {
@@ -97,7 +97,7 @@ return `You have ${activeRequestCount} requests needing attention`
               content={<ChartTooltipContent hideLabel />}
             />
             <Bar dataKey="requests"  radius={8}>
-                          {data.map((entry, index) => (
+                          {chartData.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={getBarColor(entry.status)} />
           ))}
             </Bar>

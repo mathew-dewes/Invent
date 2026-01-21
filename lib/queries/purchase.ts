@@ -130,3 +130,40 @@ export async function getPuchaseCardData(){
 
     return request;
 }
+
+export async function getPurchaseChartData(){
+          const userId = await getUserId();
+
+          const data = await prisma.purchase.groupBy({
+            by: ["status"],
+            where:{userId},
+            _count:{
+                _all:true
+            }
+          });
+
+          const statusMap = {
+DELAYED: "Delayed",
+  PLACED: "Placed",
+  RECEIVED: "Received",
+
+
+} as const;
+
+const base = Object.keys(statusMap).map(status => ({
+  name: statusMap[status as keyof typeof statusMap],
+  purchases: 0,
+  status: status as PurchaseStatus,
+}));
+
+const formatted = base.map(item => {
+  const found = data.find(d => d.status === item.status);
+
+  return {
+    ...item,
+    purchases: found ? found._count._all : 0,
+  };
+});
+
+return formatted
+}
