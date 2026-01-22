@@ -3,12 +3,15 @@ import { Suspense } from "react";
 import RequestTable from "./_components/RequestTable";
 import { RequestStatus } from "@/generated/prisma/enums";
 import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
-
 export default async function RequestsPage({searchParams}:
   {searchParams: Promise<{status: RequestStatus}>}
 ){
 
   const filters = ((await searchParams).status);
+
+
+ 
+  
 
 
     return (

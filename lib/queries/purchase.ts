@@ -32,14 +32,19 @@ export async function getPurchases(filter?: PurchaseStatus){
         }
     });
 
+          const serialisedPurchases = purchases.map(item => ({
+    ...item,
+    totalCost: item.totalCost.toString(), // safest for money
+  }));
 
-    const placedPurchases = purchases.filter(
+
+    const placedPurchases = serialisedPurchases.filter(
         item => item.status ===  "PLACED"
     );
-    const delayedPurchases = purchases.filter(
+    const delayedPurchases = serialisedPurchases.filter(
         item => item.status ===  "DELAYED"
     );
-    const receivedPurchases = purchases.filter(
+    const receivedPurchases = serialisedPurchases.filter(
         item => item.status ===  "RECEIVED"
     );
 
@@ -52,7 +57,7 @@ export async function getPurchases(filter?: PurchaseStatus){
         return receivedPurchases;
     } else {
 
-    return purchases;
+    return serialisedPurchases;
     }
 
 }
