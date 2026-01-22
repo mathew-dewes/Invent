@@ -56,7 +56,7 @@ if (filter === "OPEN"){
 } else if (filter === "READY"){
     return readyRequests;
 } else {
-    return openRequests;
+    return requests;
 }
 
 

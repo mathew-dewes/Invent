@@ -104,8 +104,16 @@ export async function getStockById(id: string) {
 
     });
 
+  
 
-    return stock;
+  if (!stock) return null;
+
+  const serialisedStock = {
+    ...stock,
+    unitCost: stock.unitCost.toString(),
+  };
+
+  return serialisedStock;
 
 };
 

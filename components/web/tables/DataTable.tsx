@@ -63,6 +63,8 @@ export function DataTable<TData extends BaseRow, TValue>({
 
 
    const pathname = usePathname();
+
+
   
    function generateSelectedTable(){
     if (pathname === "/requests") return 'Requests';
@@ -150,7 +152,11 @@ const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses)
           }
           className="max-w-sm"
         />
- <TableFilters queryCounts={queryCounts}/>
+        <div onClick={() => table.setRowSelection({})}>
+          <TableFilters queryCounts={queryCounts}/>
+
+        </div>
+ 
    
           </div>
 

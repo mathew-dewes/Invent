@@ -58,6 +58,9 @@ export default function TableFilters({
       function setQueryFilter(term: string, filter: string){
    const params = new URLSearchParams(searchParams);
 
+
+   
+
   
    if (term){
     params.set(filter, term)
@@ -80,21 +83,33 @@ export default function TableFilters({
 
       const filterLength = visibleFilters.length;
 
+      console.log(visibleFilters);
+
+ 
+
 
   
       
     return (
         <div className="flex gap-4">
-          {filterLength > 1 && <Button variant={activeQuery ? "outline" : "default"} onClick={clearQuery}>All</Button>}
-
-      {visibleFilters.length > 1 && visibleFilters?.map((filter, key)=>{     
+      {visibleFilters.length > 0 && visibleFilters?.map((filter, key)=>{     
         const query = filter.filter;
 
     
     
 
         return   <Button 
-        onClick={()=>setQueryFilter(query, filterKey!)} 
+        onClick={()=>{
+          
+          if (
+            searchParams.get("status") === filter.filter ||
+            searchParams.get("stock") === filter.filter){
+            clearQuery()
+            
+          } else {
+          setQueryFilter(query, filterKey!)}} 
+          }
+
         key={key} 
         variant={ searchParams.get(filterKey!) !== query  ? "outline" : "default"}
         >{filter.label}</Button>

@@ -22,6 +22,15 @@ import { cancelRequest, changeRequestStatus } from "@/lib/actions/request"
 import { toast } from "sonner"
 import { adjustInventory } from "@/lib/actions/stock"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+
+
+const Path = () =>{
+  const searchParams = useSearchParams().get('status');
+  return searchParams;
+
+}
+
 
 
 export const Requestcolumns: ColumnDef<Request>[] = [
@@ -29,6 +38,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     id: "select",
     header: ({ table }) => (
       <Checkbox
+        hidden={!Path()}
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -39,6 +49,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     ),
     cell: ({ row }) => (
       <Checkbox
+        hidden={!Path()}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
@@ -108,19 +119,8 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
       const requestId = row.original.id;
       const stockId = row.original.stockItem.id;
-      // const stockQuantity = row.original.stockItem.quantity;
       const requestQuantity = row.original.quantity;
-      // const stockItem = row.original.stockItem.name;
       const requestStatus = row.original.status
-
-
-      
-
-
-
-
-
-
 
       return (
         <DropdownMenu>
@@ -198,16 +198,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
                     try {
 
-                      await cancelRequest(formData, requestStatus);
-
-
-
-
-
-
-
-
-
+                      await cancelRequest(formData);
 
                     } catch (error) {
                       console.log(error);
