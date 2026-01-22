@@ -14,7 +14,7 @@ interface props {
   table: "Requests" | "Purchases" 
   status: RequestStatus | PurchaseStatus
   selectedIds: string[],
-  selectedStatuses: RequestStatus[]
+  selectedStatuses: string[]
 }
 export function MassUpdateButton({ label, table, status ,selectedIds, selectedStatuses }: props){
      const router = useRouter();

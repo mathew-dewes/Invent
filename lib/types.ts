@@ -98,4 +98,16 @@ export type Purchase = {
     };
 }
 
+//  id: string;
+//     createdAt: Date;
+//     PO: string;
+//     purchaseNumber: number;
+//     status: PurchaseStatus;
+//     quantity: number;
+//     totalCost: Decimal;
+//     stockItem: {
+//         quantity: number;
+//         name: string;
+//     };
+
 export type InventoryStatus = "out" | "low" | "good"

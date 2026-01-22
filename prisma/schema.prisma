@@ -105,7 +105,7 @@ model Stock {
   vendor       Vendor     @relation(fields: [vendorId], references: [id])
   user         User       @relation(fields: [userId], references: [id])
   brand        String
-  unitCost     Decimal
+   unitCost     Decimal    @db.Decimal(10, 2)
   maxStock     Int
   reorderPoint Int
   requests     Request[]
@@ -138,7 +138,7 @@ model Purchase {
 
   stockId  String
   quantity Int
-  totalCost Decimal
+  totalCost Float
   userId String
 
   user User @relation(fields: [userId], references: [id])
@@ -161,7 +161,7 @@ model CostLedger {
   stockName String
   vendorName String?
   quantity Int
-  unitCost Decimal
+  unitCost Float
   totalCost Decimal
 
   month Int
@@ -176,7 +176,6 @@ model CostLedger {
 
 enum RequestStatus {
   OPEN
-  PENDING
   READY
   COMPLETE
 }

@@ -36,6 +36,7 @@ const requestStatuses = Object.values(RequestStatus);
 const purchaseStatuses = Object.values(PurchaseStatus);
 
 
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
@@ -43,7 +44,7 @@ interface DataTableProps<TData, TValue> {
   queryCounts?: Record< string, number >
 }
 
-export function DataTable<TData extends { id: string, status: RequestStatus }, TValue>({
+export function DataTable<TData extends { id: string, status: RequestStatus | PurchaseStatus }, TValue>({
   columns,
   data,
   filter,

@@ -148,7 +148,7 @@ export default function StockForm({vendors}:
                                 render={({ field, fieldState }) => (
                                     <Field>
                                         <FieldLabel>Unit cost</FieldLabel>
-                                        <Input type="number" aria-invalid={fieldState.invalid} placeholder="$ cost per unit" {...field} />
+                                        <Input  type="number" aria-invalid={fieldState.invalid} placeholder="$ cost per unit" {...field} />
                                         {fieldState.invalid &&
                                             <FieldError errors={[fieldState.error]} />
                                         }
