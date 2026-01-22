@@ -1,7 +1,9 @@
 "use server";
 
+
 import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
+
 
 export async function getAllStock(filter?: string) {
     const userId = await getUserId();
@@ -33,14 +35,19 @@ export async function getAllStock(filter?: string) {
 
     });
 
-    const inStock = stock.filter(
+      const serialisedStock = stock.map(item => ({
+    ...item,
+    unitCost: item.unitCost.toString(), // safest for money
+  }));
+
+    const inStock = serialisedStock.filter(
         item => item.quantity > item.reorderPoint
     );
-    const lowStock = stock.filter(
+    const lowStock = serialisedStock.filter(
         item => item.quantity !== 0 && item.quantity < item.reorderPoint
     );
 
-    const outOfStock = stock.filter(
+    const outOfStock = serialisedStock.filter(
         item => item.quantity == 0
     );
 
@@ -51,7 +58,7 @@ export async function getAllStock(filter?: string) {
     } else if (filter === "good") {
         return inStock
     } else {
-        return stock
+        return serialisedStock
     }
 
 

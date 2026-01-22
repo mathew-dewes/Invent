@@ -5,6 +5,8 @@ import { stockSchema } from "../schemas";
 import { getUserId } from "./auth";
 import { revalidatePath } from "next/cache";
 import prisma from "../prisma";
+import { Prisma } from "@/generated/prisma/client";
+
 
 
 export async function createStock(values: z.infer<typeof stockSchema>) {
@@ -37,7 +39,7 @@ export async function createStock(values: z.infer<typeof stockSchema>) {
                 location,
                 quantity: Number(quantity),
                 userId,
-                unitCost: Number(unitCost),
+                unitCost: new Prisma.Decimal(unitCost),
                 partNumber,
                 maxStock: Number(maxStock),
                 reorderPoint: Number(reorderPoint),

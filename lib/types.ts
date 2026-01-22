@@ -5,17 +5,18 @@ export type StockStatus = "In Stock" | "Low Stock" | "Out of Stock";
 
 
 export type Stock = {
-  id: string
-  name: string
-  quantity: number
-  location: string
-  reorderPoint: number,
-  maxStock: number,
-  vendor: {
-    name: string
-  },
-  brand: string
-  unitCost: number
+     unitCost: string;
+    id: string;
+    name: string;
+    quantity: number;
+    location: string;
+    brand: string;
+    maxStock: number;
+    reorderPoint: number;
+    status: string
+    vendor: {
+        name: string;
+    };
 }
 
 export type SingleStockItem = {

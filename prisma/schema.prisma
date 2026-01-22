@@ -138,7 +138,7 @@ model Purchase {
 
   stockId  String
   quantity Int
-  totalCost Float
+  totalCost Decimal    @db.Decimal(10, 2)
   userId String
 
   user User @relation(fields: [userId], references: [id])
@@ -161,8 +161,8 @@ model CostLedger {
   stockName String
   vendorName String?
   quantity Int
-  unitCost Float
-  totalCost Decimal
+  unitCost Decimal    @db.Decimal(10, 2)
+  totalCost Decimal    @db.Decimal(10, 2)
 
   month Int
   year Int

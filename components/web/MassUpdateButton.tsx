@@ -33,8 +33,9 @@ export function MassUpdateButton({ label, table, status ,selectedIds, selectedSt
                     router.push(`/requests`);
                     }
                     if (table === "Purchases"){
-                    const res = await massUpdatePurchase(selectedIds, status as PurchaseStatus);
+                    await massUpdatePurchase(selectedIds, status as PurchaseStatus);
                       router.push(`/purchases`);
+                    toast.success("Success")
                     }
 
               
