@@ -43,9 +43,9 @@ export default function LoginPage() {
                   fetchOptions:{
                             onSuccess:()=>{
                                 toast.success("Logged in successfully!");
-                                refetch();           // 🔥 update session immediately
-                                router.refresh();    // refresh server components
-                                router.push('/');
+                                refetch();         
+                                router.refresh();   
+                                router.push('/dashboard');
                             },
                             onError: (error)=>{
                                 toast.error(error.error.message)

@@ -49,7 +49,8 @@ export type Request = {
   id: string,
   createdAt: Date,
   requestNumber: number,
-  customer: string
+  customer: string,
+  status: RequestStatus
   stockItem: {
     id: string
     name: string
@@ -96,5 +97,17 @@ export type Purchase = {
         quantity: number;
     };
 }
+
+//  id: string;
+//     createdAt: Date;
+//     PO: string;
+//     purchaseNumber: number;
+//     status: PurchaseStatus;
+//     quantity: number;
+//     totalCost: Decimal;
+//     stockItem: {
+//         quantity: number;
+//         name: string;
+//     };
 
 export type InventoryStatus = "out" | "low" | "good"

@@ -36,6 +36,7 @@ const requestStatuses = Object.values(RequestStatus);
 const purchaseStatuses = Object.values(PurchaseStatus);
 
 
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
@@ -43,7 +44,7 @@ interface DataTableProps<TData, TValue> {
   queryCounts?: Record< string, number >
 }
 
-export function DataTable<TData extends { id: string }, TValue>({
+export function DataTable<TData extends { id: string, status: RequestStatus | PurchaseStatus }, TValue>({
   columns,
   data,
   filter,
@@ -105,6 +106,30 @@ export function DataTable<TData extends { id: string }, TValue>({
   .getSelectedRowModel()
   .rows
   .map((row) => row.original.id);
+
+  const selectedStatuses = table
+  .getSelectedRowModel()
+  .rows
+  .map((row) => row.original.status);
+
+
+const allEqual = (arr: string[]) => arr.every( v => v === arr[0] );
+const completeSelected = selectedStatuses.includes("COMPLETE");
+
+const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses)
+
+
+  if (onlyCompletedSelected){
+    console.log('Entry includes COMPLETED');
+    
+  }
+  
+
+  // console.log(allEqual(selectedStatuses));
+  
+
+
+  
 
 
 
@@ -229,12 +254,24 @@ export function DataTable<TData extends { id: string }, TValue>({
                       await delay(500)
                       table.setRowSelection({})
                     } } className="mt-2 flex gap-5">
-                      {statuses?.map((status, key)=>{
-                        return  <MassUpdateButton key={key} table={selectedTable} status={status} selectedIds={selectedStockIds} label={ "MARK "+ status}/>
+                      {!onlyCompletedSelected && statuses?.map((status, key)=>{
+                        return  <MassUpdateButton key={key} table={selectedTable} status={status} selectedIds={selectedStockIds} selectedStatuses={selectedStatuses} label={ "MARK "+ status}/>
                       })}
+                      <Button variant={"destructive"} size={"sm"} className="cursor-pointer hover:bg-primary">CANCEL</Button>
           
           
                     </div>
+                    {completeSelected && 
+                        <div className={`mt-5`}>
+                      <p className="font-semibold">Attention:</p>
+                      <ul className="mt-1 list-disc space-y-1 text-sm text-muted-foreground">
+                        <li>Canceling completed requests will replenish inventory*</li>
+                        <li className={`${onlyCompletedSelected ? "hidden" : ""}`}>Completed requests statuses are fixed and wont be included in the mass update*</li>
+                      </ul>
+            
+                    </div>}
+                
+             
 
                </div>}
       

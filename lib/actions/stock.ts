@@ -6,31 +6,30 @@ import { getUserId } from "./auth";
 import { revalidatePath } from "next/cache";
 import prisma from "../prisma";
 
+
 export async function createStock(values: z.infer<typeof stockSchema>) {
 
-    const userId = await getUserId();
+    const userId = await getUserId()
 
     try {
         const parsed = stockSchema.safeParse(values);
+
+   
+        
 
         if (!parsed.success) {
             console.error('Validation errors:', parsed.error);
             throw new Error('Validation failed');
         };
 
+  
+        
+
         const { name, brand, location, quantity, vendorId, unitCost, partNumber, maxStock, reorderPoint } = parsed.data;
-        console.log({
-            name,
-            brand,
-            location,
-            quantity,
-            vendorId,
-            unitCost,
-            partNumber,
-            maxStock,
-            reorderPoint,
-            userId
-        });
+    
+
+
+        
         await prisma.stock.create({
             data: {
                 name,

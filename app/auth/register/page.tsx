@@ -38,7 +38,7 @@ export default function SignUpPage() {
 
     function onSubmit(values: z.infer<typeof signUpSchema>) {
         startTransition(async ()=>{
-            const {data, error} = await authClient.signUp.email({
+            const { error } = await authClient.signUp.email({
             email: values.email,
             name: values.name,
             password: values.password,
@@ -47,7 +47,7 @@ export default function SignUpPage() {
                                 toast.success("Logout successful");
                                 refetch();           // 🔥 update session immediately
                                 router.refresh();    // refresh server components
-                                router.push('/');
+                                router.push('/dashboard');
                             },
                             onError: (error)=>{
                                 toast.error(error.error.message)
@@ -56,7 +56,7 @@ export default function SignUpPage() {
    
             
         })
-               console.log(data);
+          
                if (error) console.log(error);
            
                

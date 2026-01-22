@@ -6,6 +6,7 @@ import { getUserId } from "./auth";
 import prisma from "../prisma";
 import { revalidatePath } from "next/cache";
 import { RequestStatus } from "@/generated/prisma/enums";
+import { error } from "console";
 
 
 export async function createRequest(values: z.infer<typeof requestSchema>) {
@@ -90,9 +91,46 @@ export async function updateRequest(values: z.infer<typeof requestSchema>, reque
 
 };
 
-export async function massUpdateRequests(requestsIds: string[], status: RequestStatus){
+export async function cancelRequest(formData: FormData, requestStatus: RequestStatus){
+const userId = await getUserId();
+const requestId = formData.get("requestId") as string;
 
-    if (!status || requestsIds.length === 0) return
+console.log(requestStatus);
+
+
+
+if (!userId || !requestId) return;
+
+try {
+    await prisma.request.delete({
+        where:{userId, id: requestId}
+    });
+
+    revalidatePath('/requests')
+} catch (error) {
+      console.error('Cancel request error:', error);
+        throw error;
+}
+ 
+    
+
+}
+
+export async function massUpdateRequests(requestsIds: string[], updateStatus: RequestStatus, selectedStatuses: RequestStatus[]){
+
+    if (!updateStatus || requestsIds.length === 0) return
+
+    const selectedComplete = selectedStatuses.includes("COMPLETE")
+
+
+
+
+
+  console.log(selectedStatuses.includes("COMPLETE"));
+
+
+  
+
 
        const userId = await getUserId();
 
@@ -101,15 +139,22 @@ export async function massUpdateRequests(requestsIds: string[], status: RequestS
 
         await prisma.request.updateMany({
             data:{
-             status: status as RequestStatus
+             status: updateStatus as RequestStatus
             },
-            where:{id: {in: requestsIds}, userId },
+            where:{id: {in: requestsIds}, userId, status:{not:"COMPLETE"} },
             
             
         })
         
 
         revalidatePath('/requests');
+          if (selectedComplete){
+    
+    return {
+         message: "Completed requests cannot be updated"
+    }
+    
+  }
 
 
     } catch (error) {

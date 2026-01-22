@@ -18,14 +18,10 @@ import { Request } from "@/lib/types"
 import { StockStatus } from "@/lib/types"
 import StockStatusBadge from "../badges/StockStatusBadge"
 import { startTransition } from "react"
-import { changeRequestStatus } from "@/lib/actions/request"
+import { cancelRequest, changeRequestStatus } from "@/lib/actions/request"
 import { toast } from "sonner"
 import { adjustInventory } from "@/lib/actions/stock"
 import Link from "next/link"
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-
 
 
 export const Requestcolumns: ColumnDef<Request>[] = [
@@ -115,6 +111,10 @@ export const Requestcolumns: ColumnDef<Request>[] = [
       // const stockQuantity = row.original.stockItem.quantity;
       const requestQuantity = row.original.quantity;
       // const stockItem = row.original.stockItem.name;
+      const requestStatus = row.original.status
+
+
+      
 
 
 
@@ -134,7 +134,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
 
-            <DropdownMenuItem asChild>
+            <DropdownMenuItem className={`${requestStatus =="COMPLETE" ? "hidden" : ""}`} asChild>
 
 
               <form action={
@@ -188,9 +188,40 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <Link href={`/requests/${requestId}/edit`}><DropdownMenuItem>Edit request</DropdownMenuItem></Link>
+            <Link className={`${requestStatus =="COMPLETE" ? "hidden" : ""}`} href={`/requests/${requestId}/edit`}><DropdownMenuItem>Edit request</DropdownMenuItem></Link>
   
-            <DropdownMenuItem>Cancel request</DropdownMenuItem>
+            <DropdownMenuItem>
+                       <form action={
+                (formData) => {
+                  startTransition(async () => {
+
+
+                    try {
+
+                      await cancelRequest(formData, requestStatus);
+
+
+
+
+
+
+
+
+
+
+                    } catch (error) {
+                      console.log(error);
+                      toast.error("There was error deleting this stock item")
+
+                    }
+                  })
+
+                }
+              }>
+                <input type="hidden" name="requestId" value={requestId} />
+                <button type="submit">{requestStatus == "COMPLETE" ? "Cancel" : "Delete"} Request</button>
+              </form>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
