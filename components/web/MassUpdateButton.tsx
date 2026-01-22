@@ -29,7 +29,13 @@ export function MassUpdateButton({ label, table, status ,selectedIds, selectedSt
                 try {
                     if (table === "Requests"){
                     const res = await massUpdateRequests(selectedIds, status as RequestStatus, selectedStatuses as RequestStatus[]);
-                    toast.success(res?.message)
+                    if (res?.parialUpdate){
+                        toast.success("Mass update successful")
+                   
+                    } else {
+                       toast.success("Mass update successful")
+                    }
+                 
                     router.push(`/requests`);
                     }
                     if (table === "Purchases"){

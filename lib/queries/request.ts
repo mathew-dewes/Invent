@@ -36,12 +36,12 @@ const requests = await prisma.request.findMany({
 
 });
 
+
+
 const openRequests = requests.filter(
     item => item.status === "OPEN"
 );
-const pendingRequests = requests.filter(
-    item => item.status === "PENDING"
-);
+
 const readyRequests = requests.filter(
     item => item.status === "READY"
 );
@@ -51,14 +51,12 @@ const completeRequests = requests.filter(
 
 if (filter === "OPEN"){
     return openRequests;
-} else if (filter === "PENDING"){
-    return pendingRequests;
 } else if (filter === "COMPLETE"){
     return completeRequests;
 } else if (filter === "READY"){
     return readyRequests;
 } else {
-    return requests;
+    return openRequests;
 }
 
 
@@ -138,7 +136,6 @@ export async function getRequestsByStatusCount(){
 
         const queryCounts = {
             OPEN:requests.filter(q => q.status === "OPEN").length,
-            PENDING: requests.filter(q => q.status === "PENDING").length,
             READY: requests.filter(q => q.status === "READY").length,
             COMPLETE: requests.filter(q => q.status === "COMPLETE").length
         }

@@ -6,7 +6,6 @@ import { getUserId } from "./auth";
 import prisma from "../prisma";
 import { revalidatePath } from "next/cache";
 import { RequestStatus } from "@/generated/prisma/enums";
-import { error } from "console";
 
 
 export async function createRequest(values: z.infer<typeof requestSchema>) {
@@ -91,11 +90,10 @@ export async function updateRequest(values: z.infer<typeof requestSchema>, reque
 
 };
 
-export async function cancelRequest(formData: FormData, requestStatus: RequestStatus){
+export async function cancelRequest(formData: FormData){
 const userId = await getUserId();
 const requestId = formData.get("requestId") as string;
 
-console.log(requestStatus);
 
 
 
@@ -116,44 +114,58 @@ try {
 
 }
 
+export async function cancelRequests(requestIds: string[]){
+    const userId = await getUserId();
+
+    if (!requestIds) return;
+
+    try {
+        await prisma.request.deleteMany({
+            where:{id: {in: requestIds}, userId}
+        });
+
+revalidatePath('/requests');
+    } catch (error) {
+            console.error('Create request error:', error);
+        throw error;
+    }
+
+
+}
+
 export async function massUpdateRequests(requestsIds: string[], updateStatus: RequestStatus, selectedStatuses: RequestStatus[]){
-
+const userId = await getUserId();
     if (!updateStatus || requestsIds.length === 0) return
+   
 
-    const selectedComplete = selectedStatuses.includes("COMPLETE")
-
-
-
+    const selectedComplete = selectedStatuses.includes("COMPLETE");
 
 
-  console.log(selectedStatuses.includes("COMPLETE"));
 
 
-  
-
-
-       const userId = await getUserId();
 
     try {
     
-
-        await prisma.request.updateMany({
+         await prisma.request.updateMany({
             data:{
              status: updateStatus as RequestStatus
             },
             where:{id: {in: requestsIds}, userId, status:{not:"COMPLETE"} },
             
             
-        })
+        });
         
-
         revalidatePath('/requests');
+        
           if (selectedComplete){
     
     return {
-         message: "Completed requests cannot be updated"
+        success: true, parialUpdate: true, message: "Completed requests cannot be updated"
     }
     
+  } else {
+
+    return {success: true, message:requestsIds.length + " requests were updated"}
   }
 
 

@@ -89,12 +89,14 @@ export default function TableFilters({
 
       {visibleFilters.length > 1 && visibleFilters?.map((filter, key)=>{     
         const query = filter.filter;
-      
+
+    
+    
 
         return   <Button 
         onClick={()=>setQueryFilter(query, filterKey!)} 
         key={key} 
-        variant={ filter.filter !== searchParams.get(filterKey!) ? "outline" : "default"}
+        variant={ searchParams.get(filterKey!) !== query  ? "outline" : "default"}
         >{filter.label}</Button>
       })}
     

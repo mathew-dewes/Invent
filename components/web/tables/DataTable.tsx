@@ -31,6 +31,7 @@ import { useState } from "react"
 import { usePathname } from "next/navigation";
 import { PurchaseStatus, RequestStatus } from "@/generated/prisma/enums"
 import { delay } from "@/lib/helpers"
+import MassCancelButton from "../MassCancelButton"
 
 const requestStatuses = Object.values(RequestStatus);
 const purchaseStatuses = Object.values(PurchaseStatus);
@@ -261,7 +262,7 @@ const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses)
                       {!onlyCompletedSelected && statuses?.map((status, key)=>{
                         return  <MassUpdateButton key={key} table={selectedTable} status={status} selectedIds={selectedStockIds} selectedStatuses={selectedStatuses} label={ "MARK "+ status}/>
                       })}
-                      <Button variant={"destructive"} size={"sm"} className="cursor-pointer hover:bg-primary">CANCEL</Button>
+                     <MassCancelButton selectedIds={selectedStockIds} table="Requests" />
           
           
                     </div>
