@@ -24,7 +24,6 @@ export type SingleStockItem = {
   location: string;
   brand: string;
   unitCost: string;
-  maxStock: number;
   reorderPoint: number;
   partNumber: string
   vendor: {

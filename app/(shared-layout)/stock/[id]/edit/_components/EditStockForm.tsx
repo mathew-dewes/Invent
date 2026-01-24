@@ -33,7 +33,6 @@ export default function EditStockForm({vendors, values, stockId}:
             vendorId: values.vendor.id,
             unitCost: String(values.unitCost),
             quantity: String(values.quantity),
-            maxStock: String(values.maxStock),
             reorderPoint: String(values.reorderPoint)
 
         }
@@ -168,20 +167,7 @@ export default function EditStockForm({vendors, values, stockId}:
                                     </Field>
                                 )}
                             />
-                            <Controller name="maxStock" control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field>
-                                        <FieldLabel>Max holding amount</FieldLabel>
-                                        <Input type="number" aria-invalid={fieldState.invalid} placeholder="Max holding amount" {...field} />
-                                        {fieldState.invalid &&
-                                            <FieldError errors={[fieldState.error]} />
-                                        }
-                                    </Field>
-                                )}
-                            />
-                        </div>
-
-                        <Controller name="reorderPoint" control={form.control}
+                                    <Controller name="reorderPoint" control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field>
                                     <FieldLabel>Reorder point</FieldLabel>
@@ -192,6 +178,10 @@ export default function EditStockForm({vendors, values, stockId}:
                                 </Field>
                             )}
                         />
+                   
+                        </div>
+
+                
 
 
 
