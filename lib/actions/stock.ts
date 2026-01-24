@@ -27,7 +27,7 @@ export async function createStock(values: z.infer<typeof stockSchema>) {
   
         
 
-        const { name, brand, location, quantity, vendorId, unitCost, partNumber, maxStock, reorderPoint } = parsed.data;
+        const { name, brand, location, quantity, vendorId, unitCost, partNumber, reorderPoint } = parsed.data;
     
 
 
@@ -41,7 +41,6 @@ export async function createStock(values: z.infer<typeof stockSchema>) {
                 userId,
                 unitCost: new Prisma.Decimal(unitCost),
                 partNumber,
-                maxStock: Number(maxStock),
                 reorderPoint: Number(reorderPoint),
                 vendorId
             }
@@ -70,7 +69,7 @@ export async function updateStock(values: z.infer<typeof stockSchema>, stockId: 
             throw new Error('Validation failed');
         };
 
-        const { name, brand, location, quantity, vendorId, unitCost, partNumber, maxStock, reorderPoint } = parsed.data;
+        const { name, brand, location, quantity, vendorId, unitCost, partNumber, reorderPoint } = parsed.data;
 
         await prisma.stock.update({
             data: {
@@ -81,7 +80,6 @@ export async function updateStock(values: z.infer<typeof stockSchema>, stockId: 
                 userId,
                 unitCost: Number(unitCost),
                 partNumber,
-                maxStock: Number(maxStock),
                 reorderPoint: Number(reorderPoint),
                 vendorId
             },

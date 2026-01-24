@@ -32,14 +32,6 @@ export const stockSchema = z.object({
             message: "Unit cost must be greater than 0",
         }),
 
-
-    maxStock: z.string().min(1, "Unit cost is required")
-        .refine((val) => {
-            const num = Number(val);
-            return !isNaN(num) && num > 1;
-        }, {
-            message: "Max holding amount must be greater than 1",
-        }),
     reorderPoint: z.string().min(1, "Reorder point is required")
         .refine((val) => {
             const num = Number(val);

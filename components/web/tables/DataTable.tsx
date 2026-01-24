@@ -21,7 +21,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  
+
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -32,26 +32,24 @@ import { usePathname } from "next/navigation";
 import { PurchaseStatus, RequestStatus } from "@/generated/prisma/enums"
 import { delay } from "@/lib/helpers"
 import MassCancelButton from "../MassCancelButton"
+import { StockStatus } from "@/lib/types"
 
 const requestStatuses = Object.values(RequestStatus);
 const purchaseStatuses = Object.values(PurchaseStatus);
 
 
-interface BaseRow {
-  id: string;
-  status: string,
-  quantity?: number,
-  stockItem:{id: string}
-}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
   filter: string,
-  queryCounts?: Record< string, number >
-}
+  queryCounts?: Record<string, number>
+};
 
-export function DataTable<TData extends BaseRow, TValue>({
+interface ParsedDataTypes { id: string, stockItem?: { id: string }, quantity: number, status: RequestStatus | PurchaseStatus | StockStatus }
+
+
+export function DataTable<TData extends ParsedDataTypes, TValue>({
   columns,
   data,
   filter,
@@ -64,35 +62,35 @@ export function DataTable<TData extends BaseRow, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
 
-   const pathname = usePathname();
+  const pathname = usePathname();
 
 
-  
-   function generateSelectedTable(){
+
+  function generateSelectedTable() {
     if (pathname === "/requests") return 'Requests';
     if (pathname === "/purchases") return 'Purchases';
     return null
-   
 
-   
-   };
 
-   function generateStatuses(table: string){
+
+  };
+
+  function generateStatuses(table: string) {
     if (table === "Requests") return requestStatuses;
     if (table === "Purchases") return purchaseStatuses;
-     return null
-   
-    
+    return null
+
+
   }
 
-   const selectedTable = generateSelectedTable();
-   const statuses = generateStatuses(selectedTable!)
-   
+  const selectedTable = generateSelectedTable();
+  const statuses = generateStatuses(selectedTable!)
 
-   
+
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    getRowId: (row) => row.id, 
+    getRowId: (row) => row.id,
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -112,42 +110,46 @@ export function DataTable<TData extends BaseRow, TValue>({
   });
 
   const selectedStockIds = table
-  .getSelectedRowModel()
-  .rows
-  .map((row) => row.original.id);
+    .getSelectedRowModel()
+    .rows
+    .map((row) => row.original.id);
 
 
   const stockIdsAndQuantity = table
-  .getSelectedRowModel()
-  .rows
-  .map(({original}) =>({
-    id: original.stockItem?.id,
-    quantity: original.quantity
-  }));
+    .getSelectedRowModel()
+    .rows
+    .map(({ original }) => ({
+      id: original.stockItem?.id,
+      quantity: original.quantity
+    }));
 
   const selectedStatuses = table
-  .getSelectedRowModel()
-  .rows
-  .map((row) => row.original.status);
+    .getSelectedRowModel()
+    .rows
+    .map((row) => row.original.status as RequestStatus | PurchaseStatus);
 
 
 
 
 
-const allEqual = (arr: string[]) => arr.every( v => v === arr[0] );
+  const allEqual = (arr: (RequestStatus | PurchaseStatus)[]) =>
+    arr.every(v => v === arr[0]);
 
 
-const completeSelected = selectedStatuses.includes("COMPLETE");
-
-
-
-
-const openEntries = !selectedStatuses.every(status => [ "RECEIVED", "COMPLETE"].includes(status))
+  const completeSelected = selectedStatuses.includes(RequestStatus.COMPLETE);
 
 
 
 
-const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses);
+
+  const openEntries = !selectedStatuses.every(status =>
+    ["RECEIVED", "COMPLETE"].includes(status)
+  );
+
+
+
+
+  const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses);
 
 
 
@@ -155,25 +157,25 @@ const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses);
 
   return (
     <div>
-        <div className="flex items-center py-4 mt-2">
-          <div className="flex gap-3">
-        <Input
-          placeholder={`Filter ${filter}...`}
-          value={(table.getColumn(filter)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(filter)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <div onClick={() => table.setRowSelection({})}>
-          <TableFilters queryCounts={queryCounts}/>
+      <div className="flex items-center py-4 mt-2">
+        <div className="flex gap-3">
+          <Input
+            placeholder={`Filter ${filter}...`}
+            value={(table.getColumn(filter)?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn(filter)?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+          <div onClick={() => table.setRowSelection({})}>
+            <TableFilters queryCounts={queryCounts} />
 
-        </div>
- 
-   
           </div>
 
-                <DropdownMenu>
+
+        </div>
+
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
               Columns
@@ -202,58 +204,58 @@ const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses);
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
- <div className="overflow-hidden rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
+      <div className="overflow-hidden rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                    </TableHead>
+                  )
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-     
-      
-    </div>
-    
-       <div className="flex items-center justify-end space-x-2 py-4">
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+
+      </div>
+
+      <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
-  {table.getFilteredSelectedRowModel().rows.length} of{" "}
-  {table.getFilteredRowModel().rows.length} row(s) selected.
-</div>
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
         <Button
           variant="outline"
           size="sm"
@@ -272,49 +274,49 @@ const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses);
         </Button>
       </div>
       {selectedStockIds.length > 0 && selectedTable &&
-           <div>
-                    <p>Update (All) selected:</p>
-                    <div onClick={async() =>{
-                      await delay(500)
-                      table.setRowSelection({})
-                    } } className="mt-2 flex gap-5">
-                      {openEntries && statuses?.map((status, key)=>{
+        <div>
+          <p>Update (All) selected:</p>
+          <div onClick={async () => {
+            await delay(500)
+            table.setRowSelection({})
+          }} className="mt-2 flex gap-5">
+            {openEntries && statuses?.map((status, key) => {
 
-                        if (selectedStatuses.includes("READY") && status !== "COMPLETE") return
-                        if (selectedStatuses.includes("OPEN") && status !== "READY") return
-                        if (selectedStatuses.includes(status)) return
-                    
+              if (selectedStatuses.includes("READY") && status !== "COMPLETE") return
+              if (selectedStatuses.includes("OPEN") && status !== "READY") return
+              if (selectedStatuses.includes(status)) return
 
-                        return  <MassUpdateButton key={key} 
-                        table={selectedTable} 
-                        status={status} 
-                        selectedIds={selectedStockIds} 
-                        selectedStatuses={selectedStatuses} 
-                        label={ "MARK "+ status}
-                        stockIdsAndQuantity={stockIdsAndQuantity}
-                        />
-                      })}
-                     <MassCancelButton selectedIds={selectedStockIds} table="Requests" />
-          
-          
-                    </div>
-                    {completeSelected && 
-                        <div className={`mt-5`}>
-                      <p className="font-semibold">Attention:</p>
-                      <ul className="mt-1 list-disc space-y-1 text-sm text-muted-foreground">
-                        <li>Canceling completed requests will replenish inventory*</li>
-                        <li className={`${onlyCompletedSelected ? "hidden" : ""}`}>Completed requests statuses are fixed and wont be included in the mass update*</li>
-                      </ul>
-            
-                    </div>}
-                
-             
 
-               </div>}
-      
+              return <MassUpdateButton key={key}
+                table={selectedTable}
+                status={status}
+                selectedIds={selectedStockIds}
+                selectedStatuses={selectedStatuses}
+                label={"MARK " + status}
+                stockIdsAndQuantity={stockIdsAndQuantity}
+              />
+            })}
+            <MassCancelButton selectedIds={selectedStockIds} table="Requests" />
+
+
+          </div>
+          {completeSelected &&
+            <div className={`mt-5`}>
+              <p className="font-semibold">Attention:</p>
+              <ul className="mt-1 list-disc space-y-1 text-sm text-muted-foreground">
+                <li>Canceling completed requests will replenish inventory*</li>
+                <li className={`${onlyCompletedSelected ? "hidden" : ""}`}>Completed requests statuses are fixed and wont be included in the mass update*</li>
+              </ul>
+
+            </div>}
+
+
+
+        </div>}
+
 
     </div>
-   
-    
+
+
   )
 }

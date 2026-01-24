@@ -19,7 +19,6 @@ export async function getAllStock(filter?: string) {
             name: true,
             location: true,
             reorderPoint: true,
-            maxStock: true,
             vendor: {
                 select: {
                     name: true
@@ -37,7 +36,7 @@ export async function getAllStock(filter?: string) {
 
       const serialisedStock = stock.map(item => ({
     ...item,
-    unitCost: item.unitCost.toString(), // safest for money
+    unitCost: item.unitCost.toString(),
   }));
 
     const inStock = serialisedStock.filter(
@@ -88,7 +87,6 @@ export async function getStockById(id: string) {
             name: true,
             location: true,
             reorderPoint: true,
-            maxStock: true,
             partNumber: true,
             vendor: {
                 select: {

@@ -33,7 +33,6 @@ export default function StockForm({vendors}:
             partNumber: "",
             unitCost: "",
             quantity: "",
-            maxStock: "",
             reorderPoint: ""
 
         }
@@ -169,20 +168,7 @@ export default function StockForm({vendors}:
                                     </Field>
                                 )}
                             />
-                            <Controller name="maxStock" control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field>
-                                        <FieldLabel>Max holding amount</FieldLabel>
-                                        <Input type="number" aria-invalid={fieldState.invalid} placeholder="Max holding amount" {...field} />
-                                        {fieldState.invalid &&
-                                            <FieldError errors={[fieldState.error]} />
-                                        }
-                                    </Field>
-                                )}
-                            />
-                        </div>
-
-                        <Controller name="reorderPoint" control={form.control}
+                                <Controller name="reorderPoint" control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field>
                                     <FieldLabel>Reorder point</FieldLabel>
@@ -193,6 +179,10 @@ export default function StockForm({vendors}:
                                 </Field>
                             )}
                         />
+             
+                        </div>
+
+                    
 
 
 
