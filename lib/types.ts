@@ -92,7 +92,7 @@ export type Purchase = {
     totalCost: string;
     notes?: string | null
     stockItem: {
-        id?: string
+        id: string
         name: string;
         quantity: number;
     };

@@ -38,6 +38,9 @@ export default function TableFilters({
 
       const activeQuery = !!searchParams.get(filterKey);
 
+      console.log(activeQuery);
+      
+
       
 
       const generateFilters = (pathname: string) =>{
@@ -83,7 +86,11 @@ export default function TableFilters({
 
       const filterLength = visibleFilters.length;
 
-      console.log(visibleFilters);
+
+      console.log(filterLength);
+      
+
+
 
  
 
@@ -92,12 +99,12 @@ export default function TableFilters({
       
     return (
         <div className="flex gap-4">
-      {visibleFilters.length > 0 && visibleFilters?.map((filter, key)=>{     
+          <Button
+          hidden={filterLength == 1}
+           variant={ searchParams.get(filterKey) ? "outline" : "default"}
+          onClick={() => clearQuery()}>View All</Button>
+      {filterLength > 1 && visibleFilters.length > 0 && visibleFilters?.map((filter, key)=>{     
         const query = filter.filter;
-
-    
-    
-
         return   <Button 
         onClick={()=>{
           

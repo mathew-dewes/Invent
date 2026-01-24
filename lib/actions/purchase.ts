@@ -6,6 +6,7 @@ import { getUserId } from "./auth";
 import prisma from "../prisma";
 import { PurchaseStatus } from "@/generated/prisma/enums";
 import { revalidatePath } from "next/cache";
+import { massIncreaseStockQuantity } from "../queries/stock";
 
 
 export async function createPurchase(values: z.infer<typeof purchaseSchema>){
@@ -32,7 +33,7 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>){
                     where: {id: item}
                 });
 
-                const totalCost = stockItem!.unitCost * Number(quantity);
+                const totalCost = Number(stockItem!.unitCost)  * Number(quantity);
     
 
         await prisma.purchase.create({
@@ -82,7 +83,7 @@ export async function updatePurchase(values: z.infer<typeof purchaseSchema>, pur
                     where: {id: item}
                 });
 
-                const totalCost = stockItem!.unitCost * Number(quantity);
+                const totalCost = Number(stockItem!.unitCost) * Number(quantity);
     
 
         await prisma.purchase.update({
@@ -107,20 +108,28 @@ export async function updatePurchase(values: z.infer<typeof purchaseSchema>, pur
     }
 }
 
-export async function massUpdatePurchase(purchaseIds: string[], status:  PurchaseStatus | null){
+export async function massUpdatePurchase(stockIds: string[], status:  PurchaseStatus | null, stockIdsAndQuantity: 
+    {id: string | undefined, quantity: number | undefined}[]){
 
-    if (!status || purchaseIds.length === 0) return
+    if (!status || stockIds.length === 0) return
 
        const userId = await getUserId();
 
-    try {
+ 
+    console.log(status);
     
 
+    try {
+
+            if (status === "RECEIVED"){
+        // increase stock QTY
+        await massIncreaseStockQuantity(stockIdsAndQuantity)
+       }
         await prisma.purchase.updateMany({
             data:{
              status: status as PurchaseStatus
             },
-            where:{id: {in: purchaseIds}, userId },
+            where:{id: {in: stockIds}, userId },
             
             
         })

@@ -140,10 +140,6 @@ const userId = await getUserId();
 
     const selectedComplete = selectedStatuses.includes("COMPLETE");
 
-
-
-
-
     try {
     
          await prisma.request.updateMany({

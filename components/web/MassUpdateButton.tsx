@@ -15,8 +15,9 @@ interface props {
   status: RequestStatus | PurchaseStatus
   selectedIds: string[],
   selectedStatuses: string[]
+  stockIdsAndQuantity?: {id: string | undefined, quantity: number | undefined}[]
 }
-export function MassUpdateButton({ label, table, status ,selectedIds, selectedStatuses }: props){
+export function MassUpdateButton({ label, table, status ,selectedIds, selectedStatuses, stockIdsAndQuantity }: props){
      const router = useRouter();
 
      
@@ -38,8 +39,10 @@ export function MassUpdateButton({ label, table, status ,selectedIds, selectedSt
                  
                     router.push(`/requests`);
                     }
-                    if (table === "Purchases"){
-                    await massUpdatePurchase(selectedIds, status as PurchaseStatus);
+                    
+                    if (table === "Purchases" && stockIdsAndQuantity){
+            
+                    await massUpdatePurchase(selectedIds, status as PurchaseStatus, stockIdsAndQuantity);
                       router.push(`/purchases`);
                     toast.success("Success")
                     }
