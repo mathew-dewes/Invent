@@ -10,9 +10,8 @@ export type Stock = {
     quantity: number;
     location: string;
     brand: string;
-    maxStock: number;
     reorderPoint: number;
-    status: string
+    status: StockStatus
     vendor: {
         name: string;
     };
@@ -25,7 +24,6 @@ export type SingleStockItem = {
   location: string;
   brand: string;
   unitCost: string;
-  maxStock: number;
   reorderPoint: number;
   partNumber: string
   vendor: {

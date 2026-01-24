@@ -46,9 +46,6 @@ export default function PurchaseForm({stock, reorderStockId}:
 
                 
                 startTransition(async () => {
-console.log(values);
-
-      
                     
             try {
                await createPurchase(values)

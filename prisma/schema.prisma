@@ -106,7 +106,6 @@ model Stock {
   user         User       @relation(fields: [userId], references: [id])
   brand        String
    unitCost     Decimal    @db.Decimal(10, 2)
-  maxStock     Int
   reorderPoint Int
   requests     Request[]
   purchases    Purchase[]

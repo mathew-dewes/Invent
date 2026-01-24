@@ -19,7 +19,6 @@ export async function getAllStock(filter?: string) {
             name: true,
             location: true,
             reorderPoint: true,
-            maxStock: true,
             vendor: {
                 select: {
                     name: true
@@ -37,7 +36,7 @@ export async function getAllStock(filter?: string) {
 
       const serialisedStock = stock.map(item => ({
     ...item,
-    unitCost: item.unitCost.toString(), // safest for money
+    unitCost: item.unitCost.toString(),
   }));
 
     const inStock = serialisedStock.filter(
@@ -88,7 +87,6 @@ export async function getStockById(id: string) {
             name: true,
             location: true,
             reorderPoint: true,
-            maxStock: true,
             partNumber: true,
             vendor: {
                 select: {
@@ -205,11 +203,38 @@ export async function increaseStockQuantity(stockId: string, inceaseAmount: numb
 
 }
 
-
-
-
 export async function checkInventory(id: string) {
     return await prisma.stock.count({
         where: { id }
     })
+};
+
+
+export async function returnStock(stockIdsAndQuantity: 
+    {id: string | undefined, quantity: number | undefined}[]){
+console.log(stockIdsAndQuantity);
+        const userId = await getUserId();
+
+try {
+    
+    await Promise.all(
+        stockIdsAndQuantity.map(async(item)=>{
+            await prisma.stock.updateMany({
+                where:{userId, id: item.id},
+                data:{
+                    quantity:{
+                        increment: item.quantity
+                    }
+                }
+            })
+        })
+    )
+
+
+} catch (error) {
+       console.error('Stock return error:', error);
+        throw error;
+}
+
+
 }

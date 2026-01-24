@@ -6,8 +6,6 @@ import { getUserId } from "./auth";
 import prisma from "../prisma";
 import { revalidatePath } from "next/cache";
 import { RequestStatus } from "@/generated/prisma/enums";
-import { massDecreaseStockQuantity } from "./stock";
-
 
 export async function createRequest(values: z.infer<typeof requestSchema>) {
 
@@ -132,44 +130,16 @@ revalidatePath('/requests');
     }
 
 
-}
-
-export async function massUpdateRequests(requestsIds: string[], status: RequestStatus, stockIdsAndQuantity: 
-    {id: string | undefined, quantity: number | undefined}[]){
-
-        if (!status || requestsIds.length === 0) return;
-        const userId = await getUserId();
+};
 
 
-    
 
 
-    try {
+export async function updateRequestStatus(requestsIds: string[], status: RequestStatus){
+       const userId = await getUserId();
 
-
-        await Promise.all(
-            stockIdsAndQuantity.map(async(item)=>{
-                    if (!item.id || !item.quantity) return;
-
-                    const res = await prisma.stock.updateMany({
-                        where: {id: item.id},
-                        data:{
-                            quantity:{
-                                decrement: item.quantity
-                            },
-                            
-                        },
-                    
-                    }
-                    )
-                    console.log(res);
-                    
-            })
-            
-        )
-
-    
-         await prisma.request.updateMany({
+       try {
+              await prisma.request.updateMany({
             data:{
              status: status as RequestStatus,
 
@@ -182,16 +152,75 @@ export async function massUpdateRequests(requestsIds: string[], status: RequestS
             
             
         });
-        
-        revalidatePath('/requests');
-        
 
-
-    } catch (error) {
-        console.error('Create request error:', error);
+           revalidatePath('/requests');
+       } catch (error) {
+             console.error('Create request error:', error);
         throw error;
+       }
+
 
     }
+
+
+
+    export async function changeRequestStatus(formData: FormData, status: RequestStatus){
+
+
+    const requestId = formData.get("requestId") as string;
+    const userId = await getUserId();
+
+    if (!requestId || !userId) return;
+
+    try {
+        await prisma.request.update({
+            where:{id: requestId, userId},
+            data:{status}
+        });
+
+        revalidatePath('/requests')
+        return {
+            success: true
+        }
+    } catch (error) {
+         console.error('Request update error:', error);
+        throw error;
+    }
+
+         
+    
+    
+
+
+          
+}
+
+export async function markRequestReady(requestsIds: string[], status: RequestStatus = "READY", stockIdsAndQuantity: 
+    {id: string | undefined, quantity: number | undefined}[]){
+     if (!status || requestsIds.length === 0) return;
+        const userId = await getUserId();
+
+if (status == "READY"){
+
+        await Promise.all(
+            stockIdsAndQuantity.map(async(item)=>{
+               await prisma.stock.updateMany({
+                        where: {id: item.id, userId},
+                        data:{
+                            quantity:{
+                                decrement: item.quantity
+                            },
+                            
+                        },
+                    
+                    }
+                    )
+         
+                    
+            })
+            
+        )
+}
 
 }
 
@@ -216,33 +245,3 @@ export async function generateRequestNumber(): Promise<number>{
 };
 
 
-export async function changeRequestStatus(formData: FormData, status: RequestStatus){
-
-
-    const requestId = formData.get("requestId") as string;
-    const userId = await getUserId();
-
-    if (!requestId || !userId) return;
-
-    try {
-        await prisma.request.update({
-            where:{id: requestId},
-            data:{status}
-        });
-
-        revalidatePath('/requests')
-        return {
-            success: true
-        }
-    } catch (error) {
-         console.error('Request update error:', error);
-        throw error;
-    }
-
-         
-    
-    
-
-
-          
-}

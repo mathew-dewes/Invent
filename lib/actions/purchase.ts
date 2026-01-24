@@ -31,7 +31,7 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>){
 
 
                 const stockItem = await prisma.stock.findUnique({
-                    where: {id: item}
+                    where: {id: item, userId}
                 });
 
                 const totalCost = Number(stockItem!.unitCost)  * Number(quantity);
@@ -116,8 +116,6 @@ export async function massUpdatePurchase(stockIds: string[], status:  PurchaseSt
 
        const userId = await getUserId();
 
- 
-    console.log(status);
     
 
     try {
@@ -199,3 +197,5 @@ export async function changePurchaseStatus(formData: FormData, status: PurchaseS
     
 
 }
+
+

@@ -69,13 +69,8 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
     
   },
   {
-    accessorKey: "maxStock",
-     header: "Max QTY",
-    
-  },
-  {
     accessorKey: "reorderPoint",
-     header: "Reorder QTY",
+     header: "Reorder point",
     
   },
 
