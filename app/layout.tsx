@@ -37,7 +37,12 @@ export default function RootLayout({
 
         {children}
           </main>
- <Toaster closeButton/>
+ <Toaster 
+ duration={4000}
+ closeButton
+ expand
+
+ />
         </ThemeProvider>
 
       </body>

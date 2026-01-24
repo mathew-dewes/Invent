@@ -39,7 +39,9 @@ const purchaseStatuses = Object.values(PurchaseStatus);
 
 interface BaseRow {
   id: string;
-  status: string
+  status: string,
+  quantity?: number,
+  stockItem:{id: string}
 }
 
 interface DataTableProps<TData, TValue> {
@@ -114,29 +116,40 @@ export function DataTable<TData extends BaseRow, TValue>({
   .rows
   .map((row) => row.original.id);
 
+
+  const stockIdsAndQuantity = table
+  .getSelectedRowModel()
+  .rows
+  .map(({original}) =>({
+    id: original.stockItem?.id,
+    quantity: original.quantity
+  }));
+
   const selectedStatuses = table
   .getSelectedRowModel()
   .rows
   .map((row) => row.original.status);
 
 
+
+
+
 const allEqual = (arr: string[]) => arr.every( v => v === arr[0] );
+
+
 const completeSelected = selectedStatuses.includes("COMPLETE");
 
-const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses)
 
 
-  if (onlyCompletedSelected){
-    console.log('Entry includes COMPLETED');
-    
-  }
-  
 
-  // console.log(allEqual(selectedStatuses));
-  
+const openEntries = !selectedStatuses.every(status => [ "RECEIVED", "COMPLETE"].includes(status))
 
 
-  
+
+
+const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses);
+
+
 
 
 
@@ -265,8 +278,21 @@ const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses)
                       await delay(500)
                       table.setRowSelection({})
                     } } className="mt-2 flex gap-5">
-                      {!onlyCompletedSelected && statuses?.map((status, key)=>{
-                        return  <MassUpdateButton key={key} table={selectedTable} status={status} selectedIds={selectedStockIds} selectedStatuses={selectedStatuses} label={ "MARK "+ status}/>
+                      {openEntries && statuses?.map((status, key)=>{
+
+                        if (selectedStatuses.includes("READY") && status !== "COMPLETE") return
+                        if (selectedStatuses.includes("OPEN") && status !== "READY") return
+                        if (selectedStatuses.includes(status)) return
+                    
+
+                        return  <MassUpdateButton key={key} 
+                        table={selectedTable} 
+                        status={status} 
+                        selectedIds={selectedStockIds} 
+                        selectedStatuses={selectedStatuses} 
+                        label={ "MARK "+ status}
+                        stockIdsAndQuantity={stockIdsAndQuantity}
+                        />
                       })}
                      <MassCancelButton selectedIds={selectedStockIds} table="Requests" />
           

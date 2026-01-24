@@ -186,6 +186,28 @@ export async function getStockNames() {
 }
 
 
+export async function increaseStockQuantity(stockId: string, inceaseAmount: number){
+     const userId = await getUserId();
+     
+    try {
+        await prisma.stock.update({
+            where:{userId, id: stockId},
+            data:{
+                quantity:{
+                    increment: inceaseAmount
+                }
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        
+    }
+
+}
+
+
+
+
 export async function checkInventory(id: string) {
     return await prisma.stock.count({
         where: { id }

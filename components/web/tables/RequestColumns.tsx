@@ -25,6 +25,7 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 
 
+
 const Path = () =>{
   const searchParams = useSearchParams().get('status');
   return searchParams;
@@ -120,7 +121,9 @@ export const Requestcolumns: ColumnDef<Request>[] = [
       const requestId = row.original.id;
       const stockId = row.original.stockItem.id;
       const requestQuantity = row.original.quantity;
-      const requestStatus = row.original.status
+      const requestStatus = row.original.status;
+
+
 
       return (
         <DropdownMenu>
@@ -134,7 +137,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
 
-            <DropdownMenuItem className={`${requestStatus =="COMPLETE" ? "hidden" : ""}`} asChild>
+            <DropdownMenuItem className={`${["READY", "COMPLETE"].includes(requestStatus) ? "hidden" : ""}`} asChild>
 
 
               <form action={
@@ -148,7 +151,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
                       if (inventory?.success) {
 
-                        const result = await changeRequestStatus(formData, 'COMPLETE');
+                        const result = await changeRequestStatus(formData, 'READY');
 
 
                         if (result?.success) {
@@ -163,14 +166,37 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
                       }
 
+                    } catch (error) {
+                      console.log(error);
+                      toast.error("There was error deleting this stock item")
+
+                    }
+                  })
+
+                }
+              }>
+                <input type="hidden" name="requestId" value={requestId} />
+                <button type="submit">Mark as Ready</button>
+              </form>
 
 
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem className={`${["OPEN", "COMPLETE"].includes(requestStatus) ?  "hidden" : ""}`} asChild>
 
 
+              <form action={
+                (formData) => {
+                  startTransition(async () => {
 
 
+                    try {
 
+                     await changeRequestStatus(formData, 'COMPLETE');
 
+       
+
+  
 
                     } catch (error) {
                       console.log(error);

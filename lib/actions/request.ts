@@ -6,6 +6,7 @@ import { getUserId } from "./auth";
 import prisma from "../prisma";
 import { revalidatePath } from "next/cache";
 import { RequestStatus } from "@/generated/prisma/enums";
+import { massDecreaseStockQuantity } from "./stock";
 
 
 export async function createRequest(values: z.infer<typeof requestSchema>) {
@@ -133,40 +134,57 @@ revalidatePath('/requests');
 
 }
 
-export async function massUpdateRequests(requestsIds: string[], updateStatus: RequestStatus, selectedStatuses: RequestStatus[]){
-const userId = await getUserId();
-    if (!updateStatus || requestsIds.length === 0) return
-   
+export async function massUpdateRequests(requestsIds: string[], status: RequestStatus, stockIdsAndQuantity: 
+    {id: string | undefined, quantity: number | undefined}[]){
 
-    const selectedComplete = selectedStatuses.includes("COMPLETE");
-
+        if (!status || requestsIds.length === 0) return;
+        const userId = await getUserId();
 
 
+    
 
 
     try {
+
+
+        await Promise.all(
+            stockIdsAndQuantity.map(async(item)=>{
+                    if (!item.id || !item.quantity) return;
+
+                    const res = await prisma.stock.updateMany({
+                        where: {id: item.id},
+                        data:{
+                            quantity:{
+                                decrement: item.quantity
+                            },
+                            
+                        },
+                    
+                    }
+                    )
+                    console.log(res);
+                    
+            })
+            
+        )
+
     
          await prisma.request.updateMany({
             data:{
-             status: updateStatus as RequestStatus
+             status: status as RequestStatus,
+
+             
+             
             },
-            where:{id: {in: requestsIds}, userId, status:{not:"COMPLETE"} },
+            where:{id: {in: requestsIds}, userId, 
+            
+  },
             
             
         });
         
         revalidatePath('/requests');
         
-          if (selectedComplete){
-    
-    return {
-        success: true, parialUpdate: true, message: "Completed requests cannot be updated"
-    }
-    
-  } else {
-
-    return {success: true, message:requestsIds.length + " requests were updated"}
-  }
 
 
     } catch (error) {

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PurchaseStatus, RequestStatus } from "@/generated/prisma/enums";
 import { massUpdatePurchase } from "@/lib/actions/purchase";
 import { massUpdateRequests } from "@/lib/actions/request";
+import { checkInventory } from "@/lib/actions/stock";
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
 import { toast } from "sonner";
@@ -15,8 +16,9 @@ interface props {
   status: RequestStatus | PurchaseStatus
   selectedIds: string[],
   selectedStatuses: string[]
+  stockIdsAndQuantity?: {id: string | undefined, quantity: number | undefined}[]
 }
-export function MassUpdateButton({ label, table, status ,selectedIds, selectedStatuses }: props){
+export function MassUpdateButton({ label, table, status ,selectedIds, stockIdsAndQuantity }: props){
      const router = useRouter();
 
      
@@ -26,20 +28,38 @@ export function MassUpdateButton({ label, table, status ,selectedIds, selectedSt
         disabled={selectedIds.length === 0}
         onClick={()=>{
             startTransition(async()=>{
+
+                if (!stockIdsAndQuantity) return;
+                
                 try {
                     if (table === "Requests"){
-                    const res = await massUpdateRequests(selectedIds, status as RequestStatus, selectedStatuses as RequestStatus[]);
-                    if (res?.parialUpdate){
-                        toast.success("Mass update successful")
-                   
-                    } else {
-                       toast.success("Mass update successful")
+
+                    const inventoryCheck = await checkInventory(stockIdsAndQuantity);
+                           console.log(inventoryCheck);
+                    
+                    
+                if (inventoryCheck.ok || status == "COMPLETE"){
+
+                    await massUpdateRequests(selectedIds, status as RequestStatus, stockIdsAndQuantity);
+                router.push(`/requests?status=${status}`);
+                    } 
+                    
+                    else{
+                         toast.info("Stock level is insufficient")
+                        inventoryCheck.insufficient!.map((error)=>{
+                        toast.info(error.name + " = " + error.available + " units available")
+                        })
+                  
                     }
                  
-                    router.push(`/requests`);
+           
+                 
+ 
                     }
+                    
                     if (table === "Purchases"){
-                    await massUpdatePurchase(selectedIds, status as PurchaseStatus);
+            
+                    await massUpdatePurchase(selectedIds, status as PurchaseStatus, stockIdsAndQuantity);
                       router.push(`/purchases`);
                     toast.success("Success")
                     }
