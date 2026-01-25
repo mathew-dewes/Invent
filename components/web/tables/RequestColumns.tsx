@@ -20,15 +20,24 @@ import StockStatusBadge from "../badges/StockStatusBadge"
 import { startTransition } from "react"
 import { cancelRequest, changeRequestStatus } from "@/lib/actions/request"
 import { toast } from "sonner"
-import { adjustInventory } from "@/lib/actions/stock"
+import {checkSingleStockItemQuantity, decreaseStockQuantity } from "@/lib/actions/stock"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 
 
-
-const Path = () =>{
+const HideCheckboxes = () =>{
   const searchParams = useSearchParams().get('status');
-  return searchParams;
+
+
+  console.log(searchParams);
+  
+
+  if (searchParams == "COMPLETE" || !searchParams){
+    return true
+  } else{
+
+    return false
+  }
 
 }
 
@@ -39,7 +48,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     id: "select",
     header: ({ table }) => (
       <Checkbox
-        hidden={!Path()}
+        hidden={HideCheckboxes()}
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -50,7 +59,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     ),
     cell: ({ row }) => (
       <Checkbox
-        hidden={!Path()}
+        hidden={HideCheckboxes()}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
@@ -94,10 +103,21 @@ export const Requestcolumns: ColumnDef<Request>[] = [
   },
   {
     accessorKey: "quantity",
-    header: () => <div>Quantity</div>,
+    header: () => <div>Requested</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("quantity"))
       return <div className="font-medium">{amount}</div>
+    },
+  },
+  {
+    accessorKey: "stockItem.quantity",
+    header: () => <div>Stock QTY</div>,
+    cell: ({ row }) => {
+          const stockCount = row.original.stockItem?.quantity ?? 0;
+          console.log(row.original);
+          
+
+      return <div className="font-medium text-red-400">{stockCount}</div>
     },
   },
 
@@ -141,30 +161,26 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
 
               <form action={
-                (formData) => {
+                () => {
                   startTransition(async () => {
 
 
                     try {
+                      // Check inventory amount of selected stock item
+                      const inventoryCheck = await checkSingleStockItemQuantity(stockId, requestQuantity);
 
-                      const inventory = await adjustInventory(stockId, requestQuantity, requestId);
-
-                      if (inventory?.success) {
-
-                        const result = await changeRequestStatus(formData, 'READY');
-
-
-                        if (result?.success) {
-                          toast.success(`Request updated`);
-                        } else {
-                          toast.error("Inventory too low")
-                        }
-
+                      if (inventoryCheck.success){
+                        await decreaseStockQuantity(stockId, requestQuantity);
+                        await changeRequestStatus(requestId, "READY")
+                        toast.success("Inventory check success!");
+            
+            
                       } else {
-
-                        toast.error(inventory?.message)
-
+                        toast.warning("Insufficient stock levels")
                       }
+                    
+
+            
 
                     } catch (error) {
                       console.log(error);
@@ -175,7 +191,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
                 }
               }>
-                <input type="hidden" name="requestId" value={requestId} />
+          
                 <button type="submit">Mark as Ready</button>
               </form>
 
@@ -186,13 +202,13 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
 
               <form action={
-                (formData) => {
+                () => {
                   startTransition(async () => {
 
 
                     try {
 
-                     await changeRequestStatus(formData, 'COMPLETE');
+                     await changeRequestStatus(requestId, 'COMPLETE');
 
        
 

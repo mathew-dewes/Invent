@@ -21,9 +21,15 @@ import { changePurchaseStatus } from "@/lib/actions/purchase"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 
-const Path = () =>{
+const HideCheckboxes = () =>{
   const searchParams = useSearchParams().get('status');
-  return searchParams;
+
+  if (searchParams == "RECEIVED" || !searchParams){
+    return true
+  } else{
+
+    return false
+  }
 
 }
 
@@ -33,7 +39,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     id: "select",
     header: ({ table }) => (
       <Checkbox
-           hidden={!Path()}
+           hidden={HideCheckboxes()}
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -44,7 +50,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     ),
     cell: ({ row }) => (
       <Checkbox
-           hidden={!Path()}
+           hidden={HideCheckboxes()}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"

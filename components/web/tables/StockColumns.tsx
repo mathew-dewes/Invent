@@ -107,14 +107,18 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/stock/${stockId}/edit`}><DropdownMenuItem>Edit Stock</DropdownMenuItem></Link>
 
             <DropdownMenuItem>
-              <Link href={`/purchases/new?reorder=${stockId}`}>Reorder stock</Link>
+              <Link href={`/stock/${stockId}/edit`}>Edit</Link>
+            </DropdownMenuItem>
+            <Link href={`/stock/${stockId}/edit`}><DropdownMenuItem>Edit</DropdownMenuItem></Link>
+
+            <DropdownMenuItem>
+              <Link href={`/purchases/new?reorder=${stockId}`}>Reorder</Link>
               </DropdownMenuItem> 
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Copy vendor email</DropdownMenuItem>
+
                         <DropdownMenuItem asChild>
 
 
@@ -134,7 +138,8 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
                 }
                 }>
                   <input type="hidden" name="id" value={stockId} />
-              <button type="submit">Delete stock</button>
+                  {/* <Button  size={"sm"} variant={"destructive"}>Delete</Button> */}
+              <button className="cursor-pointer" type="submit">Delete</button>
               </form>
 
               
