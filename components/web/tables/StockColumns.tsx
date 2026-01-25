@@ -111,7 +111,7 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
             <DropdownMenuItem>
               <Link href={`/stock/${stockId}/edit`}>Edit</Link>
             </DropdownMenuItem>
-            <Link href={`/stock/${stockId}/edit`}><DropdownMenuItem>Edit</DropdownMenuItem></Link>
+  
 
             <DropdownMenuItem>
               <Link href={`/purchases/new?reorder=${stockId}`}>Reorder</Link>

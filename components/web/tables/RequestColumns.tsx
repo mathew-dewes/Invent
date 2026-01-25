@@ -110,19 +110,20 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
 
       
-      return <div className={`${status == "COMPLETE" ? "hidden" : requestQuantity > stockQuantity ? "text-red-400" : ""}`}>{amount}</div>
+      return <div className={`${status !== "OPEN" ? "hidden" : requestQuantity > stockQuantity ? "text-red-400" : "text-green-400"}`}>{amount}</div>
     },
   },
 
 
   {
     accessorKey: "stockItem.quantity",
-    header: () => <div className={`${HideFields() ? "hidden" : ""}`}>Stock QTY</div>,
+    header: () => <div>Stock QTY</div>,
     cell: ({ row }) => {
           const stockQuantity = row.original.stockItem?.quantity ?? 0;
+             const status = row.original.status;
   
         
-      return <div className={'font-medium'}>{stockQuantity}</div>
+      return <div className={`${status !== "OPEN" ? "hidden" : ""}`}>{stockQuantity}</div>
     },
   },
 

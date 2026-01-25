@@ -26,7 +26,12 @@ export async function getPurchases(filter?: PurchaseStatus){
                 select:{
                     name: true,
                     quantity: true,
-                    id: true
+                    id: true,
+                    vendor:{
+                        select:{
+                            name: true
+                        }
+                    }
                 }
             }
 

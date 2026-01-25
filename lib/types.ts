@@ -93,6 +93,9 @@ export type Purchase = {
         id: string
         name: string;
         quantity: number;
+        vendor:{
+          name: string
+        }
     };
 }
 

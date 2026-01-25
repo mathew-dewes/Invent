@@ -99,7 +99,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
 
 
   {
-    accessorKey: "vendor.name",
+    accessorKey: "stockItem.vendor.name",
     header: ({ column }) => {
       return (
         <Button
@@ -111,6 +111,12 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
         </Button>
       )
     },
+    cell:({row})=>{
+      
+
+      const vendor = row.original.stockItem.vendor.name
+      return vendor
+    }
     
   },
 
