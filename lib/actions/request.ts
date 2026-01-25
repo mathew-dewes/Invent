@@ -164,10 +164,7 @@ export async function updateRequestStatus(requestsIds: string[], status: Request
 
 
 
-    export async function changeRequestStatus(formData: FormData, status: RequestStatus){
-
-
-    const requestId = formData.get("requestId") as string;
+    export async function changeRequestStatus(requestId: string, status: RequestStatus){
     const userId = await getUserId();
 
     if (!requestId || !userId) return;
@@ -178,7 +175,7 @@ export async function updateRequestStatus(requestsIds: string[], status: Request
             data:{status}
         });
 
-        revalidatePath('/requests')
+        revalidatePath('/requests');
         return {
             success: true
         }

@@ -339,3 +339,54 @@ export async function checkInventory(stockRequests:{
 
 
 }
+
+export async function checkSingleStockItemQuantity(stockId: string, requestedQuantity: number){
+const userId = await getUserId();
+
+try {
+    const stockItem = await prisma.stock.count({
+        where:{userId, id: stockId, quantity:{
+            gte: requestedQuantity
+        }},
+      
+    });
+
+    if (stockItem > 0){
+
+        return {
+            success: true
+        }
+    } else {
+
+        return {
+            success: false
+        }
+    }
+
+
+
+
+} catch (error) {
+    console.log(error);
+    throw error
+    
+}
+};
+
+export async function decreaseStockQuantity(stockId:string, increaseQuantity: number){
+const userId = await getUserId();
+
+try {
+    await prisma.stock.update({
+        where:{userId, id: stockId},
+        data:{quantity:{
+            decrement:increaseQuantity
+        }}
+    })
+} catch (error) {
+    console.log("Stock adjustment failed", error);
+    throw error
+    
+    
+}
+}

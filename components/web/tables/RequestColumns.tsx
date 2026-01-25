@@ -20,15 +20,21 @@ import StockStatusBadge from "../badges/StockStatusBadge"
 import { startTransition } from "react"
 import { cancelRequest, changeRequestStatus } from "@/lib/actions/request"
 import { toast } from "sonner"
-import { adjustInventory } from "@/lib/actions/stock"
+import {checkSingleStockItemQuantity, decreaseStockQuantity } from "@/lib/actions/stock"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 
 
-
-const Path = () =>{
+const HideFields = () =>{
   const searchParams = useSearchParams().get('status');
-  return searchParams;
+  
+
+  if (searchParams == "COMPLETE" && !searchParams){
+    return true
+  } else{
+
+    return false
+  }
 
 }
 
@@ -39,7 +45,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     id: "select",
     header: ({ table }) => (
       <Checkbox
-        hidden={!Path()}
+        hidden={HideFields()}
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -50,7 +56,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     ),
     cell: ({ row }) => (
       <Checkbox
-        hidden={!Path()}
+        hidden={HideFields()}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
@@ -94,10 +100,30 @@ export const Requestcolumns: ColumnDef<Request>[] = [
   },
   {
     accessorKey: "quantity",
-    header: () => <div>Quantity</div>,
+    header: () => <div className={`${HideFields() ? "hidden" : ""}`}>Requested</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("quantity"))
-      return <div className="font-medium">{amount}</div>
+      const amount = parseFloat(row.getValue("quantity"));
+    const stockQuantity = row.original.stockItem?.quantity ?? 0;
+          const requestQuantity = row.original.quantity;
+          const status = row.original.status;
+
+
+
+      
+      return <div className={`${status !== "OPEN" ? "hidden" : requestQuantity > stockQuantity ? "text-red-400" : "text-green-400"}`}>{amount}</div>
+    },
+  },
+
+
+  {
+    accessorKey: "stockItem.quantity",
+    header: () => <div>Stock QTY</div>,
+    cell: ({ row }) => {
+          const stockQuantity = row.original.stockItem?.quantity ?? 0;
+             const status = row.original.status;
+  
+        
+      return <div className={`${status !== "OPEN" ? "hidden" : ""}`}>{stockQuantity}</div>
     },
   },
 
@@ -122,6 +148,9 @@ export const Requestcolumns: ColumnDef<Request>[] = [
       const stockId = row.original.stockItem.id;
       const requestQuantity = row.original.quantity;
       const requestStatus = row.original.status;
+      const stockQuantity = row.original.stockItem?.quantity ?? 0;
+    
+
 
 
 
@@ -134,37 +163,34 @@ export const Requestcolumns: ColumnDef<Request>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+      
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+      
 
-
-            <DropdownMenuItem className={`${["READY", "COMPLETE"].includes(requestStatus) ? "hidden" : ""}`} asChild>
+            <DropdownMenuItem className={`${["READY", "COMPLETE"].includes(requestStatus) || requestQuantity > stockQuantity ? "hidden" : ""}`} asChild>
 
 
               <form action={
-                (formData) => {
+                () => {
                   startTransition(async () => {
 
 
                     try {
+                      // Check inventory amount of selected stock item
+                      const inventoryCheck = await checkSingleStockItemQuantity(stockId, requestQuantity);
 
-                      const inventory = await adjustInventory(stockId, requestQuantity, requestId);
-
-                      if (inventory?.success) {
-
-                        const result = await changeRequestStatus(formData, 'READY');
-
-
-                        if (result?.success) {
-                          toast.success(`Request updated`);
-                        } else {
-                          toast.error("Inventory too low")
-                        }
-
+                      if (inventoryCheck.success){
+                        await decreaseStockQuantity(stockId, requestQuantity);
+                        await changeRequestStatus(requestId, "READY")
+                        toast.success("Inventory check success!");
+            
+            
                       } else {
-
-                        toast.error(inventory?.message)
-
+                        toast.warning("Insufficient stock levels")
                       }
+                    
+
+            
 
                     } catch (error) {
                       console.log(error);
@@ -175,7 +201,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
                 }
               }>
-                <input type="hidden" name="requestId" value={requestId} />
+          
                 <button type="submit">Mark as Ready</button>
               </form>
 
@@ -186,13 +212,13 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
 
               <form action={
-                (formData) => {
+                () => {
                   startTransition(async () => {
 
 
                     try {
 
-                     await changeRequestStatus(formData, 'COMPLETE');
+                     await changeRequestStatus(requestId, 'COMPLETE');
 
        
 

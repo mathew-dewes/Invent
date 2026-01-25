@@ -27,6 +27,8 @@ export default function MassCancelButton({ table, selectedIds, status, stockIdsA
         
         } else if (table == 'Requests' && status == "COMPLETE"){
             return 'Cancel and restock'
+        } else {
+            return 'Delete'
         }
     }
 
@@ -40,12 +42,15 @@ export default function MassCancelButton({ table, selectedIds, status, stockIdsA
                         await cancelRequests(selectedIds);
                         toast("Delete Successful")
                         router.push(`/requests`);
+                    } else if (table == "Purchases" && status =="RECEIVED") {
+                    
+                      
                     } else {
+
                         await returnStock(stockIdsAndQuantity);
                         await cancelRequests(selectedIds);
                         router.push(`/requests`);
                         toast.info("Inventory was updated");
-                      
                     }
 
                 } catch (error) {
