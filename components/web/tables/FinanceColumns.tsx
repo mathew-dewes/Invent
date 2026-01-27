@@ -10,16 +10,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal, ArrowUpDown } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 
 
-import { Purchase, StockStatus } from "@/lib/types"
-import StockStatusBadge from "../badges/StockStatusBadge"
+import { Finance } from "@/lib/types"
+
 import { startTransition } from "react"
-import { markReceived } from "@/lib/actions/purchase"
+import { changePurchaseStatus } from "@/lib/actions/purchase"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import { Badge } from "@/components/ui/badge"
+
 
 const HideCheckboxes = () =>{
   const searchParams = useSearchParams().get('status');
@@ -34,7 +36,7 @@ const HideCheckboxes = () =>{
 }
 
 
-export const Purchasecolumns: ColumnDef<Purchase>[] = [
+export const Financecolumns: ColumnDef<Finance>[] = [
       {
     id: "select",
     header: ({ table }) => (
@@ -59,10 +61,10 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  {
-    accessorKey: "purchaseNumber",
+      {
+    accessorKey: "reference",
 
-    header: "ID",
+    header: "Reference",
   },
   {
     accessorKey: "createdAt",
@@ -79,14 +81,17 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
   },
   },
   {
-    accessorKey: "status",
-    cell:({row}) => <StockStatusBadge status={row.getValue("status") as StockStatus}/>,
-    header: "Status",
+    accessorKey: "type",
+    cell:({row}) => 
+      <Badge variant={"secondary"}>{row.getValue("type")}</Badge>,
+    header: "Type",
   },
    {
-    accessorKey: "stockItem.name",
-    header: "Item",
+    accessorKey: "stockName",
+    header: "Stock item",
   },
+
+
       {
     accessorKey: "quantity",
       header: () => <div>Quantity</div>,
@@ -96,40 +101,22 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     },
   },
 
-
-
-  {
-    accessorKey: "stockItem.vendor.name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Vendor
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
+   {
+    accessorKey: "unitCost",
+      header: () => <div>Unit Cost</div>,
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("unitCost"))
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount)
+ 
+      return <div className="font-medium">{formatted}</div>
     },
-    cell:({row})=>{
-      
-
-      const vendor = row.original.stockItem.vendor.name
-      return vendor
-    }
-    
   },
-
-    {
-    accessorKey: "PO",
-
-    header: "PO#",
-  },
-
-
    {
     accessorKey: "totalCost",
-      header: () => <div>Cost</div>,
+      header: () => <div>Total Cost</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("totalCost"))
       const formatted = new Intl.NumberFormat("en-US", {
@@ -139,6 +126,10 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
  
       return <div className="font-medium">{formatted}</div>
     },
+  },
+    {
+    accessorKey: "plantNumber",
+    header: "Plant",
   },
 
 
@@ -166,13 +157,11 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
 
 
               <form action={
-                () => {
+                (formData) => {
                   startTransition(async () => {
 
                     try {
-
-                      await markReceived(purchaseId, purchaseQuantity)
-              
+                      await changePurchaseStatus(formData, "RECEIVED");
                     } catch (error) {
                       console.log(error);
                       

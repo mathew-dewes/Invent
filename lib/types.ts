@@ -1,4 +1,4 @@
-import { PurchaseStatus, RequestStatus } from "@/generated/prisma/enums";
+import { FinanceType, PurchaseStatus, RequestStatus } from "@/generated/prisma/enums";
 export type StockStatus = "In Stock" | "Low Stock" | "Out of Stock";
 
 
@@ -99,16 +99,24 @@ export type Purchase = {
     };
 }
 
-//  id: string;
-//     createdAt: Date;
-//     PO: string;
-//     purchaseNumber: number;
-//     status: PurchaseStatus;
-//     quantity: number;
-//     totalCost: Decimal;
-//     stockItem: {
-//         quantity: number;
-//         name: string;
-//     };
+export type Finance = {
+   totalCost: string;
+    id: string;
+    createdAt: Date;
+    type: FinanceType;
+    requestId: string | null;
+    purchaseId: string | null;
+    stockId: string;
+    vendorId: string | null;
+    userId: string;
+    reference: string;
+    plantNumber: string | null;
+    stockName: string;
+    vendorName: string | null;
+    quantity: number;
+    unitCost: string;
+    month: number;
+    year: number;
+}
 
 export type InventoryStatus = "out" | "low" | "good"

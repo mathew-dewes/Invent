@@ -262,11 +262,12 @@ export async function createLedger(type: FinanceType, recordId: string) {
         const stockName = request?.stockItem.name;
         const vendorName = request?.stockItem.vendor.name;
         const unitCost = request?.stockItem.unitCost;
+        const requestNumber = request?.requestNumber
 
-        if (!request || !stockName || !vendorName || !unitCost) return
+        if (!request || !stockName || !vendorName || !unitCost ||  !requestNumber) return
 
 
-        await createRequestLedger(request, stockName, vendorName, unitCost,)
+        await createRequestLedger(request, stockName, vendorName, unitCost, String(requestNumber))
     
     } else {
 
@@ -284,16 +285,17 @@ export async function createLedger(type: FinanceType, recordId: string) {
         const stockName = purchase?.stockItem.name;
         const vendorName = purchase?.vendor.name;
         const unitCost = purchase?.stockItem.unitCost;
+        const reference = purchase?.PO
 
         if (!purchase || !stockName || !vendorName || !unitCost) return
 
-        await createPurchaseLedger(purchase, stockName, vendorName, unitCost)
+        await createPurchaseLedger(purchase, stockName, vendorName, unitCost, String(reference))
     }
 
 
 };
 
-export async function createPurchaseLedger(purchase: Purchase, stockName: string, vendorName: string, unitCost: Decimal) {
+export async function createPurchaseLedger(purchase: Purchase, stockName: string, vendorName: string, unitCost: Decimal, reference: string) {
     await prisma.costLedger.create({
         data: {
             type: "PURCHASE",
@@ -306,14 +308,15 @@ export async function createPurchaseLedger(purchase: Purchase, stockName: string
             unitCost,
             totalCost: purchase.totalCost,
             month: new Date().getMonth() + 1,
-            year: new Date().getFullYear()
+            year: new Date().getFullYear(),
+            reference
 
 
 
         }
     })
 };
-export async function createRequestLedger(request: Request, stockName: string, vendorName: string, unitCost: Decimal) {
+export async function createRequestLedger(request: Request, stockName: string, vendorName: string, unitCost: Decimal, reference: string) {
     await prisma.costLedger.create({
         data: {
             type: "REQUEST",
@@ -327,7 +330,8 @@ export async function createRequestLedger(request: Request, stockName: string, v
             unitCost,
             totalCost: request.quantity * Number(unitCost),
             month: new Date().getMonth() + 1,
-            year: new Date().getFullYear()
+            year: new Date().getFullYear(),
+            reference
 
 
 

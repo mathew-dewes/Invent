@@ -8,6 +8,7 @@ export default async function PurchaseTable({filter}:
 
     const purchases = await getPurchases(filter);
     const statusCounts = await getPurchaseStatusCount();
+    
     return (
         <DataTable queryCounts={statusCounts} filter="PO" columns={Purchasecolumns} data={purchases}/>
     )

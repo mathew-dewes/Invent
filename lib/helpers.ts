@@ -16,7 +16,9 @@ export function generateStockStatus(currentStock: number, reorderPointAmount: nu
 
 export const getFilterKey = (pathname: string) =>{
         if (pathname ==='/stock') return "stock"
+        if (pathname === "/finance") return "type"
         if (pathname ==="/requests" || "/purchases") return "status"
+ 
 
       }
 
@@ -39,6 +41,11 @@ export const purchaseFilters = [
     {filter:"DELAYED", label: "Delayed"},
 ];
 
+export const financeFilters = [
+    {filter:"REQUEST", label: "Request"},
+    {filter:"PURCHASE", label: "Purchase"},
+];
+
 export const generateFilters = (pathname: string) =>{
           if (pathname === "/stock"){
             return stockFilters
@@ -46,6 +53,8 @@ export const generateFilters = (pathname: string) =>{
             return requestFilters
           } else if (pathname === "/purchases"){
             return purchaseFilters
+          } else if (pathname === "/finance"){
+            return financeFilters
           }
           return []
       }

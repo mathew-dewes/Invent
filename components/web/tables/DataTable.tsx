@@ -29,7 +29,7 @@ import TableFilters from "../TableFilters"
 import { MassUpdateButton } from "../MassUpdateButton"
 import { useState } from "react"
 import { usePathname } from "next/navigation";
-import { PurchaseStatus, RequestStatus } from "@/generated/prisma/enums"
+import { FinanceType, PurchaseStatus, RequestStatus } from "@/generated/prisma/enums"
 import { delay } from "@/lib/helpers"
 import MassCancelButton from "../MassCancelButton"
 import { StockStatus } from "@/lib/types"
@@ -46,7 +46,7 @@ interface DataTableProps<TData, TValue> {
   queryCounts?: Record<string, number>
 };
 
-interface ParsedDataTypes { id: string, stockItem?: { id: string }, quantity: number, status: RequestStatus | PurchaseStatus | StockStatus }
+interface ParsedDataTypes { id: string, stockItem?: { id: string }, quantity: number, status?: RequestStatus | PurchaseStatus | StockStatus, type?: FinanceType }
 
 
 export function DataTable<TData extends ParsedDataTypes, TValue>({
@@ -151,6 +151,7 @@ export function DataTable<TData extends ParsedDataTypes, TValue>({
 
 
   const onlyCompletedSelected = completeSelected && allEqual(selectedStatuses);
+
 
   
 

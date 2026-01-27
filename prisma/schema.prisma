@@ -28,6 +28,7 @@ model User {
   requests      Request[]
   purchases Purchase[]
   costLedger CostLedger[]
+  budget Budget[]
 
   @@unique([email])
   @@map("user")
@@ -158,6 +159,7 @@ model CostLedger {
   stockId String
   vendorId String?
   userId String
+  reference String
 
   plantNumber String?
   stockName String
@@ -172,6 +174,18 @@ model CostLedger {
   user User @relation(fields: [userId], references: [id])
   stock Stock @relation(fields: [stockId], references: [id])
 
+}
+
+model Budget {
+    id             String   @id @default(cuid())
+    createdAt      DateTime @default(now())
+    userId String
+    month Int
+    year Int
+    amount Decimal @db.Decimal(10, 2)
+
+    user User @relation(fields: [userId], references: [id])
+     @@unique([userId, month, year])
 }
 
 

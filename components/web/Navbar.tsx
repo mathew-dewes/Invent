@@ -17,6 +17,7 @@ const links = [
     {href: '/requests', label: "Requests"},
     {href: '/purchases', label: "Puchases"},
     {href: '/vendors', label: "Vendors"},
+    {href: '/finance', label: "Finance"},
 ]
 
 export function Navbar() {
@@ -40,12 +41,12 @@ export function Navbar() {
     return (
         <nav className="w-full py-5 flex items-center justify-between mb-4">
             <div className="flex items-center gap-8">
-                <Link href={'/dashboard'}>
+                <Link className={`${!session ? "pointer-events-none" : ""}`} href={session ? "/dashboard" : "#"}>
                     <h1 className="text-3xl font-bold">Invent
            
                     </h1></Link>
                 <div className="flex items-center gap-2">
-                    {links.map((link, key)=>{
+                    {session && links.map((link, key)=>{
                         return <Link 
                         key={key} 
                         className={generateStyling(link.href)} 
@@ -78,7 +79,7 @@ export function Navbar() {
                         }
                     })}>Logout</Button>
                 ) : <>
-                    <Link className={buttonVariants()} href={'/auth/register'}>Sign up</Link>
+                    <Link className={buttonVariants()} href={'/auth/register'}>Register</Link>
                     <Link className={buttonVariants({ variant: "outline" })} href={'/auth/login'}>Login</Link>
                     </>}
                     <ThemeToggle />

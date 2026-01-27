@@ -214,6 +214,42 @@ export async function changePurchaseStatus(formData: FormData, status: PurchaseS
     }
 
 
+};
+
+
+export async function markReceived(purchaseId: string, stockAmount: number){
+const userId = await getUserId();
+
+try {
+    await prisma.purchase.update({
+        where:{userId, id: purchaseId},
+        data:{
+            status: "RECEIVED",
+            stockItem:{
+                update:{
+                    quantity:{
+                        increment: stockAmount
+                    }
+                }
+            }
+        }
+    });
+
+    await createLedger("PURCHASE", purchaseId);
+
+    revalidatePath('/purchases');
+
+    return {
+        success: true, message:'Purchase marked Received'
+    }
+} catch (error) {
+        console.log(error);
+    throw error;
+   
+    
+    
+}
+
 }
 
 

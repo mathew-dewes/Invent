@@ -57,7 +57,7 @@ export default function TableFilters({
       }
 
      const visibleFilters =  
-     pathname === "/stock" || "/requests" || "/purchases" ?
+     pathname === "/stock" || "/requests" || "/purchases" || "/finance" ?
 
      filters.filter(
         f => (queryCounts[f.filter as keyof typeof queryCounts] ?? 0) > 0
