@@ -29,7 +29,7 @@ const HideFields = () =>{
   const searchParams = useSearchParams().get('status');
   
 
-  if (searchParams == "COMPLETE" && !searchParams){
+  if (searchParams == "COMPLETE" || !searchParams){
     return true
   } else{
 
@@ -37,7 +37,6 @@ const HideFields = () =>{
   }
 
 }
-
 
 
 export const Requestcolumns: ColumnDef<Request>[] = [

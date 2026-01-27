@@ -19,9 +19,6 @@ import { startTransition } from "react"
 import { toast } from "sonner"
 import Link from "next/link"
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-
 
 export const Stockcolumns: ColumnDef<Stock>[] = [
   

@@ -13,12 +13,18 @@ export default async function page({searchParams}:
     return (
                 <div>
   <div className="flex justify-end">
-      <Link href={'/purchases/new'}><Button>Create Purchase</Button></Link>
+      <Link href={'#'}><Button>Export Data</Button></Link>
+      {/* On click of the button above to export all entries taking the search params as the query */}
        
       </div>
       <Suspense fallback={<TableSkeleton/>}>
         <FinanceTable filter={filters}  />
       </Suspense>
+      <div>
+        {/* Budget information can be placed here - Mirroring dashboard */}
+        <Link href={'/finance/budget'}><Button className="cursor-pointer">Manage Budget</Button></Link>
+
+      </div>
         </div>
     )
 }

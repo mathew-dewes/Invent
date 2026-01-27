@@ -238,3 +238,39 @@ try {
 
 
 }
+
+export async function getStockHealthPercentages(){
+    const userId = await getUserId();
+    const stock = await prisma.stock.findMany({
+        where:{userId},
+        select:{
+            quantity: true,
+            reorderPoint: true
+        }
+    });
+
+    const total = stock.length;
+
+    const healthy = stock.filter(
+        s => s.quantity > s.reorderPoint
+    ).length;
+
+    const low = stock.filter(
+        s => s.quantity > 0 && s.quantity <= s.reorderPoint
+    ).length;
+
+
+    const out = stock.filter(
+        s => s.quantity === 0
+    ).length;
+
+const stockHealthPercent = total === 0 ? 0 : Math.round((healthy / total) * 100);
+const lowStockPercent = total === 0 ? 0 : Math.round((low / total) * 100);
+const outStockPercent = total === 0 ? 0 : Math.round((out / total) * 100);
+
+return {
+    percentage: stockHealthPercent,
+    low: lowStockPercent,
+    out: outStockPercent
+}
+}

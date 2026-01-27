@@ -47,7 +47,7 @@ return sum + item.quantity
                 <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle className="text-xl">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 uppercase">
            <StatusCircle status={cardType}/>
             <p>{title}</p>
     

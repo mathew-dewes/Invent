@@ -270,8 +270,6 @@ export async function createLedger(type: FinanceType, recordId: string) {
         await createRequestLedger(request, stockName, vendorName, unitCost, String(requestNumber))
     
     } else {
-
-        console.log(recordId);
         
 
         const purchase = await prisma.purchase.findUnique({
