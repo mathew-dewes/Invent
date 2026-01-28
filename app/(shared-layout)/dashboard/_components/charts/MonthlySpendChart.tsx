@@ -35,30 +35,32 @@ const chartConfig = {
     label: "Spend",
     color: "var(--chart-2)",
   },
-    desktop: {
+  desktop: {
     label: "Desktop",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig
 
-export function MonthlySpendChart({data}:
-  {data:{date: string, spend: number}[]}
+export function MonthlySpendChart({ data }:
+  { data: { date: string, spend: number }[] }
 ) {
-  const [timeRange, setTimeRange] = React.useState("90d")
+  const [timeRange, setTimeRange] = React.useState("30d");
+
 
   const filteredData = data.filter((item) => {
-    const date = new Date(item.date)
-    const referenceDate = new Date("2024-06-30")
-    let daysToSubtract = 90
-    if (timeRange === "30d") {
-      daysToSubtract = 30
-    } else if (timeRange === "7d") {
-      daysToSubtract = 7
-    }
-    const startDate = new Date(referenceDate)
-    startDate.setDate(startDate.getDate() - daysToSubtract)
-    return date >= startDate
-  })
+      const dateStr = item.date;
+        const nowStr = new Date().toISOString().slice(0, 10);
+
+    let daysToSubtract = 30;
+    if (timeRange === "7d") daysToSubtract = 7;
+
+    const startDate = new Date();
+     startDate.setDate(startDate.getDate() - daysToSubtract);
+       const startStr = startDate.toISOString().slice(0, 10);
+   
+
+      return dateStr >= startStr && dateStr <= nowStr;
+  });
 
   return (
     <Card className="pt-0">
@@ -66,7 +68,7 @@ export function MonthlySpendChart({data}:
         <div className="grid flex-1 gap-1">
           <CardTitle>Spend</CardTitle>
           <CardDescription>
-            Showing total spend for the last 3 months
+            Showing total spend for the last 30 days
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
@@ -77,9 +79,6 @@ export function MonthlySpendChart({data}:
             <SelectValue placeholder="Last 3 months" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
-            <SelectItem value="90d" className="rounded-lg">
-              Last 3 months
-            </SelectItem>
             <SelectItem value="30d" className="rounded-lg">
               Last 30 days
             </SelectItem>
@@ -150,7 +149,7 @@ export function MonthlySpendChart({data}:
                 />
               }
             />
-  
+
             <Area
               dataKey="spend"
               type="natural"

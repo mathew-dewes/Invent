@@ -1,4 +1,5 @@
 
+
 import { getBudgetChartData } from "@/lib/queries/budget";
 import BudgetBar from "./BudgetBar";
 
@@ -7,9 +8,11 @@ import { MonthlySpendChart } from "./charts/MonthlySpendChart";
 
 
 
+
 export default async function Budget() {
 
     const chartData = await getBudgetChartData();
+    
 
 
 

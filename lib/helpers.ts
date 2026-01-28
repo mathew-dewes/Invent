@@ -67,35 +67,3 @@ export function decimalToMoney(value: Prisma.Decimal) {
     ).format(value.toNumber())
 };
 
-
-type ChartPoint = {
-  date: string;
-  spend: number;
-};
-
-type Purchase = {
-  createdAt: Date;
-  totalCost: Prisma.Decimal;
-};
-
-
-export function buildSpendChartData(purchases:Purchase[]): ChartPoint[]{
-
-    const map = new Map<string, Prisma.Decimal>();
-
-    for (const p of purchases){
-        const dataKey = p.createdAt.toISOString().split("T")[0];
-
-        const existing = map.get(dataKey) ?? new Prisma.Decimal(0);
-        map.set(dataKey, existing.plus(p.totalCost));
-    }
-
-    return Array.from(map.entries()).
-    sort((a, b) => a[0].localeCompare(b[0])).map(([date, total])=>({
-        date,
-        spend: total.toNumber()
-    }))
-
-
-
-}

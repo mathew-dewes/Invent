@@ -35,6 +35,15 @@ export async function getMonthlyTotalSpend() {
    return spend._sum.totalCost;
 };
 
+function toNZISOString(date: Date) {
+  const d = new Date(date);
+  // get NZ local year/month/day
+  const year = d.getFullYear();
+  const month = (d.getMonth() + 1).toString().padStart(2, "0");
+  const day = d.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`; 
+}
+
 
 type ChartPoint = {
   date: string;
@@ -45,8 +54,9 @@ export async function getBudgetChartData(){
     const userId = await getUserId();
 
 
-    const purchases = await prisma.purchase.findMany({
-        where:{userId},
+
+    const purchases = await prisma.costLedger.findMany({
+        where:{userId, type:"PURCHASE"},
         select:{
             createdAt:true,
             totalCost:true
@@ -56,7 +66,7 @@ export async function getBudgetChartData(){
     const map = new Map<string, Prisma.Decimal>();
 
     for (const p of purchases){
-        const dateKey = p.createdAt.toISOString().slice(0, 10);
+        const dateKey = toNZISOString(p.createdAt);
         const existing = map.get(dateKey) ?? new Prisma.Decimal(0);
         map.set(dateKey, existing.plus(p.totalCost));
     }
@@ -71,7 +81,7 @@ export async function getBudgetChartData(){
     const current = new Date(start);
 
     while (current <= end){
-        const key = current.toISOString().slice(0, 10);
+        const key = toNZISOString(current);
 
         result.push({
             date: key,
