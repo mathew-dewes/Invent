@@ -39,10 +39,8 @@ const customers = getCustomers();
 
 
   
-
-  
     return (
-         <Card className="w-full max-w-sm h-fit">
+         <Card className="w-full  h-fit">
       <CardHeader>
         <CardTitle className="text-xl">
               <div className="flex items-center gap-2 uppercase">

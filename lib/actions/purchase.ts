@@ -11,6 +11,7 @@ import { createLedger } from "./request";
 
 
 
+
 export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
 
 
@@ -221,7 +222,7 @@ export async function markReceived(purchaseId: string, stockAmount: number){
 const userId = await getUserId();
 
 try {
-    await prisma.purchase.update({
+await prisma.purchase.update({
         where:{userId, id: purchaseId},
         data:{
             status: "RECEIVED",
@@ -234,6 +235,8 @@ try {
             }
         }
     });
+
+
 
     await createLedger("PURCHASE", purchaseId);
 

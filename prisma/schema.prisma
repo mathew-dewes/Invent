@@ -91,6 +91,7 @@ model Vendor {
   stock       Stock[]
   purchase    Purchase[]
   user        User       @relation(fields: [userId], references: [id])
+  ledger CostLedger[]
 
   @@unique([userId, name])
 }
@@ -171,6 +172,7 @@ model CostLedger {
   month Int
   year Int
 
+  vendor Vendor? @relation(fields: [vendorId], references: [id])
   user User @relation(fields: [userId], references: [id])
   stock Stock @relation(fields: [stockId], references: [id])
 

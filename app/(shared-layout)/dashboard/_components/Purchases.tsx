@@ -20,16 +20,19 @@ export default async function Purchases() {
     return (
         <div className="border-2 p-3 rounded-xl bg-secondary">
             <h1 className="font-semibold text-xl py-3 ml-1">Purchases</h1>
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-6 gap-3">
                 <div className="col-span-2">
                     <PurchaseChart chartData={chartData} activeRequestCount={urgentPurchaseCount} />
                 </div>
 
-                <div className="col-span-2 flex flex-col gap-5">
+                <div className="col-span-4 flex flex-col gap-5">
                     <div className="grid grid-cols-2 gap-3">
-                        {delayedPurchases.length > 0 && <PurchaseCard title="Delayed" status="DELAYED" purchases={delayedPurchases} total={delayedPurchases.length} />}
-                        {placedPurchases.length > 0 && <PurchaseCard title="Placed" status="PLACED" purchases={placedPurchases} total={placedPurchases.length} />}
-                        {receivedPurchases.length > 0 && <PurchaseCard title="Received" status="RECEIVED" purchases={receivedPurchases} total={receivedPurchases.length} />}
+                        <PurchaseCard title="Delayed" status="DELAYED" purchases={delayedPurchases} total={delayedPurchases.length} />
+                        <PurchaseCard title="Placed" status="PLACED" purchases={placedPurchases} total={placedPurchases.length} />
+                        <div className="col-span-2 w-full">
+                        <PurchaseCard title="Received" status="RECEIVED" purchases={receivedPurchases} total={receivedPurchases.length} />
+                        </div>
+                   
 
 
                     </div>

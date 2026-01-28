@@ -131,6 +131,10 @@ export const Financecolumns: ColumnDef<Finance>[] = [
     accessorKey: "plantNumber",
     header: "Plant",
   },
+    {
+    accessorKey: "vendor.name",
+    header: "Vendor",
+  },
 
 
   {

@@ -12,14 +12,13 @@ import {
 import { Button } from "@/components/ui/button"
 import { MoreHorizontal, ArrowUpDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
-
-
 import { Purchase, StockStatus } from "@/lib/types"
 import StockStatusBadge from "../badges/StockStatusBadge"
 import { startTransition } from "react"
 import { markReceived } from "@/lib/actions/purchase"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import { toast } from "sonner"
 
 const HideCheckboxes = () =>{
   const searchParams = useSearchParams().get('status');
@@ -171,7 +170,11 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
 
                     try {
 
-                      await markReceived(purchaseId, purchaseQuantity)
+                      const res = await markReceived(purchaseId, purchaseQuantity);
+
+                      if (res.success){
+                        toast.success('Purchase has been charged')
+                      }
               
                     } catch (error) {
                       console.log(error);

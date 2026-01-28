@@ -21,13 +21,13 @@ import { PurchaseStatus } from "@/generated/prisma/enums"
 
 export const description = "A bar chart"
 
-const chartData = [
-  { month: "OPEN", requests: 186 },
-  { month: "PENDING", requests: 305 },
-  { month: "READY", requests: 237 },
-  { month: "COMPLETE", requests: 73 },
+// const chartData = [
+//   { month: "OPEN", requests: 186 },
+//   { month: "PENDING", requests: 305 },
+//   { month: "READY", requests: 237 },
+//   { month: "COMPLETE", requests: 73 },
 
-]
+// ]
 
 const chartConfig = {
   desktop: {
@@ -70,7 +70,7 @@ return `You have ${activeRequestCount} purchase(s) needing attention`
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Active requests by status</CardTitle>
+        <CardTitle>Active purchases</CardTitle>
         <CardDescription>{activeMessage()}</CardDescription>
       </CardHeader>
       <CardContent>

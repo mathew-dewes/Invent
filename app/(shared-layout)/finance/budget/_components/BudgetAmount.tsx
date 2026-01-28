@@ -9,7 +9,7 @@ export default async function BudgetAmount(){
     return (
         <div className="mt-10 flex items-center gap-1">
             <p className="font-semibold">Budget:</p>
-      <p>{decimalToMoney(budgetAmount!.amount!)}</p>
+      <p>{decimalToMoney(budgetAmount)}</p>
         </div>
    
     )

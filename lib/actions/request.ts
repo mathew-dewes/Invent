@@ -267,7 +267,8 @@ export async function createLedger(type: FinanceType, recordId: string) {
         if (!request || !stockName || !vendorName || !unitCost ||  !requestNumber) return
 
 
-        await createRequestLedger(request, stockName, vendorName, unitCost, String(requestNumber))
+        await createRequestLedger(request, stockName, vendorName, unitCost, String(requestNumber));
+        
     
     } else {
         

@@ -8,7 +8,12 @@ export async function getFinanceData(filter?: FinanceType){
     const userId = await getUserId();
 
     const finances = await prisma.costLedger.findMany({
-        where:{userId}
+        where:{userId}, include:{
+            vendor:true
+        },
+        orderBy:{
+            createdAt: "desc"
+        }
     });
 
     const serialisedFinances = finances.map((item) => ({

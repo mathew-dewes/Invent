@@ -3,7 +3,8 @@ import { Suspense } from "react";
 import Inventory from "./_components/Inventory";
 import Requests from "./_components/Requests";
 import Purchases from "./_components/Purchases";
-import MonthlySpend from "./_components/MonthlySpend";
+
+import Budget from "./_components/Budget";
 
 export default function page() {
 
@@ -14,7 +15,7 @@ export default function page() {
                 <div className="flex flex-col gap-6">
                
                         <Inventory />
-                        <MonthlySpend/>
+                        <Budget/>
                         <Requests />
                         <Purchases/>
             
