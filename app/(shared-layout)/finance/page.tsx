@@ -4,6 +4,7 @@ import { FinanceTable } from "./_components/FinanceTable";
 import { Suspense } from "react";
 import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 import { FinanceType } from "@/generated/prisma/enums";
+import ExportCSVButton from "./_components/exportCSVButton";
 
 export default async function page({searchParams}:
   {searchParams: Promise<{type: FinanceType}>}
@@ -13,7 +14,7 @@ export default async function page({searchParams}:
     return (
                 <div>
   <div className="flex justify-end">
-      <Link href={'#'}><Button>Export Data</Button></Link>
+      <Link href={'#'}><ExportCSVButton/></Link>
       {/* On click of the button above to export all entries taking the search params as the query */}
        
       </div>

@@ -10,6 +10,10 @@ export async function FinanceTable({filter}:
     const finances = await getFinanceData(filter);
     const financeTypeCount = await getFinanceTypeCount();
 
+    console.log(finances);
+    
+    
+
     
     
 return (
