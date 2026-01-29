@@ -6,9 +6,7 @@ import { getRequestCardData, getRequestChartData } from "@/lib/queries/request";
 
 export default async function Requests() {
 
-
-    const requests = await getRequestCardData();
-    const chartData = await getRequestChartData();
+const [requests, chartData] = await Promise.all([getRequestCardData(), getRequestChartData()])
 
     const urgentRequestCount = requests.filter((i => (i.status !=="COMPLETE" && i.status !== "READY" ))).length
     const completedRequests = requests.filter((i => i.status === "COMPLETE"));

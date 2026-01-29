@@ -1,7 +1,6 @@
 
 import { InventoryCard } from "./InventoryCard";
 import { getStockHealthData, 
-  // getTotalStockCount 
 } from "@/lib/queries/stock";
 import HealthBar from "./HealthBar";
 

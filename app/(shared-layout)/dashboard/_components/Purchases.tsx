@@ -5,10 +5,7 @@ import PurchaseCard from "./PurchaseCard";
 
 export default async function Purchases() {
 
-    const purchases = await getPuchaseCardData();
-    const chartData = await getPurchaseChartData();
-
-
+    const [purchases, chartData] = await Promise.all([getPuchaseCardData(), getPurchaseChartData()])
 
 
     const urgentPurchaseCount = purchases.filter((i => i.status !== "RECEIVED")).length

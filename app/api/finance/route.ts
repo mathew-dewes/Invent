@@ -1,4 +1,3 @@
-// app/api/export/finance/route.ts
 import { NextResponse } from "next/server";
 import { Parser } from "json2csv";
 import prisma from "@/lib/prisma";
