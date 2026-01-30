@@ -134,6 +134,21 @@ export const Financecolumns: ColumnDef<Finance>[] = [
     {
     accessorKey: "vendor.name",
     header: "Vendor",
+    cell:({row})=>{
+      
+      const vendorName = row.original.vendorName;
+      return vendorName ?? "-"
+    }
+  },
+    {
+    accessorKey: "requestee",
+    header: "Customer",
+    cell:({row})=>{
+      console.log(row.original);
+      
+      const customer = row.original.requestee;
+      return customer ?? "-"
+    }
   },
 
 

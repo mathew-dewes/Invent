@@ -3,14 +3,27 @@
 import { FinanceType } from "@/generated/prisma/enums";
 import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
+import { getStartDate } from "../helpers";
+import { TimeFrame } from "../types";
 
-export async function getFinanceData(filter?: FinanceType){
+
+
+
+export async function getFinanceData(filter?: FinanceType, timeFrame?:TimeFrame){
     const userId = await getUserId();
 
+    const startDate = getStartDate(timeFrame)
+
+
     const finances = await prisma.costLedger.findMany({
-        where:{userId}, include:{
-            vendor:true
+        where:{userId, 
+            createdAt:{
+                gte: startDate
+            }
         },
+    
+        
+    
         orderBy:{
             createdAt: "desc"
         }
@@ -19,7 +32,7 @@ export async function getFinanceData(filter?: FinanceType){
     const serialisedFinances = finances.map((item) => ({
         ...item,
         totalCost: item.totalCost.toString(),
-        unitCost: item.unitCost.toString()
+        unitCost: item.unitCost.toString(),
     }));
 
     const requests = serialisedFinances.filter(

@@ -389,4 +389,34 @@ try {
     
     
 }
+};
+
+
+export async function updateSingleStockItemQuantity(stockId:string, updateAmount: number){
+    const userId = await getUserId();
+
+    try {
+       const item = await prisma.stock.update({
+            where:{userId, id: stockId},
+            data:{
+                quantity: updateAmount
+            },
+            select:{
+                name:true,
+                quantity:true
+            }
+        });
+
+        revalidatePath('/stock')
+
+        return {
+            success: true, message: `${item.name} updated`
+        }
+    } catch (error) {
+        console.log('Stock quantity updated failed' ,error)
+          return {
+            success: false, message: `Update failed`
+        }
+    }
+
 }

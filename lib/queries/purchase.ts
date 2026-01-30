@@ -156,8 +156,8 @@ export async function getPurchaseChartData(){
 
           const statusMap = {
 DELAYED: "Delayed",
-  PLACED: "Placed",
-  RECEIVED: "Received",
+PLACED: "Placed",
+
 
 
 } as const;

@@ -1,9 +1,20 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
+import { TimeFrame } from "@/lib/types";
 
-export default function ExportCSVButton(){
+export default function ExportCSVButton({ timeFrame }: { timeFrame: TimeFrame }) {
+
+
+    function exportData() {
+        if (timeFrame) {
+            window.open(`/api/finance?timeFrame=${timeFrame}`)
+        } else {
+            window.open(`/api/finance`)
+        }
+
+    }
     return (
-        <Button onClick={()=> window.open("/api/finance")}>Export Data</Button>
+        <Button onClick={() => exportData()}>Export Data</Button>
     )
 }

@@ -15,7 +15,7 @@ export default async function BudgetBar(){
 
 
       return (
-      <div className="ml-2">
+      <div>
         <p>Your current spend for this month is zero</p>
         <p>You will need to set a budget, create a vendor and make a purchase for the dashboard to sync</p>
         <div className="mt-2">

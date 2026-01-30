@@ -274,3 +274,16 @@ return {
     out: outStockPercent
 }
 }
+
+export async function getStockNameAndQuantityById(stockId: string){
+    const userId = await getUserId();
+    const stockItem = await prisma.stock.findUnique({
+        where:{userId, id: stockId},
+        select:{
+            name: true,
+            quantity:true
+        }
+    });
+
+    return stockItem
+}

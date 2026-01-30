@@ -117,6 +117,9 @@ export type Finance = {
     unitCost: string;
     month: number;
     year: number;
+    requestee: string | null;
 }
 
-export type InventoryStatus = "out" | "low" | "good"
+export type InventoryStatus = "out" | "low" | "good";
+
+export type TimeFrame = "day" | "week" | "month" | "year";

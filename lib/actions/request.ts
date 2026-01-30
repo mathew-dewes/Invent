@@ -256,30 +256,31 @@ export async function createLedger(type: FinanceType, recordId: string) {
 
         });
 
-      
-        
+
+
 
         const stockName = request?.stockItem.name;
         const vendorName = request?.stockItem.vendor.name;
         const unitCost = request?.stockItem.unitCost;
-        const requestNumber = request?.requestNumber
+        const requestNumber = request?.requestNumber;
+        const customer = request?.customer
 
-        if (!request || !stockName || !vendorName || !unitCost ||  !requestNumber) return
+        if (!request || !stockName || !vendorName || !unitCost || !requestNumber || !customer) return
 
 
-        await createRequestLedger(request, stockName, vendorName, unitCost, String(requestNumber));
-        
-    
+        await createRequestLedger(request, stockName, unitCost, String(requestNumber), customer);
+
+
     } else {
-        
+
 
         const purchase = await prisma.purchase.findUnique({
             where: { userId, id: recordId },
             include: { stockItem: true, vendor: true }
         });
 
-    
-        
+
+
 
         const stockName = purchase?.stockItem.name;
         const vendorName = purchase?.vendor.name;
@@ -315,16 +316,16 @@ export async function createPurchaseLedger(purchase: Purchase, stockName: string
         }
     })
 };
-export async function createRequestLedger(request: Request, stockName: string, vendorName: string, unitCost: Decimal, reference: string) {
+export async function createRequestLedger(request: Request, stockName: string, unitCost: Decimal, reference: string, customer: string) {
     await prisma.costLedger.create({
         data: {
             type: "REQUEST",
             stockId: request.stockId,
-            requestId:request.id,
+            requestId: request.id,
             userId: request.userId,
             plantNumber: request.plantNumber,
             stockName,
-            vendorName,
+            requestee: customer,
             quantity: request.quantity,
             unitCost,
             totalCost: request.quantity * Number(unitCost),

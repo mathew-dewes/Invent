@@ -106,7 +106,10 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuItem>
-              <Link href={`/stock/${stockId}/edit`}>Edit</Link>
+              <Link href={`/stock/${stockId}/edit`}>Edit details</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/stock/${stockId}/edit/quantity`}>Update quantity</Link>
             </DropdownMenuItem>
   
 

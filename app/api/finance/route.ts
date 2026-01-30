@@ -1,11 +1,25 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Parser } from "json2csv";
 import prisma from "@/lib/prisma";
+import { getStartDate } from "@/lib/helpers";
+import { TimeFrame } from "@/lib/types";
+import { getUserId } from "@/lib/actions/auth";
 
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+
+ const { searchParams } = new URL(req.url);
+ const userId = await getUserId()
+
+      const timeFrame = searchParams.get("timeFrame") as TimeFrame;
+
+    const startDate = getStartDate(timeFrame)
+
   const ledger = await prisma.costLedger.findMany({
-    orderBy: { createdAt: "asc" },
+    where:{
+      createdAt:{gte: startDate}, userId
+    },
+    orderBy: { createdAt: "asc"},
   });
 
   const data = ledger.map(row => ({

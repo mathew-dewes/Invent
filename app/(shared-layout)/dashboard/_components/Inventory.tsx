@@ -19,8 +19,8 @@ export default async function Inventory(){
 
     return ( 
 
-    <div className="border-2 p-3 rounded-xl bg-secondary">
-<h1 className="font-semibold text-xl py-3 ml-1">Inventory</h1>
+    <div className="border-2 p-5 rounded-xl bg-secondary">
+<h1 className="font-semibold text-xl py-3">Inventory</h1>
 <HealthBar/>
 
         <div className="flex gap-3 mt-5">

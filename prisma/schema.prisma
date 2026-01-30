@@ -156,6 +156,7 @@ model CostLedger {
   type FinanceType
 
   requestId String?
+  requestee String?
   purchaseId String?
   stockId String
   vendorId String?
