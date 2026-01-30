@@ -96,7 +96,7 @@ export default function TableFilters({
           variant={searchParams.get(filterKey!) !== query ? "outline" : "default"}
         >{filter.label}</Button>
       })}
-      <div className="flex items-center gap-2">
+      <div hidden={!pathname.startsWith('/finance')} className="flex items-center gap-2">
         <Select value={timeRange} onValueChange={(value) => setQueryFilter(value, 'date')
         }>
           <SelectTrigger className="w-45">

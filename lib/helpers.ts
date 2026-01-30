@@ -79,7 +79,7 @@ export function getNZDateKey(date = new Date()) {
 
 
 export function getStartDate(timeFrame?: TimeFrame) {
-  const now = new Date(); // UTC on server
+  const now = new Date();
   const start = new Date(now);
 
   switch (timeFrame) {
@@ -93,17 +93,17 @@ export function getStartDate(timeFrame?: TimeFrame) {
       break;
 
     case "month":
-      start.setUTCDate(1);
+      start.setUTCDate(start.getUTCDate() - 28);
       start.setUTCHours(0, 0, 0, 0);
       break;
 
     case "year":
-      start.setUTCMonth(0, 1);
-      start.setUTCHours(0, 0, 0, 0);
+  start.setUTCDate(start.getUTCDate() - 365);
+  start.setUTCHours(0, 0, 0, 0);
       break;
 
     default:
-      return undefined; // no filter
+      return undefined; 
   }
 
   return start;

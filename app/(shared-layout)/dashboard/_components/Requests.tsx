@@ -16,7 +16,7 @@ const [requests, chartData] = await Promise.all([getRequestCardData(), getReques
     
 
     return (
-        <div className="border-2 p-3 rounded-xl bg-secondary">
+        <div className="border-2 p-5 rounded-xl bg-secondary">
             <h1 className="font-semibold text-xl py-3 ml-1">Requests</h1>
             <div className="grid grid-cols-6 gap-3">
                 <div className="col-span-2">

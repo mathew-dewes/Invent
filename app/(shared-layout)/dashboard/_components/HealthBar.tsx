@@ -7,7 +7,7 @@ export default async function HealthBar(){
   const stockHealth = await getStockHealthPercentages();
     return (
           
-          <div className="w-full max-w-sm ml-2">
+          <div className="w-full max-w-sm">
  <Field>
       <FieldLabel htmlFor="progress-upload">
         <span>Stock Health</span>
