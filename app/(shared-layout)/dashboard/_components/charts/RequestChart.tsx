@@ -42,9 +42,7 @@ const chartConfig = {
 function getBarColor(status: RequestStatus) {
   switch (status) {
     case "COMPLETE":
-      return "#86efac";   // green-500
-    case "PENDING":
-      return "#fde047";   // yellow-500
+      return "#86efac";   // green-500 // yellow-500
     case "READY":
       return "#93c5fd";   // red-500
     default:

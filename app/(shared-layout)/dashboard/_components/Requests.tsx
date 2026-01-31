@@ -9,7 +9,6 @@ export default async function Requests() {
 const [requests, chartData] = await Promise.all([getRequestCardData(), getRequestChartData()])
 
     const urgentRequestCount = requests.filter((i => (i.status !=="COMPLETE" && i.status !== "READY" ))).length
-    const completedRequests = requests.filter((i => i.status === "COMPLETE"));
     const openRequests = requests.filter((i => i.status === "OPEN"));
     const readyRequests = requests.filter((i => i.status === "READY"));
   
@@ -18,19 +17,17 @@ const [requests, chartData] = await Promise.all([getRequestCardData(), getReques
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary">
             <h1 className="font-semibold text-xl py-3 ml-1">Requests</h1>
-            <div className="grid grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 gap-3">
                 <div className="col-span-2">
                     <RequestChart chartData={chartData} activeRequestCount={urgentRequestCount} />
                 </div>
 
-                <div className="col-span-4 flex flex-col gap-5">
-                    <div className="grid grid-cols-2 gap-3">
+                <div className="col-span-2 flex flex-col gap-5">
+                    <div className="flex flex-wrap gap-3">
                          <RequestCard title="Open" status="OPEN" total={openRequests.length} requests={openRequests}  />
                          <RequestCard title="Ready" status="READY" total={readyRequests.length} requests={readyRequests} />
                    
-                       <div className="col-span-2">
-                        <RequestCard title="COMPLETE" status="COMPLETE" total={completedRequests.length} requests={completedRequests} />
-                    </div>
+                 
                   
              
 

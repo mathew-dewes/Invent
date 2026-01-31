@@ -26,11 +26,11 @@ export default async function Budget() {
 
                 </div>
 
-                <div className="col-span-1">
+                {/* <div className="col-span-1">
 
                     <VendorChart vendors={vendorData ?? []} />
 
-                </div>
+                </div> */}
 
 
 

@@ -46,7 +46,7 @@ return sum + item.quantity
 
 
     return (
-                <Card className="w-full max-w-sm">
+                <Card className="w-full">
       <CardHeader>
         <CardTitle className="text-xl">
           <div className="flex items-center gap-2 uppercase">
