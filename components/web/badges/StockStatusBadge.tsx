@@ -8,6 +8,6 @@ export default function StockStatusBadge({ status }: {
     status: StockStatus
 }) {
     return <div>
-        <Badge className={cn(setStatusColor(status))}>{status}</Badge>
+        <Badge className={cn(setStatusColor(status), "text-gray-900 font-semibold text-xs")}> {status}</Badge>
     </div>
 }

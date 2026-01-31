@@ -16,7 +16,7 @@ export default async function Budget() {
 
 
     return (
-        <div className="border-2 p-5 rounded-xl bg-secondary">
+        <div className="border-2 p-5 rounded-xl bg-secondary lg:col-span-2">
             <h1 className="font-semibold text-xl py-3 ml-1">Budget</h1>
             <BudgetBar />
             <div className="grid grid-cols-3 gap-5 justify-between mt-5">

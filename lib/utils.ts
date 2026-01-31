@@ -13,7 +13,7 @@ export function setStatusColor(status: StockStatus | RequestStatus | PurchaseSta
           switch (status) {
   
               case "OPEN":
-              case "DELAYED":
+         
               style = "bg-orange-400"
               break;
               case "READY":
@@ -27,7 +27,8 @@ export function setStatusColor(status: StockStatus | RequestStatus | PurchaseSta
                   style = 'bg-green-400'
                   break;
               case 'Low Stock':
-                  style = 'bg-yellow-400'
+              case "DELAYED":
+                  style = 'bg-yellow-300'
                   break;
               default:
                   style = 'bg-red-400'
@@ -51,10 +52,11 @@ export function generateStatusColor(status: RequestStatus | StockOverviewType | 
                 color = 'bg-green-300'
                 break;
             case "Below reorder point":
+            case "DELAYED":
                 color = 'bg-yellow-300'
                 break;
             case "OPEN":
-            case "DELAYED":
+       
             case "Critical items":
                 color = 'bg-orange-400'
                    break;

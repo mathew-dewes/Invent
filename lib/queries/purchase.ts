@@ -181,3 +181,26 @@ return formatted
 };
 
 
+export async function getDelayedPurchases(){
+    const userId = await getUserId();
+    const purchases = await prisma.purchase.findMany({
+        where:{userId, status: "DELAYED"},
+        select:{
+            stockItem:{
+                select:{
+                    name:true,
+                    quantity:true,
+                }
+            },
+            vendor:{
+                select:{
+                    name:true
+                }
+            }
+        }
+    });
+
+    return purchases;
+}
+
+

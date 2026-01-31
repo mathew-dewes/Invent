@@ -14,12 +14,22 @@ import Link from "next/link";
 
 type ActionCardProps = {
     title: string,
-    description: string
+    description: string,
+    total: number,
+    details?: {
+        stockItem: {
+        name: string,
+        quantity: number
+  
+      }
+    }[]
 }
 
 export default function ActionCard({
     title,
-    description
+    description,
+    total,
+    details
 }: ActionCardProps){
     return (
                        <Card className="w-full">
@@ -39,7 +49,15 @@ export default function ActionCard({
       </CardHeader>
       <CardContent>
         <div>
-      <p>Total: 111</p>
+      <p>Total: {total}</p>
+      <div className="mt-3">
+        <p>Items to pick:</p>
+        {details?.map((d, key)=>{
+          return   <p key={key}>{d.stockItem.name} x {d.stockItem.quantity}</p>
+        })}
+
+      </div>
+    
     
 
         </div>

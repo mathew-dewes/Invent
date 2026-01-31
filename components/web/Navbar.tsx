@@ -45,7 +45,7 @@ export function Navbar() {
                     <h1 className="text-3xl font-bold">Invent
            
                     </h1></Link>
-                <div className="flex items-center gap-2">
+                <div className="lg:flex items-center gap-2 hidden">
                     {session && links.map((link, key)=>{
                         return <Link 
                         key={key} 

@@ -210,3 +210,37 @@ const stock = await prisma.request.findMany({
 
 return stock;
 }
+
+
+export async function getOpenRequests(){
+    const userId = await getUserId();
+    
+    const requests = await prisma.request.findMany({
+        where:{userId, status:"OPEN"},
+        select:{
+            stockItem:{
+                select:{
+                    name:true,
+                    quantity:true
+            
+                }
+            }
+        }
+    });
+
+    return requests;
+}
+
+export async function getReadyRequests(){
+    const userId = await getUserId();
+    
+    const requests = await prisma.request.findMany({
+        where:{userId, status:"READY"},
+        select:{
+            customer:true,
+          
+        }
+    });
+
+    return requests;
+}
