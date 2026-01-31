@@ -22,7 +22,7 @@ export default function page() {
                         <Budget />
                     </div>
 
-                    <div className="grid lg:grid-cols-2  gap-5">
+                    <div className="flex gap-5">
                         <Purchases />
                         <Requests />
                     </div>

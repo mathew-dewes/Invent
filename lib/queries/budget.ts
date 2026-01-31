@@ -68,15 +68,16 @@ export async function getBudgetChartData() {
     start.setDate(1);
     start.setHours(0, 0, 0, 0);
 
+    const end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+    end.setHours(23, 59, 59, 999);
+
+
 
     const result: ChartPoint[] = [];
 
-
-      const todayKey = getNZDateKey();
-
           const current = new Date(start);
 
-    while (getNZDateKey(current) <= todayKey) {
+    while (getNZDateKey(current) <= getNZDateKey(end)) {
 
             const key = getNZDateKey(current);
 

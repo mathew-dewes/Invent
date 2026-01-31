@@ -25,8 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { getNZDateKey } from "@/lib/helpers"
-
 
 export const description = "An interactive area chart"
 
@@ -37,10 +35,7 @@ const chartConfig = {
     label: "Spend",
     color: "var(--chart-2)",
   },
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
-  },
+
 } satisfies ChartConfig
 
 export function MonthlySpendChart({ data }:
@@ -49,26 +44,7 @@ export function MonthlySpendChart({ data }:
   const [timeRange, setTimeRange] = React.useState("30d");
 
 
-
-
-  const filteredData = data.filter((item) => {
-
-    const nowKey = getNZDateKey();
-      let days = 30;
-
-    if (timeRange === "7d") days = 7;
-
-    const start = new Date();
- start.setUTCDate(start.getUTCDate() - days);
-  const startKey = getNZDateKey(start);
-   
-
-    return item.date >= startKey && item.date <= nowKey;
-  });
-
-
-
-
+const filterData = timeRange === "7d" ? data.slice(0, 8) : data;
   
   return (
     <Card className="pt-0">
@@ -88,10 +64,10 @@ export function MonthlySpendChart({ data }:
           </SelectTrigger>
           <SelectContent className="rounded-xl">
             <SelectItem value="30d" className="rounded-lg">
-              Last 30 days
+              This month
             </SelectItem>
             <SelectItem value="7d" className="rounded-lg">
-              Last 7 days
+              This week
             </SelectItem>
           </SelectContent>
         </Select>
@@ -101,7 +77,7 @@ export function MonthlySpendChart({ data }:
           config={chartConfig}
           className="aspect-auto h-62.5 w-full"
         >
-          <AreaChart data={filteredData}>
+          <AreaChart data={filterData}>
             <defs>
               <linearGradient id="fillDestop" x1="0" y1="0" x2="0" y2="1">
                 <stop

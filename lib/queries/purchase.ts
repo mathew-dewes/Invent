@@ -3,6 +3,7 @@
 import { PurchaseStatus } from "@/generated/prisma/enums";
 import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
+import { getNZDateKey } from "../helpers";
 
 
 
@@ -143,42 +144,6 @@ export async function getPuchaseCardData(){
     return request;
 }
 
-export async function getPurchaseChartData(){
-          const userId = await getUserId();
-
-          const data = await prisma.purchase.groupBy({
-            by: ["status"],
-            where:{userId},
-            _count:{
-                _all:true
-            }
-          });
-
-          const statusMap = {
-DELAYED: "Delayed",
-PLACED: "Placed",
-
-
-
-} as const;
-
-const base = Object.keys(statusMap).map(status => ({
-  name: statusMap[status as keyof typeof statusMap],
-  purchases: 0,
-  status: status as PurchaseStatus,
-}));
-
-const formatted = base.map(item => {
-  const found = data.find(d => d.status === item.status);
-
-  return {
-    ...item,
-    purchases: found ? found._count._all : 0,
-  };
-});
-
-return formatted
-};
 
 
 export async function getDelayedPurchases(){
@@ -203,4 +168,49 @@ export async function getDelayedPurchases(){
     return purchases;
 }
 
+
+
+export async function getPurchaseChartData(){
+          const userId = await getUserId();
+
+   const purchases = await prisma.purchase.findMany({
+    where:{userId, status:{not:"DELAYED"}},
+    select:{
+        createdAt:true
+    }
+   });
+
+   const map = new Map<string, number>();
+
+   for (const purchase of purchases){
+    const dateKey = getNZDateKey(purchase.createdAt);
+    const existing = map.get(dateKey) ?? 0;
+    map.set(dateKey, existing + 1);
+
+   };
+
+       const start = new Date();
+    start.setDate(1);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+    end.setHours(23, 59, 59, 999);
+
+        const result: {date: string, total: number}[] = [];
+    const current = new Date(start);
+
+        while (getNZDateKey(current) <= getNZDateKey(end)) {
+
+            const key = getNZDateKey(current);
+
+        result.push({
+            date: key,
+            total: map.get(key) ?? 0
+        });
+       current.setDate(current.getDate() + 1);
+    };
+
+    return result;
+
+};
 
