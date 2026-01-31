@@ -17,19 +17,18 @@ export default async function Purchases() {
         <div className="border-2 p-5 rounded-xl bg-secondary">
             <h1 className="font-semibold text-xl py-3 ml-1">Purchases</h1>
             <div className="grid grid-cols-2 gap-3">
-                <div className="col-span-2">
+                <div className="col-span-2 md:col-span-1">
                     <PurchaseChart chartData={chartData} activeRequestCount={urgentPurchaseCount} />
                 </div>
 
-                <div className="col-span-2 flex flex-col gap-5">
-                    <div className="flex flex-wrap gap-3">
+                <div className="flex flex-col gap-3 col-span-2 md:col-span-1">
                         <PurchaseCard title="Delayed" status="DELAYED" purchases={delayedPurchases} total={delayedPurchases.length} />
                         <PurchaseCard title="Placed" status="PLACED" purchases={placedPurchases} total={placedPurchases.length} />
                  
                    
 
 
-                    </div>
+                   
 
 
 
