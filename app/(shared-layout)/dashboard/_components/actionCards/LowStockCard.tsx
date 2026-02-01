@@ -8,74 +8,85 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { StatusCircle } from "@/components/web/StatusCircle";
+import { Separator } from "@/components/ui/separator";
 
 import { cn } from "@/lib/utils";
+import { CircleAlert } from "lucide-react";
 import Link from "next/link";
 
 type ActionCardProps = {
   title: string,
   description: string,
   total: number,
-  details?: {
-    stockItem: {
-      name: string,
-      quantity: number
-
-    }
+  stock: {
+    name: string,
+    quantity: number,
+    reorderPoint: number,
+    id: string
   }[]
 }
 
 export default function LowStockCard({
   title,
-  description,
   total,
-  details
+  stock
 }: ActionCardProps) {
+
   return (
-    <Card className="w-full">
+    <Card className="w-full border-l-8 border-b-6 border-l-red-400 border-b-red-400 shadow-2xl">
       <CardHeader>
         <CardTitle className="text-xl">
-          
-          
-                    <p>{title}</p>
-               
+          <div className="flex items-center gap-2">
+            <CircleAlert />
+            <p>{title} ({total})</p>
+          </div>
 
 
         </CardTitle>
         <CardDescription>
-          <p>{description}</p>
+          <p>Warning: Items have fell below their reorder points</p>
 
 
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div>
-          <p><span className="font-semibold">Total:</span> {total}</p>
-          <div className="mt-3">
-            <p className="text-sm font-medium">Stock items</p>
-            <ul className="list-disc ml-5 mt-1">
-        
-          {details?.map((d, key) => {
-              return <li className="tracking-tight text-muted-foreground" key={key}>{d.stockItem.name} x {d.stockItem.quantity}</li>
+
+    
+          <div className="flex w-full max-w-sm flex-col gap-2 text-sm">
+            {stock?.map((item) => {
+              return (
+                <div className="flex flex-col gap-2" key={item.id} >
+                  <dl className="flex items-center justify-between">
+                    <dt>{item.name} - {item.quantity} left</dt>
+                    <dd className="text-muted-foreground">ROP {item.reorderPoint}</dd>
+                  </dl>
+                   <Separator />
+                </div>)
+
+
+
             })}
-
-            </ul>
-           
+     
           </div>
+   
+
+      
 
 
 
-        </div>
+
 
       </CardContent>
       <CardFooter className="flex-col gap-2 items-start">
 
-        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/requests?status=OPEN"}>View request{total > 1 ? "s" : ""}</Link>
+        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=low"}>View stock</Link>
 
 
 
       </CardFooter>
+      <div />
     </Card>
   )
 }
+
+

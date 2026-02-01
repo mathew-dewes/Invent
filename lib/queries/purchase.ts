@@ -146,28 +146,6 @@ export async function getPuchaseCardData() {
 
 
 
-export async function getDelayedPurchases() {
-    const userId = await getUserId();
-    const purchases = await prisma.purchase.findMany({
-        where: { userId, status: "DELAYED" },
-        select: {
-            stockItem: {
-                select: {
-                    name: true,
-                    quantity: true,
-                }
-            },
-            vendor: {
-                select: {
-                    name: true
-                }
-            }
-        }
-    });
-
-    return purchases;
-}
-
 
 
 export async function getPurchaseChartData() {
@@ -261,5 +239,37 @@ export async function getPurchaseTableData(){
     });
 
     return data;
-}
+};
 
+
+
+
+export async function getDelayedPurchases() {
+
+     const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+    const userId = await getUserId();
+    const purchases = await prisma.purchase.findMany({
+        where: { userId, createdAt:{
+            lte: threeDaysAgo,
+        }, status: {not: "RECEIVED"}},
+        select: {
+            id:true,
+            quantity:true,
+            stockItem: {
+                select: {
+                    name: true,
+                
+                }
+            },
+            vendor: {
+                select: {
+                    name: true
+                }
+            },
+            createdAt:true
+        },
+        
+    });
+
+    return purchases;
+}

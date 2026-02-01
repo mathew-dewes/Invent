@@ -292,8 +292,23 @@ export async function getStockNameAndQuantityById(stockId: string){
 };
 
 
-// export async function getLowStock(){
-//     const userId = await getUserId();
+export async function getLowStock(){
+    const userId = await getUserId();
+
+    const stockItems = await prisma.stock.findMany({
+        where:{userId, lowStock:true},
+        select:{
+            name:true,
+            quantity:true,
+            reorderPoint: true,
+            id:true
+        },
+        orderBy:{
+            quantity: 'asc'
+        }
+    });
+
+    return stockItems;
 
  
-// }
+}
