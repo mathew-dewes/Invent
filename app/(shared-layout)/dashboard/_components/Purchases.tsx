@@ -1,34 +1,41 @@
-import { getPuchaseCardData, getPurchaseChartData } from "@/lib/queries/purchase";
+import { getPurchaseChartData, getPurchaseTableData } from "@/lib/queries/purchase";
 import { PurchaseChart } from "./charts/PurchaseChart";
-import PurchaseCard from "./PurchaseCard";
+import PurchaseFulfillmentBar from "./PurchaseFulfillmentBar";
+
+import PurchaseTable from "./tables/PurchaseTable";
 
 
 export default async function Purchases() {
 
-    const [purchases, chartData] = await Promise.all([getPuchaseCardData(), getPurchaseChartData()])
+    const [chartData, tableData] = await Promise.all([getPurchaseChartData(), getPurchaseTableData()]);
 
 
-    const urgentPurchaseCount = purchases.filter((i => i.status !== "RECEIVED")).length
-    const placedPurchases = purchases.filter((i => i.status === "PLACED"));
-    const delayedPurchases = purchases.filter((i => i.status === "DELAYED"));
 
 
     return (
-        <div className="border-2 p-5 rounded-xl bg-secondary">
-            <h1 className="font-semibold text-xl py-3 ml-1">Purchases</h1>
-            <div className="grid grid-cols-2 gap-3">
-                <div className="col-span-2 md:col-span-1">
-                    <PurchaseChart chartData={chartData} activeRequestCount={urgentPurchaseCount} />
+        <div className={`border-2 p-5 rounded-xl bg-secondary flex-1`}>
+
+            <h1 className="font-semibold text-xl py-3 ml-2">Purchases</h1>
+            <PurchaseFulfillmentBar />
+
+
+
+
+
+            <div className="grid grid-cols-2 gap-5 mt-5">
+                <div>
+                    <PurchaseChart data={chartData} />
                 </div>
 
-                <div className="flex flex-col gap-3 col-span-2 md:col-span-1">
-                        <PurchaseCard title="Delayed" status="DELAYED" purchases={delayedPurchases} total={delayedPurchases.length} />
-                        <PurchaseCard title="Placed" status="PLACED" purchases={placedPurchases} total={placedPurchases.length} />
-                 
-                   
+                <div>
+       <PurchaseTable purchases={tableData} />
+
+        
 
 
-                   
+
+
+
 
 
 

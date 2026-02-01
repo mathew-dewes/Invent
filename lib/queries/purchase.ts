@@ -3,32 +3,33 @@
 import { PurchaseStatus } from "@/generated/prisma/enums";
 import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
+import { getNZDateKey } from "../helpers";
 
 
 
-export async function getPurchases(filter?: PurchaseStatus){
+export async function getPurchases(filter?: PurchaseStatus) {
     const userId = await getUserId();
 
     const purchases = await prisma.purchase.findMany({
-        where:{userId},
+        where: { userId },
         orderBy:
-        {createdAt: "desc"},
-        select:{
+            { createdAt: "desc" },
+        select: {
             id: true,
             createdAt: true,
             purchaseNumber: true,
-            
+
             quantity: true,
             PO: true,
             totalCost: true,
             status: true,
             stockItem: {
-                select:{
+                select: {
                     name: true,
                     quantity: true,
                     id: true,
-                    vendor:{
-                        select:{
+                    vendor: {
+                        select: {
                             name: true
                         }
                     }
@@ -38,42 +39,42 @@ export async function getPurchases(filter?: PurchaseStatus){
         }
     });
 
-          const serialisedPurchases = purchases.map(item => ({
-    ...item,
-    totalCost: item.totalCost.toString(), // safest for money
-  }));
+    const serialisedPurchases = purchases.map(item => ({
+        ...item,
+        totalCost: item.totalCost.toString(), // safest for money
+    }));
 
 
     const placedPurchases = serialisedPurchases.filter(
-        item => item.status ===  "PLACED"
+        item => item.status === "PLACED"
     );
     const delayedPurchases = serialisedPurchases.filter(
-        item => item.status ===  "DELAYED"
+        item => item.status === "DELAYED"
     );
     const receivedPurchases = serialisedPurchases.filter(
-        item => item.status ===  "RECEIVED"
+        item => item.status === "RECEIVED"
     );
 
 
-    if (filter === "PLACED"){
+    if (filter === "PLACED") {
         return placedPurchases;
-    } else if (filter === "DELAYED"){
+    } else if (filter === "DELAYED") {
         return delayedPurchases;
-    } else if (filter === "RECEIVED"){
+    } else if (filter === "RECEIVED") {
         return receivedPurchases;
     } else {
 
-    return serialisedPurchases;
+        return serialisedPurchases;
     }
 
 }
 
-export async function getPurchaseById(id: string){
-      const userId = await getUserId();
+export async function getPurchaseById(id: string) {
+    const userId = await getUserId();
 
     const purchase = await prisma.purchase.findUnique({
-        where:{userId, id},
-        select:{
+        where: { userId, id },
+        select: {
             id: true,
             createdAt: true,
             purchaseNumber: true,
@@ -83,7 +84,7 @@ export async function getPurchaseById(id: string){
             totalCost: true,
             status: true,
             stockItem: {
-                select:{
+                select: {
                     id: true,
                     name: true,
                     quantity: true
@@ -97,44 +98,44 @@ export async function getPurchaseById(id: string){
 }
 
 
-export async function getPurchaseStatusCount(){
-        const userId = await getUserId();
+export async function getPurchaseStatusCount() {
+    const userId = await getUserId();
 
-        const requests = await prisma.purchase.findMany({
-            select:{
-                status:true
-            },
-            where:{userId}
-        });
+    const requests = await prisma.purchase.findMany({
+        select: {
+            status: true
+        },
+        where: { userId }
+    });
 
 
-        const queryCounts = {
-            PLACED:requests.filter(q => q.status === "PLACED").length,
-            DELAYED: requests.filter(q => q.status === "DELAYED").length,
-            RECEIVED: requests.filter(q => q.status === "RECEIVED").length,
-        
-        }
+    const queryCounts = {
+        PLACED: requests.filter(q => q.status === "PLACED").length,
+        DELAYED: requests.filter(q => q.status === "DELAYED").length,
+        RECEIVED: requests.filter(q => q.status === "RECEIVED").length,
 
-          return queryCounts
+    }
+
+    return queryCounts
 
 }
 
-export async function getPuchaseCardData(){
-        const userId = await getUserId();
+export async function getPuchaseCardData() {
+    const userId = await getUserId();
     const request = await prisma.purchase.findMany({
-        where:{userId},
-        select:{
-            status:true,
-            quantity:true,
-            stockItem:{
-                select:{
-                    name:true,
-                    vendor:{
-                        select:{
-                            name:true
+        where: { userId },
+        select: {
+            status: true,
+            quantity: true,
+            stockItem: {
+                select: {
+                    name: true,
+                    vendor: {
+                        select: {
+                            name: true
                         }
                     }
-                  
+
                 }
             }
         }
@@ -143,58 +144,22 @@ export async function getPuchaseCardData(){
     return request;
 }
 
-export async function getPurchaseChartData(){
-          const userId = await getUserId();
-
-          const data = await prisma.purchase.groupBy({
-            by: ["status"],
-            where:{userId},
-            _count:{
-                _all:true
-            }
-          });
-
-          const statusMap = {
-DELAYED: "Delayed",
-PLACED: "Placed",
 
 
-
-} as const;
-
-const base = Object.keys(statusMap).map(status => ({
-  name: statusMap[status as keyof typeof statusMap],
-  purchases: 0,
-  status: status as PurchaseStatus,
-}));
-
-const formatted = base.map(item => {
-  const found = data.find(d => d.status === item.status);
-
-  return {
-    ...item,
-    purchases: found ? found._count._all : 0,
-  };
-});
-
-return formatted
-};
-
-
-export async function getDelayedPurchases(){
+export async function getDelayedPurchases() {
     const userId = await getUserId();
     const purchases = await prisma.purchase.findMany({
-        where:{userId, status: "DELAYED"},
-        select:{
-            stockItem:{
-                select:{
-                    name:true,
-                    quantity:true,
+        where: { userId, status: "DELAYED" },
+        select: {
+            stockItem: {
+                select: {
+                    name: true,
+                    quantity: true,
                 }
             },
-            vendor:{
-                select:{
-                    name:true
+            vendor: {
+                select: {
+                    name: true
                 }
             }
         }
@@ -203,4 +168,98 @@ export async function getDelayedPurchases(){
     return purchases;
 }
 
+
+
+export async function getPurchaseChartData() {
+    const userId = await getUserId();
+
+       const start = new Date();
+    start.setDate(start.getDate() - 13);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    const purchases = await prisma.purchase.findMany({
+        where: { userId, status: { not: "DELAYED"},
+    createdAt:{
+        gte: start, lte: end
+    } },
+        select: {
+            createdAt: true,
+            status: true
+        }
+    });
+
+    const map = new Map<string, { date: string; received: number, placed: number }>();
+
+    for (const purchase of purchases) {
+        const dateKey = getNZDateKey(purchase.createdAt);
+        const existing = map.get(dateKey) ?? {
+            date: dateKey,
+            received: 0,
+            placed: 0
+        };
+
+        if (purchase.status === "RECEIVED") {
+            existing.received += 1;
+        };
+            existing.placed += 1;
+
+        map.set(dateKey, existing);
+    }
+
+
+
+    const result: { date: string; received: number; placed: number }[] = [];
+    const current = new Date(start);
+
+    while (getNZDateKey(current) <= getNZDateKey(end)) {
+
+        const key = getNZDateKey(current);
+
+        result.push(
+            map.get(key) ?? {
+                date: key,
+                received: 0,
+                placed: 0
+            }
+        );
+        current.setDate(current.getDate() + 1);
+    };
+
+    return result;
+
+};
+
+
+export async function getPurchaseTableData(){
+    const userId = await getUserId();
+
+    const data = await prisma.purchase.findMany({
+        where:{userId},
+        select:{
+            id:true,
+            createdAt:true,
+            vendor:{
+                select:{
+                    name:true
+                }
+            },
+            stockItem:{
+                select:{
+                    name:true
+                }
+            },
+            quantity: true,
+            status:true
+        },
+        take: 10,
+        orderBy:{
+            createdAt:"desc"
+        }
+    });
+
+    return data;
+}
 

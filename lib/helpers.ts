@@ -75,6 +75,15 @@ export function getNZDateKey(date = new Date()) {
     month: "2-digit",
     day: "2-digit",
   }).format(date); 
+};
+
+export function formatTimeToNZ(date = new Date()){
+    return new Intl.DateTimeFormat("en-NZ",{
+    timeZone: "Pacific/Auckland",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
 }
 
 

@@ -21,11 +21,10 @@ export default function page() {
                         <Inventory />
                         <Budget />
                     </div>
-
-                    <div className="grid lg:grid-cols-2  gap-5">
-                        <Purchases />
                         <Requests />
-                    </div>
+                        <Purchases />
+                    
+            
                     <RequestInsight/>
 
 

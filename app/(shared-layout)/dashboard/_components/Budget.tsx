@@ -1,9 +1,7 @@
 
 
-import { getBudgetChartData, getMonthlyVendorPurchases } from "@/lib/queries/budget";
+import { getBudgetChartData } from "@/lib/queries/budget";
 import BudgetBar from "./BudgetBar";
-
-import { VendorChart } from "./charts/VendorChart";
 import { MonthlySpendChart } from "./charts/MonthlySpendChart";
 
 
@@ -12,8 +10,12 @@ import { MonthlySpendChart } from "./charts/MonthlySpendChart";
 
 export default async function Budget() {
 
-    const [chartData, vendorData] = await Promise.all([getBudgetChartData(), getMonthlyVendorPurchases()])
+    const [chartData] = await Promise.all([getBudgetChartData()]);
 
+
+
+
+    
 
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary lg:col-span-2">
@@ -26,11 +28,7 @@ export default async function Budget() {
 
                 </div>
 
-                {/* <div className="col-span-1">
-
-                    <VendorChart vendors={vendorData ?? []} />
-
-                </div> */}
+     
 
 
 
