@@ -14,7 +14,7 @@ export default async function Action(){
     
     return (
         <div className={`border-2 p-5 rounded-xl bg-secondary ${noEntries ? "hidden" : ""}`}>
-                  <h1 className="font-semibold text-xl py-3">Queries</h1>
+                  <h1 className="font-semibold text-xl py-3">Actions</h1>
 
         <div className="grid lg:grid-cols-3 gap-3">
          {openRequests.length > 0 && <OpenRequestsCard details={openRequests} title="Open requests" description="Requests awaiting to be picked" total={openRequests.length}/>}

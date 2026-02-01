@@ -21,11 +21,10 @@ export default function page() {
                         <Inventory />
                         <Budget />
                     </div>
-
-                    <div className="flex gap-5">
-                        <Purchases />
                         <Requests />
-                    </div>
+                        <Purchases />
+                    
+            
                     <RequestInsight/>
 
 

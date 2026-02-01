@@ -12,12 +12,7 @@ export default async function Budget() {
 
     const [chartData] = await Promise.all([getBudgetChartData()]);
 
-    console.log(chartData);
-    
-    
 
-
-    
 
 
     

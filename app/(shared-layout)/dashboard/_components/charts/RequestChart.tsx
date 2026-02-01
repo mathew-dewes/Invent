@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, Cell, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import {
   Card,
@@ -13,97 +13,80 @@ import {
 } from "@/components/ui/card"
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-import { RequestStatus } from "@/generated/prisma/enums"
+export const description = "A multiple bar chart"
 
-export const description = "A bar chart"
 
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  placed: {
+    label: "Placed",
     color: "var(--chart-1)",
   },
-} satisfies ChartConfig;
+  complete: {
+    label: "Complete",
+    color: "var(--chart-2)",
+  },
+} satisfies ChartConfig
 
-
-// const data = [
-//   { name: "Open", requests: 21, status: "OPEN" as RequestStatus  },
-//   { name: "Pending", requests: 5, status: "PENDING" as RequestStatus  },
-//   { name: "Ready", requests: 11, status: "READY" as RequestStatus  },
-
-
- 
-// ];
-
-function getBarColor(status: RequestStatus) {
-  switch (status) {
-    case "COMPLETE":
-      return "#86efac";   // green-500 // yellow-500
-    case "READY":
-      return "#93c5fd";   // red-500
-    default:
-      return "#fb923c";   // slate-400
-  }
-}
-
-
-type Props = {
-  chartData:{name:string, requests: number, status: RequestStatus}[],
-  activeRequestCount: number
-}
-
-
-
-export function RequestChart({chartData, activeRequestCount}:Props
+export function RequestChart({ data }:
+  { data: { date: string, placed: number, complete: number }[] }
 ) {
 
+ 
 
-  const activeMessage = () =>{
 
-    if (activeRequestCount > 0){
-return `You have ${activeRequestCount} requests needing attention`
-    } else{
-      return 'You have no urgent requests at this time. Well done'
-    }
 
-}
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Active requests</CardTitle>
-        <CardDescription>
-          {activeMessage()}
-          </CardDescription>
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <div className="grid flex-1 gap-1">
+    <CardTitle className="uppercase">Placed vs. Complete</CardTitle>
+        <CardDescription>Within the last 14 days</CardDescription>
+        </div>
+
+    
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="name"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-            //   tickFormatter={(value) => value.slice(0, 3)}
-            />
+             <XAxis
+                     dataKey="date"
+                     tickLine={false}
+                     axisLine={false}
+                     tickMargin={8}
+                     minTickGap={32}
+                     tickFormatter={(value) => {
+                       const date = new Date(value);                
+                       return date.toLocaleDateString("en-NZ", {
+                         month: "2-digit",
+                         day: "2-digit",
+                       })
+                     }}
+                   />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent indicator="dot"
+                     labelFormatter={(value) => {
+                    return new Date(value).toLocaleDateString("en-NZ", {
+                      month: "short",
+                      day: "numeric",
+                    });
+                  }} />}
             />
-            <Bar dataKey="requests"  radius={8}>
-                          {chartData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={getBarColor(entry.status)} />
-          ))}
-            </Bar>
-        
-    
+            <Bar dataKey="placed" fill="#60a5fa" radius={4} />
+            <Bar dataKey="complete" fill="#4ade80" radius={4} />
+            <ChartLegend content={<ChartLegendContent />} />
           </BarChart>
         </ChartContainer>
       </CardContent>
+ 
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
@@ -115,3 +98,7 @@ return `You have ${activeRequestCount} requests needing attention`
     </Card>
   )
 }
+
+
+
+

@@ -3,6 +3,7 @@
 import { RequestStatus } from "@/generated/prisma/enums";
 import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
+import { getNZDateKey } from "../helpers";
 
 export async function getRequests(filter?: RequestStatus){
 const userId = await getUserId();
@@ -85,40 +86,61 @@ export async function getRequestCardData(){
 }
 
 export async function getRequestChartData(){
-        const userId = await getUserId();
+    const userId = await getUserId();
+    const start = new Date();
+    start.setDate(start.getDate() - 13);
+    start.setHours(0, 0, 0, 0);
 
-   const data = await prisma.request.groupBy({
-  by: ["status"],
-  where: { userId },
-  _count: {
-    _all: true,
-  },
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+const requests = await prisma.request.findMany({
+    where: {userId, status:{not: "READY"}, 
+        createdAt:{
+            gte: start, lte: end
+        }
+    },
+    select:{
+        createdAt:true,
+        status:true
+    }
 });
 
-const statusMap = {
-  OPEN: "Open",
-  PENDING: "Pending",
-  READY: "Ready",
+    const map = new Map<string, { date: string; placed: number, complete: number }>();
 
+    for (const request of requests){
+        const dateKey = getNZDateKey(request.createdAt);
+        const existing = map.get(dateKey) ?? {
+            date: dateKey,
+            placed: 0,
+            complete: 0
+        };
 
-} as const;
+        if (request.status == "COMPLETE"){
+            existing.complete += 1;
+        }
+        existing.placed += 1;
 
-const base = Object.keys(statusMap).map(status => ({
-  name: statusMap[status as keyof typeof statusMap],
-  requests: 0,
-  status: status as RequestStatus,
-}));
+        map.set(dateKey, existing)
+    };
 
-const formatted = base.map(item => {
-  const found = data.find(d => d.status === item.status);
+    const result: {date: string; placed: number; complete: number}[] = [];
+    const current = new Date(start);
 
-  return {
-    ...item,
-    requests: found ? found._count._all : 0,
-  };
-});
+    while (getNZDateKey(current) <= getNZDateKey(end)){
+        const key = getNZDateKey(current);
 
-return formatted
+        result.push(
+            map.get(key) ?? {
+                date: key,
+               placed: 0, 
+               complete: 0 
+            }
+        );
+        current.setDate(current.getDate() + 1);
+    };
+    return result
+
 }
 
 
@@ -243,4 +265,31 @@ export async function getReadyRequests(){
     });
 
     return requests;
+};
+
+
+export default async function getRequestTableData(){
+    const userId = await getUserId();
+
+    const data = await prisma.request.findMany({
+        where:{userId},
+        select:{
+            id:true,
+            createdAt:true,
+            customer:true,
+            stockItem:{
+                select:{
+                    name: true
+                    }
+            },
+            quantity: true,
+            status: true
+        },
+        take: 10,
+        orderBy:{
+            createdAt: "desc"
+        }
+    });
+
+    return data;
 }
