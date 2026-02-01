@@ -44,7 +44,26 @@ export default function RequestTable({ requests }:
 
     function linkToRequests (status: RequestStatus){
       router.push(`/requests?status=${status}`)
-}
+};
+
+   function generateStyle(status: RequestStatus){
+         let style;
+      switch (status){
+     
+        case "OPEN":
+          style = 'bg-yellow-300/70 font-medium hover:bg-yellow-300/80'
+          break;
+        case "READY":
+          style = 'bg-blue-300/70 font-medium hover:bg-blue-300/80'
+          break;
+          default:
+          style = 'text-white/70 pointer-events-none'
+
+      };
+
+      return style + " cursor-pointer"
+
+    }
 
 
     
@@ -74,7 +93,7 @@ export default function RequestTable({ requests }:
     const createdAt = formatTimeToNZ(request.createdAt);
 
             return (
-              <TableRow onClick={()=>linkToRequests(request.status)} className={`text-sm ${request.status === "OPEN" ? "font-medium bg-blue-300/70 cursor-pointer hover:bg-blue-300/90" : "text-white/70 pointer-events-none "} `} key={request.id}>
+              <TableRow onClick={()=>linkToRequests(request.status)} className={`text-sm ${generateStyle(request.status)} `} key={request.id}>
                 <TableCell>{createdAt}</TableCell>
                 <TableCell>{request.customer}</TableCell>
                 <TableCell>{request.stockItem.name}</TableCell>
@@ -90,7 +109,7 @@ export default function RequestTable({ requests }:
       </Table>
     </CardContent>
     <CardFooter>
-      <Link href={'/requests'} ><Button>View requests</Button></Link>
+      <Link href={'/requests'} ><Button variant={"outline"}>View requests</Button></Link>
 
     </CardFooter>
   </Card>)

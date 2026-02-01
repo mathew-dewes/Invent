@@ -1,30 +1,15 @@
-import { getPuchaseCardData, getPurchaseChartData } from "@/lib/queries/purchase";
+import { getPurchaseChartData, getPurchaseTableData } from "@/lib/queries/purchase";
 import { PurchaseChart } from "./charts/PurchaseChart";
-import PurchaseCard from "./PurchaseCard";
 import PurchaseFulfillmentBar from "./PurchaseFulfillmentBar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { HighestSpendingTable } from "./tables/HighestSpendingTable";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
 import PurchaseTable from "./tables/PurchaseTable";
 
 
 export default async function Purchases() {
 
-    const [purchases, chartData] = await Promise.all([getPuchaseCardData(), getPurchaseChartData()]);
+    const [chartData, tableData] = await Promise.all([getPurchaseChartData(), getPurchaseTableData()]);
 
 
-    const placedPurchases = purchases.filter((i => i.status === "PLACED"));
-    const delayedPurchases = purchases.filter((i => i.status === "DELAYED"));
-
-    const noEntires = placedPurchases.length == 0 && delayedPurchases.length == 0;
 
 
     return (
@@ -43,7 +28,7 @@ export default async function Purchases() {
                 </div>
 
                 <div>
-       <PurchaseTable/>
+       <PurchaseTable purchases={tableData} />
 
         
 

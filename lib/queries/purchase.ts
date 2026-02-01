@@ -232,3 +232,34 @@ export async function getPurchaseChartData() {
 
 };
 
+
+export async function getPurchaseTableData(){
+    const userId = await getUserId();
+
+    const data = await prisma.purchase.findMany({
+        where:{userId},
+        select:{
+            id:true,
+            createdAt:true,
+            vendor:{
+                select:{
+                    name:true
+                }
+            },
+            stockItem:{
+                select:{
+                    name:true
+                }
+            },
+            quantity: true,
+            status:true
+        },
+        take: 10,
+        orderBy:{
+            createdAt:"desc"
+        }
+    });
+
+    return data;
+}
+
