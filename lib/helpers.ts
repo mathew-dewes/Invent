@@ -1,19 +1,5 @@
 import { Prisma } from "@/generated/prisma/client"
-import { StockStatus, TimeFrame } from "./types"
 
-export function generateStockStatus(currentStock: number, reorderPointAmount: number): StockStatus {
-
-    if (currentStock === 0) {
-        return "Out of Stock"
-    }
-
-    else if (currentStock < reorderPointAmount) {
-        return "Low Stock"
-    } else {
-        return "In Stock"
-    }
-
-}
 
 export const getFilterKey = (pathname: string) => {
     if (pathname === '/stock') return "stock"
@@ -87,34 +73,4 @@ export function formatTimeToNZ(date = new Date()){
 }
 
 
-export function getStartDate(timeFrame?: TimeFrame) {
-  const now = new Date();
-  const start = new Date(now);
-
-  switch (timeFrame) {
-    case "day":
-      start.setUTCHours(0, 0, 0, 0);
-      break;
-
-    case "week":
-      start.setUTCDate(start.getUTCDate() - 7);
-      start.setUTCHours(0, 0, 0, 0);
-      break;
-
-    case "month":
-      start.setUTCDate(start.getUTCDate() - 28);
-      start.setUTCHours(0, 0, 0, 0);
-      break;
-
-    case "year":
-  start.setUTCDate(start.getUTCDate() - 365);
-  start.setUTCHours(0, 0, 0, 0);
-      break;
-
-    default:
-      return undefined; 
-  }
-
-  return start;
-}
 

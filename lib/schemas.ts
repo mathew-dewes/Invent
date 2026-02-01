@@ -83,7 +83,7 @@ export const purchaseSchema = z.object({
             message: "Quantity must be greater than 0",
         }),
     notes: z.string().optional(),
-    poNumber: z.string(),
+    poNumber: z.string().min(1, "PO number is required"),
 
     
 });

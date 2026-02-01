@@ -39,8 +39,14 @@ export function MassUpdateButton({ label, table, status, selectedIds, stockIdsAn
                                 const inventoryCheck = await checkInventory(stockIdsAndQuantity);
 
                                 if (inventoryCheck.ok) {
-                                    await markRequestReady(selectedIds, status as RequestStatus, stockIdsAndQuantity);
-                                    await updateRequestStatus(selectedIds, status as RequestStatus);
+                                    const res = await markRequestReady(selectedIds, status as RequestStatus, stockIdsAndQuantity);
+                                         if (res?.success){
+                                                await updateRequestStatus(selectedIds, status as RequestStatus);
+                                                toast.success(res.message)
+                                         }
+                                   
+
+                               
 
                                     router.push(`/requests?status=${status}`);
                                 } else {

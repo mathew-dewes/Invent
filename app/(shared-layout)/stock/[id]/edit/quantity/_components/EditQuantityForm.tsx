@@ -38,13 +38,10 @@ export default function EditQuantityForm({stockId ,stockName, stockQuantity}:
         startTransition(async () => {
             try {
         const res = await updateSingleStockItemQuantity(stockId, stockAmount);
-        if (res.success){
+        if (res?.success){
             toast.success(res.message);
             router.push('/stock')
         }
-
-      
-
         
             } catch (error) {
             console.log(error);

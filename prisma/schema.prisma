@@ -108,8 +108,9 @@ model Stock {
   vendor       Vendor     @relation(fields: [vendorId], references: [id])
   user         User       @relation(fields: [userId], references: [id])
   brand        String
-   unitCost     Decimal    @db.Decimal(10, 2)
+  unitCost     Decimal    @db.Decimal(10, 2)
   reorderPoint Int
+  lowStock Boolean @default(false)
   requests     Request[]
   purchases    Purchase[]
   costLedger CostLedger[]

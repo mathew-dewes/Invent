@@ -6,8 +6,7 @@ import { getPurchases, getPurchaseStatusCount } from "@/lib/queries/purchase"
 export default async function PurchaseTable({filter}:
      {filter: PurchaseStatus | undefined}){
 
-    const purchases = await getPurchases(filter);
-    const statusCounts = await getPurchaseStatusCount();
+        const [purchases, statusCounts] = await Promise.all([getPurchases(filter), getPurchaseStatusCount()])
     
     return (
         <DataTable queryCounts={statusCounts} filter="PO" columns={Purchasecolumns} data={purchases}/>

@@ -218,24 +218,51 @@ export async function markRequestReady(requestsIds: string[], status: RequestSta
 
     if (status == "READY") {
 
-        await Promise.all(
-            stockIdsAndQuantity.map(async (item) => {
-                await prisma.stock.updateMany({
-                    where: { id: item.id, userId },
-                    data: {
-                        quantity: {
-                            decrement: item.quantity
+        try {
+            await Promise.all(
+                stockIdsAndQuantity.map(async (item) => {
+
+
+                    const stock = await prisma.stock.findUnique({
+                        where: { userId, id: item.id },
+                        select: {
+                            reorderPoint: true
+                        }
+                    });
+                    if (!stock || !item.quantity) return
+
+                    const reorderPoint = stock.reorderPoint;
+
+
+
+             await prisma.stock.update({
+                        where: { id: item.id, userId },
+                        data: {
+                            quantity: {
+                                decrement: item.quantity
+                            },
+                            lowStock: item.quantity > reorderPoint
+
                         },
 
-                    },
+                    }
+                    )
 
+                }));
+
+                return {
+                    success:true, message: "Stock has been adjusted"
                 }
-                )
+        } catch (error) {
+            console.log(error);
+                return {
+                    success:false, message: "Inventory updated failed. See"
+                }
+            
+
+        }
 
 
-            })
-
-        )
     }
 
 }

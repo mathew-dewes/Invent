@@ -19,6 +19,7 @@ export async function getAllStock(filter?: string) {
             name: true,
             location: true,
             reorderPoint: true,
+            lowStock:true,
             vendor: {
                 select: {
                     name: true
@@ -51,7 +52,7 @@ export async function getAllStock(filter?: string) {
     );
 
     if (filter === "out") {
-        return outOfStock
+        return outOfStock 
     } else if (filter === "low") {
         return lowStock
     } else if (filter === "good") {
@@ -288,4 +289,11 @@ export async function getStockNameAndQuantityById(stockId: string){
     });
 
     return stockItem
-}
+};
+
+
+// export async function getLowStock(){
+//     const userId = await getUserId();
+
+ 
+// }

@@ -14,15 +14,13 @@ import { MoreHorizontal } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Request } from "@/lib/types"
 
-
-import { StockStatus } from "@/lib/types"
-import StockStatusBadge from "../badges/StockStatusBadge"
 import { startTransition } from "react"
 import { cancelRequest, changeRequestStatus } from "@/lib/actions/request"
 import { toast } from "sonner"
 import {checkSingleStockItemQuantity, decreaseStockQuantity } from "@/lib/actions/stock"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import RequestStatusBadge from "../badges/RequestStatusBadge"
 
 
 const HideFields = () =>{
@@ -53,14 +51,16 @@ export const Requestcolumns: ColumnDef<Request>[] = [
         aria-label="Select all"
       />
     ),
-    cell: ({ row }) => (
+    cell: ({ row }) => {
+
+
       <Checkbox
         hidden={HideFields()}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
       />
-    ),
+    },
     enableSorting: false,
     enableHiding: false,
   },
@@ -73,6 +73,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     accessorKey: "createdAt",
     header: "Date",
     cell: ({ getValue }) => {
+     
       const date = new Date(getValue() as string);
       return date.toLocaleString("en-NZ", {
         year: "numeric",
@@ -84,7 +85,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
     {
     accessorKey: "status",
-    cell: ({ row }) => <StockStatusBadge status={row.getValue("status") as StockStatus} />,
+    cell: ({ row }) => <RequestStatusBadge status={row.original.status} />,
     header: "Status",
   },
   {

@@ -26,7 +26,8 @@ const requests = await prisma.request.findMany({
             select:{
                 id: true,
                 name:true,
-                quantity:true
+                quantity:true,
+                reorderPoint:true
             }
         },
         quantity: true,

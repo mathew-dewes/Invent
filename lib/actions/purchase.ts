@@ -221,7 +221,27 @@ export async function changePurchaseStatus(formData: FormData, status: PurchaseS
 export async function markReceived(purchaseId: string, stockAmount: number){
 const userId = await getUserId();
 
+
+
 try {
+
+    const stock = await prisma.purchase.findFirst({
+    where:{userId, id: purchaseId},
+    select:{
+        stockItem:{
+            select:{
+                reorderPoint:true,
+                quantity:true
+            }
+        }
+    }
+});
+
+if (!stock) return
+
+const reorderPoint = stock.stockItem.reorderPoint;
+const newStockAmount = stockAmount + stock.stockItem.quantity;
+
 await prisma.purchase.update({
         where:{userId, id: purchaseId},
         data:{
@@ -230,7 +250,8 @@ await prisma.purchase.update({
                 update:{
                     quantity:{
                         increment: stockAmount
-                    }
+                    },
+                    lowStock: newStockAmount < reorderPoint
                 }
             }
         }
