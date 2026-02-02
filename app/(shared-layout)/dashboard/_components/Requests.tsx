@@ -1,6 +1,5 @@
 
 import { RequestChart } from "./charts/RequestChart";
-import PurchaseFulfillmentBar from "./PurchaseFulfillmentBar";
 import getRequestTableData, { getRequestCardData, getRequestChartData } from "@/lib/queries/request";
 
 import RequestTable from "./tables/RequestTable";
@@ -26,8 +25,8 @@ export default async function Requests() {
     return (
         <div className={`border-2 p-5 rounded-xl bg-secondary flex-1 ${noEntires ? "hidden" : ""}`}>
             <h1 className="font-semibold text-xl py-3 ml-1">Requests</h1>
-            <PurchaseFulfillmentBar />
-            <div className="grid grid-cols-2 gap-5 mt-5">
+
+            <div className="grid grid-cols-1 gap-5">
                 <div>
                     <RequestChart data={chartData} />
                 </div>

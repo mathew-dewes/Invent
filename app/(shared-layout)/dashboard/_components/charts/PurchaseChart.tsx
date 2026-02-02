@@ -47,7 +47,7 @@ export function PurchaseChart({ data }:
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
     <CardTitle className="uppercase">Placed vs. received</CardTitle>
-        <CardDescription>Within the last 14 days</CardDescription>
+        <CardDescription>Within the last 7 days</CardDescription>
         </div>
 
     

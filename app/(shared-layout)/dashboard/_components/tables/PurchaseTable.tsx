@@ -50,10 +50,7 @@ export default function PurchaseTable({ purchases }:
       switch (status){
      
         case "PLACED":
-          style = 'bg-yellow-300/70 font-medium hover:bg-yellow-300/80'
-          break;
-        case "DELAYED":
-          style = 'bg-red-500/70 font-medium hover:bg-red-500/80'
+          style = 'bg-blue-300/70 font-medium hover:bg-blue-300/80'
           break;
           default:
           style = 'text-white/70 pointer-events-none'
@@ -78,9 +75,8 @@ return <Card  className="mx-auto w-full">
           <TableHead className="w-25">Date</TableHead>
           <TableHead>Vendor</TableHead>
           <TableHead>Item</TableHead>
-    
-       
-          <TableHead className="text-right">Status</TableHead>
+          <TableHead className="text-center">QTY</TableHead>
+  
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -93,9 +89,9 @@ return <Card  className="mx-auto w-full">
                    className={`text-sm ${generateStyle(purchase.status)}`} key={purchase.id}>
                      <TableCell>{createdAt}</TableCell>
                      <TableCell>{purchase.vendor.name}</TableCell>
-                     <TableCell>{purchase.stockItem.name} x {purchase.quantity}</TableCell>
+                     <TableCell>{purchase.stockItem.name}</TableCell>
    
-                     <TableCell className="text-right">{purchase.status}</TableCell>
+                     <TableCell className="text-center">{purchase.quantity}</TableCell>
                    </TableRow>
                  )
                }

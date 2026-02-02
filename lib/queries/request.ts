@@ -89,7 +89,7 @@ export async function getRequestCardData(){
 export async function getRequestChartData(){
     const userId = await getUserId();
     const start = new Date();
-    start.setDate(start.getDate() - 13);
+    start.setDate(start.getDate() - 6);
     start.setHours(0, 0, 0, 0);
 
     const end = new Date();
