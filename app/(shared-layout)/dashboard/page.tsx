@@ -6,6 +6,7 @@ import Purchases from "./_components/Purchases";
 import Budget from "./_components/Budget";
 import Action from "./_components/Action";
 import RequestInsight from "./_components/RequestInsight";
+import Delays from "./_components/Delays";
 
 export default function page() {
 
@@ -16,6 +17,7 @@ export default function page() {
                 <div className="flex flex-col gap-6">
 
                     <Action />
+                    <Delays />
                     <div>
                 
                         <Budget />

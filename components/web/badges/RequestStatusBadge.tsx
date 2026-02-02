@@ -1,6 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { RequestStatus } from "@/generated/prisma/enums";
+import { cn } from "@/lib/utils";
 
 
 
@@ -12,12 +13,12 @@ function requestStatus(){
      if (status == "COMPLETE"){
         return {style: "bg-green-400", label: "Complete"}
 } else if (status == "OPEN") {
-     return {style: "bg-orange-400", label: "Open"}
+     return {style: "bg-yellow-300 text-black", label: "Open"}
 } else {
      return {style: "bg-blue-400", label: "Ready"}
 }
 };
     return <div>
-        <Badge className={(requestStatus().style)}>{requestStatus().label}</Badge>
+        <Badge className={cn(requestStatus().style, "uppercase font-semibold")}>{requestStatus().label}</Badge>
     </div>
 }

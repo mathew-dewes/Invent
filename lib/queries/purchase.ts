@@ -342,4 +342,30 @@ export async function getPurchaseHealthPercentage(){
    
   },
 };
+};
+
+
+export async function getPlacedPurchases(){
+    const userId = await getUserId();
+
+    const purchases = await prisma.purchase.findMany({
+        where:{userId, status:"PLACED"},
+        select:{
+            id:true,
+            createdAt:true,
+            stockItem:{
+                select:{
+                    name:true
+                }
+            },
+            quantity:true,
+            vendor:{
+                select:{
+                    name:true
+                }
+            }
+        }
+    });
+
+    return purchases;
 }

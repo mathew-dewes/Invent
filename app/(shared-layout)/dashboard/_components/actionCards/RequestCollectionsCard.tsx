@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { daysAgo } from "@/lib/helpers";
 
 import { cn } from "@/lib/utils";
-import { CircleAlert } from "lucide-react";
+import { CircleCheckBig } from "lucide-react";
 import Link from "next/link";
 
 type ActionCardProps = {
@@ -35,7 +35,6 @@ type ActionCardProps = {
 
 export default function RequestCollectionsCard({
   title,
-  total,
   requests
 }: ActionCardProps) {
   return (
@@ -43,8 +42,8 @@ export default function RequestCollectionsCard({
       <CardHeader>
         <CardTitle className="text-xl">
           <div className="flex items-center gap-2">
-        <CircleAlert/>
-        <p>{title} ({total})</p>
+        <CircleCheckBig/>
+        <p>{title}</p>
           </div>
   
                
@@ -81,9 +80,9 @@ export default function RequestCollectionsCard({
      
 
       </CardContent>
-      <CardFooter className="flex-col gap-2 items-start">
-
-        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/requests?status=READY"}>View requests</Link>
+      <CardFooter className="flex gap-2">
+          <p className="text-sm">View:</p>
+        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/requests?status=READY"}>Requests</Link>
 
 
 

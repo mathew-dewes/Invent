@@ -1,6 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { PurchaseStatus } from "@/generated/prisma/enums";
+import { cn } from "@/lib/utils";
 
 
       const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
@@ -25,6 +26,6 @@ function purchaseStatus(){
 }
 };
     return <div>
-        <Badge className={(purchaseStatus().style)}>{purchaseStatus().label}</Badge>
+        <Badge className={cn(purchaseStatus().style, "uppercase font-semibold" )}>{purchaseStatus().label}</Badge>
     </div>
 }

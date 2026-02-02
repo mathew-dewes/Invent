@@ -241,10 +241,14 @@ export async function getOpenRequests(){
     const requests = await prisma.request.findMany({
         where:{userId, status:"OPEN"},
         select:{
+               quantity:true,
+               customer:true,
+               id:true,
+               createdAt:true,
             stockItem:{
                 select:{
                     name:true,
-                    quantity:true
+                 
             
                 }
             }
@@ -350,6 +354,6 @@ export async function getRequestHealthPercentage() {
     open,
   },
 };
-}
+};
 
 

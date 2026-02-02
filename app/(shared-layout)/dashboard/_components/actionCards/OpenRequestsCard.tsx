@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { daysAgo } from "@/lib/helpers";
 
 import { cn } from "@/lib/utils";
 import { CircleAlert } from "lucide-react";
@@ -18,29 +19,28 @@ type ActionCardProps = {
   title: string,
   description: string,
   total: number,
-  stock: {
-    name: string,
+
+  requests: {
+    createdAt: Date,
+    id:string,
     quantity: number,
-    reorderPoint: number,
-    id: string
+    customer: string,
+    stockItem:{
+        name: string, 
+    }
+
   }[]
 }
 
-export default function LowStockCard({
+export default function OpenRequestsCard({
   title,
-  stock
+  requests
 }: ActionCardProps) {
 
-const noStockCount = stock.filter(
-  s => s.quantity == 0
-).length;
 
-const lowStock = stock.filter(
-  s => s.quantity > 0
-).length;
 
   return (
-    <Card className="w-full border-l-8 border-b-6 border-l-orange-400 border-b-orange-400 shadow-2xl">
+    <Card className="w-full border-l-8 border-b-6 border-l-yellow-400 border-b-yellow-400 shadow-2xl">
       <CardHeader>
         <CardTitle className="text-xl">
           <div className="flex items-center gap-2">
@@ -51,7 +51,7 @@ const lowStock = stock.filter(
 
         </CardTitle>
         <CardDescription>
-          <p>Warning: Items have fell below their reorder points</p>
+          <p>You have open requests to pick</p>
 
 
         </CardDescription>
@@ -60,12 +60,14 @@ const lowStock = stock.filter(
 
     
           <div className="flex w-full max-w-sm flex-col gap-2 text-sm">
-            {stock?.map((item) => {
+            {requests?.map((item) => {
               return (
                 <div className="flex flex-col gap-2" key={item.id} >
                   <dl className="flex items-center justify-between">
-                    <dt>{item.name} - {item.quantity} left</dt>
-                    <dd className="text-muted-foreground">ROP {item.reorderPoint}</dd>
+                    <dt>{item.stockItem.name} x {item.quantity}</dt>
+                    <dt>{item.customer}</dt>
+                    <dt></dt>
+                    <dd className="text-muted-foreground">{daysAgo(item.createdAt)}</dd>
                   </dl>
                    <Separator />
                 </div>)
@@ -87,9 +89,7 @@ const lowStock = stock.filter(
 
       <CardFooter className="flex gap-2">
         <p className="text-sm">View:</p>
-        {noStockCount > 0 && <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=out"}>No stock</Link>}
-
-        {lowStock > 0 && <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=low"}>Low stock</Link> }
+        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/requests?status=OPEN"}>Open requests</Link>
 
 
 
