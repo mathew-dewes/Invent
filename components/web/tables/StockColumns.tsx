@@ -11,9 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { MoreHorizontal } from "lucide-react"
-import { Stock, StockStatus } from "@/lib/types"
+import { Stock } from "@/lib/types"
 import StockStatusBadge from "../badges/StockStatusBadge"
-import { generateStockStatus } from "@/lib/helpers"
 import { deleteStock } from "@/lib/actions/stock"
 import { startTransition } from "react"
 import { toast } from "sonner"
@@ -35,10 +34,12 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
   { 
 
     cell:({row}) => {
-      const quantity = row.getValue("quantity") as number;
-      const reorderAmount = row.getValue("reorderPoint") as number;
+      const quantity = row.original.quantity
+      const lowStock = row.original.lowStock
+
       
-    return <StockStatusBadge status={generateStockStatus(quantity, reorderAmount)  as StockStatus}/>
+      
+    return <StockStatusBadge lowStock={lowStock} quantity={quantity}/>
     },
     header: "Status",
   },

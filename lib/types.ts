@@ -4,14 +4,14 @@ export type StockStatus = "In Stock" | "Low Stock" | "Out of Stock";
 
 
 export type Stock = {
-    unitCost: string;
+   unitCost: string;
     id: string;
     name: string;
     quantity: number;
     location: string;
     brand: string;
     reorderPoint: number;
-    status: StockStatus
+    lowStock:boolean,
     vendor: {
         name: string;
     };
@@ -53,6 +53,7 @@ export type Request = {
     id: string
     name: string
     quantity: number
+    reorderPoint: number
   }
   quantity: number
   plantNumber: string

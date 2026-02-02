@@ -1,19 +1,6 @@
 import { Prisma } from "@/generated/prisma/client"
-import { StockStatus, TimeFrame } from "./types"
+import { TimeFrame } from "./types"
 
-export function generateStockStatus(currentStock: number, reorderPointAmount: number): StockStatus {
-
-    if (currentStock === 0) {
-        return "Out of Stock"
-    }
-
-    else if (currentStock < reorderPointAmount) {
-        return "Low Stock"
-    } else {
-        return "In Stock"
-    }
-
-}
 
 export const getFilterKey = (pathname: string) => {
     if (pathname === '/stock') return "stock"
@@ -84,8 +71,7 @@ export function formatTimeToNZ(date = new Date()){
     month: "2-digit",
     day: "2-digit",
   }).format(date);
-}
-
+};
 
 export function getStartDate(timeFrame?: TimeFrame) {
   const now = new Date();
@@ -118,3 +104,17 @@ export function getStartDate(timeFrame?: TimeFrame) {
   return start;
 }
 
+
+
+export function daysAgo(createdAt: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - createdAt.getTime();
+
+
+
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (days === 0) return "Today";
+  if (days === 1) return "1 day ago";
+  return `${days} days ago`;
+}

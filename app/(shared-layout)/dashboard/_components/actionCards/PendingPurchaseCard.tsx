@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { daysAgo } from "@/lib/helpers";
 
 import { cn } from "@/lib/utils";
-import { CircleAlert } from "lucide-react";
+import { ClipboardClock } from "lucide-react";
 import Link from "next/link";
 
 type ActionCardProps = {
@@ -20,11 +20,13 @@ type ActionCardProps = {
   description: string,
   total: number,
 
-  requests: {
+  purchases: {
     createdAt: Date,
     id:string,
     quantity: number,
-    customer: string,
+    vendor: {
+      name: string
+    },
     stockItem:{
         name: string, 
     }
@@ -32,19 +34,19 @@ type ActionCardProps = {
   }[]
 }
 
-export default function OpenRequestsCard({
+export default function PendingPurchaseCard({
   title,
-  requests
+  purchases
 }: ActionCardProps) {
 
 
 
   return (
-    <Card className="w-full border-l-8 border-b-6 border-l-yellow-400 border-b-yellow-400 shadow-2xl">
+    <Card className="w-full border-l-8 border-b-6 border-l-blue-400 border-b-blue-400 shadow-2xl">
       <CardHeader>
         <CardTitle className="text-xl">
           <div className="flex items-center gap-2">
-            <CircleAlert />
+            <ClipboardClock  />
             <p>{title}</p>
           </div>
 
@@ -60,12 +62,12 @@ export default function OpenRequestsCard({
 
     
           <div className="flex w-full max-w-sm flex-col gap-2 text-sm">
-            {requests?.map((item) => {
+            {purchases?.map((item) => {
               return (
                 <div className="flex flex-col gap-2" key={item.id} >
                   <dl className="flex items-center justify-between">
                     <dt>{item.stockItem.name} x {item.quantity}</dt>
-                    <dt>{item.customer}</dt>
+                    <dt>{item.vendor.name}</dt>
                     <dt></dt>
                     <dd className="text-muted-foreground">{daysAgo(item.createdAt)}</dd>
                   </dl>
@@ -89,7 +91,7 @@ export default function OpenRequestsCard({
 
       <CardFooter className="flex gap-2">
         <p className="text-sm">View:</p>
-        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/requests?status=OPEN"}>Open requests</Link>
+        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/purchases?status=PLACED"}>Purchases</Link>
 
 
 
