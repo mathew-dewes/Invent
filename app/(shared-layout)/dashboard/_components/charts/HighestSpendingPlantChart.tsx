@@ -20,45 +20,48 @@ import {
 
 export const description = "A bar chart"
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
 
 const chartConfig = {
   desktop: {
     label: "Desktop",
     color: "var(--chart-1)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function HighestSpendingPlantChart() {
+type ChartProps = {
+  customer: string,
+  spend: number
+}[]
+
+export function HighestSpendingPlantChart({data}:
+  {data: ChartProps}
+) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Highest spending plant</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Highest spending customers</CardTitle>
+        <CardDescription>Within the last 31 days</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="customer"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              
+    
             />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent hideLabel
+/>
+                
+              }
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
+            <Bar dataKey="spend" fill="#86efac" radius={8} />
           </BarChart>
         </ChartContainer>
       </CardContent>

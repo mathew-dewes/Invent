@@ -113,7 +113,7 @@ export default function VendorForm(){
                                     <Loader2 className="size-4 animate-spin" />
                                     <span>Loading...</span>
                                 </>
-                            ) : (<span>Create Stock</span>)}
+                            ) : (<span>Create vendor</span>)}
                         </Button>
 
 

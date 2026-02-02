@@ -32,7 +32,7 @@ export async function getRequests(filter?: RequestStatus) {
             },
             quantity: true,
             status: true,
-            plantNumber: true,
+            costCentre: true,
             note: true
         }
 
@@ -174,7 +174,7 @@ export async function getRequestById(id: string) {
             },
             quantity: true,
             status: true,
-            plantNumber: true,
+            costCentre: true,
             note: true
         }
 
@@ -210,7 +210,7 @@ export async function getCompletedRequests() {
             },
             quantity: true,
             status: true,
-            plantNumber: true,
+            costCentre: true,
             note: true
         }
 
@@ -342,5 +342,135 @@ export async function getRequestHealthPercentage() {
         },
     };
 };
+
+
+export async function getMonthlyHighestSpendingChartData(){
+    const userId = await getUserId();
+
+    const customers = await prisma.request.findMany({
+        where:{userId, status:"COMPLETE"},
+        select:{
+            customer:true,
+            stockItem:{
+                select:{
+                    unitCost:true,
+                }
+            },
+            quantity:true
+        }
+    });
+
+  const spendMap = new Map<string, number>();
+
+
+    for (const request of customers){
+    const unitCost = Number(request.stockItem?.unitCost ?? 0);
+    const spend = unitCost * request.quantity;
+    
+    spendMap.set(request.customer, (spendMap.get(request.customer) ?? 0) + spend
+    );
+
+
+    };
+    
+  return Array.from(spendMap.entries()).map(
+    ([customer, spend]) => ({
+      customer,
+      spend
+    })
+  ).sort((a, b) => b.spend - a.spend);
+
+
+
+
+
+};
+
+export async function getHighestSpendingCustomersCostCentreAndSpend(){
+    const userId = await getUserId();
+
+    const requests = await prisma.request.findMany(
+        {where: {userId, status:"COMPLETE"},
+    select:{
+        customer:true,
+        costCentre:true,
+        stockItem:{
+            select:{
+                unitCost:true
+            }
+        },
+        quantity: true
+    }}
+    
+    );
+
+    const spendMap = new Map<string, { costCentre: string; spend: number }
+>();
+
+for (const request of requests){
+  const unitCost = Number(request.stockItem?.unitCost ?? 0);
+  const spend = unitCost * request.quantity;
+
+  const current = spendMap.get(request.customer) ?? {
+    spend: 0,
+  };
+
+  spendMap.set(request.customer, {
+    spend: current.spend + spend,
+    costCentre: request.costCentre
+  })
+}
+
+    return Array.from(spendMap.entries()).map(
+  ([customer, data]) => ({
+    customer,
+    costCentre: data.costCentre,
+    spend: data.spend,
+
+  })
+).sort((a, b) => b.spend - a.spend).slice(0, 10);
+};
+
+export async function getMostRequestedChartData(){
+
+    const userId = await getUserId();
+
+    const requests = await prisma.request.findMany(
+        {where:{userId},
+    select:{
+        stockItem:{
+            select:{
+                name:true,
+
+            }
+        },
+        quantity:true
+    }}
+    );
+
+        const requestsMap = new Map<string, { stock: string; requests: number }>();
+
+        for (const request of requests){
+            const current = requestsMap.get(request.stockItem.name) ?? {
+                requests: 0
+            };
+
+            requestsMap.set(request.stockItem.name, {
+                requests: current.requests + request.quantity,
+                stock: request.stockItem.name
+            })
+        };
+
+            return Array.from(requestsMap.entries()).map(
+  ([stock, data]) => ({
+    stock,
+    requests: data.requests,
+  
+
+  })
+).sort((a, b) => b.requests - a.requests).slice(0, 10)
+
+
+}
 
 

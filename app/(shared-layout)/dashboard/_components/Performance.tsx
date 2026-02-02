@@ -2,8 +2,7 @@
 import HightestSpend from "./HighestSpend";
 import MostRequested from "./MostRequested";
 
-export default async function RequestInsight() {
-
+export default function Performance() {
 
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary">

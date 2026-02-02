@@ -31,7 +31,7 @@ export default function RequestForm({stock}:
                 customer:"",
                 stockItem: "",
                 quantity: "",
-                plant: "",
+                costCentre: "",
                 notes: ""
     
     
@@ -117,11 +117,11 @@ export default function RequestForm({stock}:
                                 </Field>
                             )}
                         />
-                        <Controller name="plant" control={form.control}
+                        <Controller name="costCentre" control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field>
-                                    <FieldLabel>Plant Number</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter plant number" {...field} />
+                                    <FieldLabel>Cost centre</FieldLabel>
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter cost center code" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />
                                     }

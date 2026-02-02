@@ -7,70 +7,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { convertToMoney } from "@/lib/helpers"
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-]
 
-export function HighestSpendingTable() {
+
+type tableProps = {
+  customer: string,
+  costCentre: string,
+  spend: number
+}[]
+
+export function HighestSpendingTable({tableData}:{tableData: tableProps}) {
   return (
     <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
+      <TableCaption>Top spending customers.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-25">Name</TableHead>
-          <TableHead>Plant</TableHead>
+          <TableHead>Cost centre</TableHead>
        
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="text-right">Spend</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+        {tableData.map((data, key) => (
+          <TableRow key={key}>
+            <TableCell className="font-medium">{data.customer}</TableCell>
+            <TableCell>{data.costCentre}</TableCell>
+            <TableCell className="text-right">{convertToMoney(data.spend)}</TableCell>
           </TableRow>
         ))}
       </TableBody>

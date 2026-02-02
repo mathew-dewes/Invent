@@ -8,13 +8,19 @@ import {
 } from "@/components/ui/card"
 import { MostRequestedItemsChart } from "./charts/MostRequestedItemsChart"
 import { MostRequestedTable } from "./tables/MostRequestedTable"
+import { getMostRequestedChartData } from "@/lib/queries/request"
 
-export default function MostRequested(){
+export default async function MostRequested(){
+
+  const requests = await getMostRequestedChartData();
+
+
+  
     return (
         <div className="grid grid-cols-10 gap-5">
         
                             <div className="col-span-6">
-                                <MostRequestedItemsChart />
+                                <MostRequestedItemsChart requests={requests} />
                             </div>
                             <div className="col-span-4">
                                 <Card  className="mx-auto w-full">

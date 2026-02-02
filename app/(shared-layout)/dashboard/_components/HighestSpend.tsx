@@ -8,12 +8,17 @@ import {
 } from "@/components/ui/card"
 import { HighestSpendingPlantChart } from "./charts/HighestSpendingPlantChart"
 import { HighestSpendingTable } from "./tables/HighestSpendingTable"
+import { getHighestSpendingCustomersCostCentreAndSpend, getMonthlyHighestSpendingChartData } from "@/lib/queries/request";
 
-export default function HightestSpend(){
+export default async function HightestSpend(){
+
+  const [chartData, tableData] = await Promise.all([getMonthlyHighestSpendingChartData(), getHighestSpendingCustomersCostCentreAndSpend()])
+
+
     return (
          <div className="grid grid-cols-10 gap-5">
                             <div className="col-span-6">
-                                <HighestSpendingPlantChart />
+                                <HighestSpendingPlantChart data={chartData} />
                             </div>
         
                             <div className="col-span-4">
@@ -25,7 +30,7 @@ export default function HightestSpend(){
         </CardDescription>
       </CardHeader>
       <CardContent>
-       <HighestSpendingTable/>
+       <HighestSpendingTable tableData={tableData}/>
       </CardContent>
       <CardFooter>
       </CardFooter>
