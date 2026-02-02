@@ -38,7 +38,8 @@ export default async function BudgetBar(){
     if (!budgetAmount) return (
         <div>
         <p className="ml-2">Budget amount unset</p>
-        <Button className="mt-3">Set Budget</Button>
+        <Link href={'/finance/budget'}><Button className="mt-3">Set Budget</Button></Link>
+        
         </div>
 
     );

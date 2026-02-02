@@ -23,14 +23,14 @@ export async function createRequest(values: z.infer<typeof requestSchema>) {
 
         const requestNumber = await generateRequestNumber();
 
-        const { customer, plant: plantNumber, quantity, stockItem: stockId, notes } = parsed.data;
+        const { customer, costCentre, quantity, stockItem: stockId, notes } = parsed.data;
 
         await prisma.request.create({
             data: {
                 customer,
                 stockId,
                 quantity: Number(quantity),
-                plantNumber,
+                costCentre,
                 status: "OPEN",
                 requestNumber,
                 userId,
@@ -65,14 +65,14 @@ export async function updateRequest(values: z.infer<typeof requestSchema>, reque
 
 
 
-        const { customer, plant: plantNumber, quantity, stockItem: stockId, notes } = parsed.data;
+        const { customer, costCentre, quantity, stockItem: stockId, notes } = parsed.data;
 
         await prisma.request.update({
             data: {
                 customer,
                 stockId,
                 quantity: Number(quantity),
-                plantNumber,
+                costCentre,
                 userId,
                 note: notes
             },
@@ -350,7 +350,7 @@ export async function createRequestLedger(request: Request, stockName: string, u
             stockId: request.stockId,
             requestId: request.id,
             userId: request.userId,
-            plantNumber: request.plantNumber,
+            costCentre: request.costCentre,
             stockName,
             requestee: customer,
             quantity: request.quantity,

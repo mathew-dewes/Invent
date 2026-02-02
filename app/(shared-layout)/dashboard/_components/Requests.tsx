@@ -14,7 +14,7 @@ export default async function Requests() {
     
 
     return (
-        <div className={`border-2 p-5 rounded-xl bg-secondary flex-1`}>
+        <div className={`border-2 p-5 rounded-xl bg-secondary`}>
             <h1 className="font-semibold text-xl py-3 ml-1">Requests</h1>
 
             <div className="grid grid-cols-1 gap-5">

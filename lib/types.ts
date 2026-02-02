@@ -56,7 +56,7 @@ export type Request = {
     reorderPoint: number
   }
   quantity: number
-  plantNumber: string
+  costCentre: string
   note?: string | null
 }
 
@@ -75,7 +75,7 @@ export type SingleRequest = {
     PO?: string;
     totalCost?: number;
     customer?:string
-    plantNumber?: string
+    costCentre: string
   
   
 }

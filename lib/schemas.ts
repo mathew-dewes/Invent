@@ -22,7 +22,7 @@ export const stockSchema = z.object({
 
     partNumber: z.string().min(1, "Part or SKU number is required").min(3, "Part or SKU number must be 3 or more characters"),
     location: z.string().min(1, "Bin location is required").min(3, "Bin location must be 3 or more characters"),
-    vendorId: z.string(),
+    vendorId: z.string('Please select a vendor'),
     brand: z.string().min(1, "Brand or model is required").min(3, "Brand or model name must be 3 more than characters"),
     unitCost: z.string().min(1, "Unit cost is required")
         .refine((val) => {
@@ -68,7 +68,7 @@ export const requestSchema = z.object({
         }, {
             message: "Quantity must be greater than 0",
         }),
-    plant: z.string().min(1, "Plant number is required").max(20, "Customer name must be 20 characters or less"),
+    costCentre: z.string().min(5, "Cost centre must be greater than 5 characters").max(10, "Cost centre must be 20 characters or less"),
     notes: z.string().max(200, "Note must be 200 characters or less").optional()
 
 });

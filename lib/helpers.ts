@@ -54,6 +54,12 @@ export function decimalToMoney(value: Prisma.Decimal) {
     ).format(value.toNumber())
 };
 
+export function convertToMoney(value: number){
+    return new Intl.NumberFormat('en-NZ',
+        { style: 'currency', currency: 'NZD' }
+    ).format(value)
+}
+
 
 export function getNZDateKey(date = new Date()) {
   return new Intl.DateTimeFormat("en-CA", {

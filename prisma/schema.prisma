@@ -123,7 +123,7 @@ model Request {
   requestNumber Int           @unique
   quantity      Int
   status        RequestStatus
-  plantNumber   String
+  costCentre   String
   note          String?
   stockItem     Stock         @relation(fields: [stockId], references: [id])
   user          User          @relation(fields: [userId], references: [id])
@@ -164,7 +164,7 @@ model CostLedger {
   userId String
   reference String
 
-  plantNumber String?
+  costCentre String?
   stockName String
   vendorName String?
   quantity Int

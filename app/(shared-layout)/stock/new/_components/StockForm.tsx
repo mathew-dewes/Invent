@@ -105,7 +105,7 @@ export default function StockForm({vendors}:
                             render={({ field, fieldState }) => (
                                 <Field >
                                     <FieldLabel>Vendor</FieldLabel>
-                                    <Select
+                                    <Select 
 
 
                                         value={field.value}
@@ -115,11 +115,11 @@ export default function StockForm({vendors}:
 
                                     >
                                         <SelectTrigger className="w-45">
-                                            <SelectValue placeholder="Location" />
+                                            <SelectValue placeholder="Vendor" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectGroup >
-                                                <SelectLabel>Location</SelectLabel>
+                                            <SelectGroup>
+                                                <SelectLabel>Vendor</SelectLabel>
                                                 {vendors?.map((vendor, key) => {
                                                     return <SelectItem key={key} value={vendor.id}>{vendor.name}</SelectItem>
                                                 })}

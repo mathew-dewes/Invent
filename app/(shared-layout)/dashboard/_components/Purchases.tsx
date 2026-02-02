@@ -13,7 +13,7 @@ export default async function Purchases() {
 
 
     return (
-        <div className={`border-2 p-5 rounded-xl bg-secondary flex-1`}>
+        <div className={`border-2 p-5 rounded-xl bg-secondary`}>
 
             <h1 className="font-semibold text-xl py-3 ml-2">Purchases</h1>
 

@@ -5,10 +5,9 @@ import { getRequests, getRequestsByStatusCount } from "@/lib/queries/request";
 
 export default async function RequestTable({filter}:
      {filter: RequestStatus | undefined}){
-    
 
-    const requests = await getRequests(filter);
-    const statusCounts = await getRequestsByStatusCount();
+        const [requests, statusCounts] = await Promise.all([getRequests(filter), getRequestsByStatusCount()])
+
     return (
         <div>
   <DataTable filter="customer" columns={Requestcolumns} data={requests} queryCounts={statusCounts}/>

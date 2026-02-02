@@ -1,11 +1,10 @@
 import { Suspense } from "react";
-
 import Requests from "./_components/Requests";
 import Purchases from "./_components/Purchases";
-
 import Budget from "./_components/Budget";
 import Action from "./_components/Action";
-import RequestInsight from "./_components/RequestInsight";
+import Performance from "./_components/Performance";
+
 import Delays from "./_components/Delays";
 
 export default function page() {
@@ -18,18 +17,14 @@ export default function page() {
 
                     <Action />
                     <Delays />
-                    <div className="flex gap-6">
+                    {/* <div className="grid lg:grid-cols-2 gap-6">
                         <Requests />
                         <Purchases />
-                    </div>
+                    </div> */}
 
 
                     <Budget />
-
-
-
-
-                    <RequestInsight />
+                    <Performance/>
 
 
 

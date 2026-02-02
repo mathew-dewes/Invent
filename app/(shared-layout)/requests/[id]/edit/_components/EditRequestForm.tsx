@@ -34,7 +34,7 @@ export default function EditRequestForm({stock, values, requestId}:
                 customer:values.customer,
                 stockItem: values.stockItem.id,
                 quantity: String(values.quantity),
-                plant: values.plantNumber,
+                costCentre: values.costCentre,
                 notes: ""
     
     
@@ -120,11 +120,11 @@ export default function EditRequestForm({stock, values, requestId}:
                                 </Field>
                             )}
                         />
-                        <Controller name="plant" control={form.control}
+                        <Controller name="costCentre" control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field>
-                                    <FieldLabel>Plant Number</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter plant number" {...field} />
+                                    <FieldLabel>Cost centre</FieldLabel>
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter cost centre" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />
                                     }
