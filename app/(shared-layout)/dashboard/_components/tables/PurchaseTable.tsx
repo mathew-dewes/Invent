@@ -35,14 +35,21 @@ type TableProps = {
 
 }[];
 
+const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+
 
 export default function PurchaseTable({ purchases }:
   { purchases: TableProps }){
 
         const router = useRouter();
     
-        function linkToRequests (status: PurchaseStatus){
-          router.push(`/requests?status=${status}`)
+        function linkToRequests (status: string, delayed: boolean){
+          if (delayed){
+            router.push('/purchases?status=DELAYED')
+          } else {
+     router.push(`/purchases?status=${status}`)
+          }
+     
     };
 
     function generateStyle(status: PurchaseStatus){
@@ -82,12 +89,16 @@ return <Card  className="mx-auto w-full">
       <TableBody>
       {purchases.map((purchase) => {
      
-         const createdAt = formatTimeToNZ(purchase.createdAt);
+         const createdAtDisplay = formatTimeToNZ(purchase.createdAt);
+         const isOlderThanThreeDays = new Date(purchase.createdAt) < threeDaysAgo && purchase.status == "PLACED";
+
+    
+    
      
                  return (
-                   <TableRow onClick={()=>linkToRequests(purchase.status)} 
-                   className={`text-sm ${generateStyle(purchase.status)}`} key={purchase.id}>
-                     <TableCell>{createdAt}</TableCell>
+                   <TableRow onClick={()=>linkToRequests(purchase.status, isOlderThanThreeDays)} 
+                   className={`text-sm ${generateStyle(purchase.status)} ${isOlderThanThreeDays ? "bg-orange-400/70 font-medium hover:bg-orange-400/80" : ""}`} key={purchase.id}>
+                     <TableCell>{createdAtDisplay}</TableCell>
                      <TableCell>{purchase.vendor.name}</TableCell>
                      <TableCell>{purchase.stockItem.name}</TableCell>
    

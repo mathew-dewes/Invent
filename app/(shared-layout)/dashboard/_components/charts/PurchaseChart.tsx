@@ -32,6 +32,10 @@ const chartConfig = {
     label: "Placed",
     color: "var(--chart-2)",
   },
+  delayed: {
+    label: "Delayed",
+    color: "var(--chart-2)",
+  },
 } satisfies ChartConfig
 
 export function PurchaseChart({ data }:
@@ -46,7 +50,7 @@ export function PurchaseChart({ data }:
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
-    <CardTitle className="uppercase">Placed vs. received</CardTitle>
+    <CardTitle className="uppercase">Overview</CardTitle>
         <CardDescription>Within the last 7 days</CardDescription>
         </div>
 
@@ -80,8 +84,10 @@ export function PurchaseChart({ data }:
                     });
                   }} />}
             />
+            
             <Bar dataKey="placed" fill="#60a5fa" radius={4} />
             <Bar dataKey="received" fill="#4ade80" radius={4} />
+             <Bar dataKey="delayed" fill="#fb923c" radius={4} />
             <ChartLegend content={<ChartLegendContent />} />
           </BarChart>
         </ChartContainer>

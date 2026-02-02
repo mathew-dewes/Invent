@@ -37,10 +37,13 @@ type TableProps = {
 
 
 
+
+
 export default function RequestTable({ requests }:
   { requests: TableProps }) {
 
     const router = useRouter();
+    
 
     function linkToRequests (status: RequestStatus){
       router.push(`/requests?status=${status}`)

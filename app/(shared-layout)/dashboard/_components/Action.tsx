@@ -23,7 +23,7 @@ export default async function Action() {
                 {LowStock.length > 0 && <LowStockCard title="Low Stock" description="Stock below reorder point" total={LowStock.length} stock={LowStock} />}
                 {openRequests.length > 0 && <OpenRequestsCard requests={openRequests} title="Open Requests" description="Stock below reorder point" total={openRequests.length} />}
                 {readyRequests.length > 0 && <RequestCollectionsCard requests={readyRequests} title="Requests Ready" description="Stock below reorder point" total={readyRequests.length} />}
-                <PendingRequestCard purchases={pendingPurchases} title="Pending Purchase" description="Stock below reorder point" total={openRequests.length} />
+                {pendingPurchases.length > 0 && <PendingRequestCard purchases={pendingPurchases} title="Pending Purchase" description="Stock below reorder point" total={pendingPurchases.length} />}
             </div>
 
         </div>

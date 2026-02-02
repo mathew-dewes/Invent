@@ -25,6 +25,9 @@ import RequestStatusBadge from "../badges/RequestStatusBadge"
 
 const HideFields = () =>{
   const searchParams = useSearchParams().get('status');
+
+  console.log(searchParams);
+  
   
 
   if (searchParams == "COMPLETE" || !searchParams){
@@ -52,9 +55,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
       />
     ),
     cell: ({ row }) => {
-
-
-      <Checkbox
+    return <Checkbox
         hidden={HideFields()}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
