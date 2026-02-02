@@ -24,18 +24,22 @@ export const description = "A multiple bar chart"
 
 
 const chartConfig = {
-  placed: {
-    label: "Placed",
+    open: {
+    label: "open",
     color: "var(--chart-1)",
+  },
+  ready: {
+    label: "Ready",
+    color: "var(--chart-2)",
   },
   complete: {
     label: "Complete",
-    color: "var(--chart-2)",
+    color: "var(--chart-3)",
   },
 } satisfies ChartConfig
 
 export function RequestChart({ data }:
-  { data: { date: string, placed: number, complete: number }[] }
+  { data: { date: string, ready: number, complete: number }[] }
 ) {
 
  
@@ -46,8 +50,8 @@ export function RequestChart({ data }:
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
-    <CardTitle className="uppercase">Placed vs. Complete</CardTitle>
-        <CardDescription>Within the last 14 days</CardDescription>
+    <CardTitle className="uppercase">Overview</CardTitle>
+        <CardDescription>Within the last 7 days</CardDescription>
         </div>
 
     
@@ -80,8 +84,10 @@ export function RequestChart({ data }:
                     });
                   }} />}
             />
-            <Bar dataKey="placed" fill="#60a5fa" radius={4} />
+            <Bar dataKey="open" fill="#fde047" radius={4} />
+            <Bar dataKey="ready" fill="#60a5fa" radius={4} />
             <Bar dataKey="complete" fill="#4ade80" radius={4} />
+       
             <ChartLegend content={<ChartLegendContent />} />
           </BarChart>
         </ChartContainer>

@@ -18,15 +18,18 @@ export default function page() {
 
                     <Action />
                     <Delays />
-                    <div>
-                
-                        <Budget />
-                    </div>
+                    <div className="flex gap-6">
                         <Requests />
                         <Purchases />
-                    
-            
-                    <RequestInsight/>
+                    </div>
+
+
+                    <Budget />
+
+
+
+
+                    <RequestInsight />
 
 
 

@@ -12,8 +12,6 @@ export default async function Action() {
 
     const [LowStock, readyRequests, openRequests, pendingPurchases] = await Promise.all([getLowStock(), getReadyRequests(), getOpenRequests(), getPlacedPurchases()]);
 
-    console.log(pendingPurchases);
-
     return (
         <div className={`border-2 p-5 rounded-xl bg-secondary`}>
             <h1 className="font-semibold text-xl py-3">Actions</h1>
@@ -22,10 +20,10 @@ export default async function Action() {
 
 
             <div className="grid lg:grid-cols-2 gap-3 mt-5">
-                {openRequests.length > 0 && <OpenRequestsCard requests={openRequests} title="Open Requests" description="Stock below reorder point" total={openRequests.length} />}
                 {LowStock.length > 0 && <LowStockCard title="Low Stock" description="Stock below reorder point" total={LowStock.length} stock={LowStock} />}
-                {readyRequests.length > 0 && <RequestCollectionsCard requests={readyRequests} title="Stock ready for collection" description="Stock below reorder point" total={readyRequests.length} />}
-                <PendingRequestCard purchases={pendingPurchases} title="Pending Purchase" description="Stock below reorder point" total={openRequests.length} />
+                {openRequests.length > 0 && <OpenRequestsCard requests={openRequests} title="Open Requests" description="Stock below reorder point" total={openRequests.length} />}
+                {readyRequests.length > 0 && <RequestCollectionsCard requests={readyRequests} title="Requests Ready" description="Stock below reorder point" total={readyRequests.length} />}
+                {pendingPurchases.length > 0 && <PendingRequestCard purchases={pendingPurchases} title="Pending Purchase" description="Stock below reorder point" total={pendingPurchases.length} />}
             </div>
 
         </div>

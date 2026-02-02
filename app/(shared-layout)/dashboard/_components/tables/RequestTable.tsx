@@ -37,10 +37,13 @@ type TableProps = {
 
 
 
+
+
 export default function RequestTable({ requests }:
   { requests: TableProps }) {
 
     const router = useRouter();
+    
 
     function linkToRequests (status: RequestStatus){
       router.push(`/requests?status=${status}`)
@@ -81,10 +84,8 @@ export default function RequestTable({ requests }:
             <TableHead className="w-25">Date</TableHead>
             <TableHead>Customer</TableHead>
             <TableHead>Item</TableHead>
-            <TableHead>QTY</TableHead>
+            <TableHead className="text-center">QTY</TableHead>
 
-
-            <TableHead className="text-right">Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -97,8 +98,8 @@ export default function RequestTable({ requests }:
                 <TableCell>{createdAt}</TableCell>
                 <TableCell>{request.customer}</TableCell>
                 <TableCell>{request.stockItem.name}</TableCell>
-                <TableCell>{request.quantity}</TableCell>
-                <TableCell className="text-right">{request.status}</TableCell>
+                <TableCell className="text-center">{request.quantity}</TableCell>
+      
               </TableRow>
             )
           }

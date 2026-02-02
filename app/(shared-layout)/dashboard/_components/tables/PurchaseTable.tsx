@@ -35,14 +35,21 @@ type TableProps = {
 
 }[];
 
+const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+
 
 export default function PurchaseTable({ purchases }:
   { purchases: TableProps }){
 
         const router = useRouter();
     
-        function linkToRequests (status: PurchaseStatus){
-          router.push(`/requests?status=${status}`)
+        function linkToRequests (status: string, delayed: boolean){
+          if (delayed){
+            router.push('/purchases?status=DELAYED')
+          } else {
+     router.push(`/purchases?status=${status}`)
+          }
+     
     };
 
     function generateStyle(status: PurchaseStatus){
@@ -50,10 +57,7 @@ export default function PurchaseTable({ purchases }:
       switch (status){
      
         case "PLACED":
-          style = 'bg-yellow-300/70 font-medium hover:bg-yellow-300/80'
-          break;
-        case "DELAYED":
-          style = 'bg-red-500/70 font-medium hover:bg-red-500/80'
+          style = 'bg-blue-300/70 font-medium hover:bg-blue-300/80'
           break;
           default:
           style = 'text-white/70 pointer-events-none'
@@ -78,24 +82,27 @@ return <Card  className="mx-auto w-full">
           <TableHead className="w-25">Date</TableHead>
           <TableHead>Vendor</TableHead>
           <TableHead>Item</TableHead>
-    
-       
-          <TableHead className="text-right">Status</TableHead>
+          <TableHead className="text-center">QTY</TableHead>
+  
         </TableRow>
       </TableHeader>
       <TableBody>
       {purchases.map((purchase) => {
      
-         const createdAt = formatTimeToNZ(purchase.createdAt);
+         const createdAtDisplay = formatTimeToNZ(purchase.createdAt);
+         const isOlderThanThreeDays = new Date(purchase.createdAt) < threeDaysAgo && purchase.status == "PLACED";
+
+    
+    
      
                  return (
-                   <TableRow onClick={()=>linkToRequests(purchase.status)} 
-                   className={`text-sm ${generateStyle(purchase.status)}`} key={purchase.id}>
-                     <TableCell>{createdAt}</TableCell>
+                   <TableRow onClick={()=>linkToRequests(purchase.status, isOlderThanThreeDays)} 
+                   className={`text-sm ${generateStyle(purchase.status)} ${isOlderThanThreeDays ? "bg-orange-400/70 font-medium hover:bg-orange-400/80" : ""}`} key={purchase.id}>
+                     <TableCell>{createdAtDisplay}</TableCell>
                      <TableCell>{purchase.vendor.name}</TableCell>
-                     <TableCell>{purchase.stockItem.name} x {purchase.quantity}</TableCell>
+                     <TableCell>{purchase.stockItem.name}</TableCell>
    
-                     <TableCell className="text-right">{purchase.status}</TableCell>
+                     <TableCell className="text-center">{purchase.quantity}</TableCell>
                    </TableRow>
                  )
                }

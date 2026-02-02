@@ -40,7 +40,7 @@ const lowStock = stock.filter(
 ).length;
 
   return (
-    <Card className="w-full border-l-8 border-b-6 border-l-orange-400 border-b-orange-400 shadow-2xl">
+    <Card className="w-full border-l-8 border-b-6 border-l-red-400 border-b-red-400 shadow-2xl">
       <CardHeader>
         <CardTitle className="text-xl">
           <div className="flex items-center gap-2">
@@ -87,7 +87,7 @@ const lowStock = stock.filter(
 
       <CardFooter className="flex gap-2">
         <p className="text-sm">View:</p>
-        {noStockCount > 0 && <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=out"}>No stock</Link>}
+        {noStockCount > 0 && <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=out"}>Out of stock</Link>}
 
         {lowStock > 0 && <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=low"}>Low stock</Link> }
 

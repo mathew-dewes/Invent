@@ -162,9 +162,10 @@ export async function getPuchaseCardData() {
 
 export async function getPurchaseChartData() {
     const userId = await getUserId();
+    const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
 
     const start = new Date();
-    start.setDate(start.getDate() - 13);
+    start.setDate(start.getDate() - 6);
     start.setHours(0, 0, 0, 0);
 
     const end = new Date();
@@ -183,27 +184,32 @@ export async function getPurchaseChartData() {
         }
     });
 
-    const map = new Map<string, { date: string; received: number, placed: number }>();
+    const map = new Map<string, { date: string; received: number, placed: number; delayed: number }>();
 
     for (const purchase of purchases) {
         const dateKey = getNZDateKey(purchase.createdAt);
         const existing = map.get(dateKey) ?? {
             date: dateKey,
             received: 0,
-            placed: 0
+            placed: 0,
+            delayed: 0
         };
 
         if (purchase.status === "RECEIVED") {
             existing.received += 1;
-        };
-        existing.placed += 1;
+        } else if (purchase.createdAt < threeDaysAgo){
+            existing.delayed += 1;
+        } else {
+     existing.placed += 1;
+        }
+   
 
         map.set(dateKey, existing);
     }
 
 
 
-    const result: { date: string; received: number; placed: number }[] = [];
+    const result: { date: string; received: number; placed: number; delayed: number  }[] = [];
     const current = new Date(start);
 
     while (getNZDateKey(current) <= getNZDateKey(end)) {
@@ -214,7 +220,8 @@ export async function getPurchaseChartData() {
             map.get(key) ?? {
                 date: key,
                 received: 0,
-                placed: 0
+                placed: 0,
+                delayed: 0
             }
         );
         current.setDate(current.getDate() + 1);
