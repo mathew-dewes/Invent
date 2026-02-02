@@ -221,8 +221,6 @@ export async function changePurchaseStatus(formData: FormData, status: PurchaseS
 export async function markReceived(purchaseId: string, stockAmount: number){
 const userId = await getUserId();
 
-
-
 try {
 
     const stock = await prisma.purchase.findFirst({

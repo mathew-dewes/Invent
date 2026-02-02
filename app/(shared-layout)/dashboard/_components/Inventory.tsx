@@ -3,7 +3,7 @@ import { InventoryCard } from "./InventoryCard";
 import {
   getStockHealthData,
 } from "@/lib/queries/stock";
-import HealthBar from "./HealthBar";
+import HealthBar from "./bars/StockHealthBar";
 
 
 

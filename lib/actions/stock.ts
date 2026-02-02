@@ -191,12 +191,21 @@ export async function massIncreaseStockQuantity(updateData: {
 
         await Promise.all(
             updateData.map(async (item) => {
-                const res = await prisma.stock.updateMany({
+
+                const stock = await prisma.stock.findUnique({
+                    where:{userId, id:item.id},
+                    select:{reorderPoint:true}
+                });
+                       if (!stock || !item.quantity) return
+            const reorderPoint = stock.reorderPoint;
+
+                const res = await prisma.stock.update({
                     where: { userId, id: item.id },
                     data: {
                         quantity: {
                             increment: item.quantity
-                        }
+                        },
+                        lowStock: item.quantity < reorderPoint
                     }
                 });
 

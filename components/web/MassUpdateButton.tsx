@@ -28,9 +28,6 @@ export function MassUpdateButton({ label, table, status, selectedIds, stockIdsAn
             disabled={selectedIds.length === 0}
             onClick={() => {
                 startTransition(async () => {
-
-          
-
                     try {
 
                         if (table === "Requests") {

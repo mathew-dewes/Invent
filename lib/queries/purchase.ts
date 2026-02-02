@@ -10,6 +10,9 @@ import { getNZDateKey } from "../helpers";
 export async function getPurchases(filter?: PurchaseStatus) {
     const userId = await getUserId();
 
+
+    const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+
     const purchases = await prisma.purchase.findMany({
         where: { userId },
         orderBy:
@@ -39,17 +42,21 @@ export async function getPurchases(filter?: PurchaseStatus) {
         }
     });
 
+
+
     const serialisedPurchases = purchases.map(item => ({
         ...item,
-        totalCost: item.totalCost.toString(), // safest for money
+        totalCost: item.totalCost.toString(),
     }));
 
 
     const placedPurchases = serialisedPurchases.filter(
-        item => item.status === "PLACED"
+        item => item.status === "PLACED" &&   item.createdAt.getTime() > threeDaysAgo.getTime()
     );
     const delayedPurchases = serialisedPurchases.filter(
-        item => item.status === "DELAYED"
+        item =>
+            item.status !== "RECEIVED" &&
+            item.createdAt.getTime() < threeDaysAgo.getTime()
     );
     const receivedPurchases = serialisedPurchases.filter(
         item => item.status === "RECEIVED"
@@ -58,12 +65,12 @@ export async function getPurchases(filter?: PurchaseStatus) {
 
     if (filter === "PLACED") {
         return placedPurchases;
-    } else if (filter === "DELAYED") {
-        return delayedPurchases;
     } else if (filter === "RECEIVED") {
         return receivedPurchases;
-    } else {
+    } else if (filter == "DELAYED") {
 
+        return delayedPurchases;
+    } else {
         return serialisedPurchases;
     }
 
@@ -101,18 +108,23 @@ export async function getPurchaseById(id: string) {
 export async function getPurchaseStatusCount() {
     const userId = await getUserId();
 
+    const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+
     const requests = await prisma.purchase.findMany({
         select: {
-            status: true
+            status: true,
+            createdAt: true
         },
         where: { userId }
     });
 
 
+
+
     const queryCounts = {
         PLACED: requests.filter(q => q.status === "PLACED").length,
-        DELAYED: requests.filter(q => q.status === "DELAYED").length,
         RECEIVED: requests.filter(q => q.status === "RECEIVED").length,
+        DELAYED: requests.filter(q => q.createdAt < threeDaysAgo && q.status !=='RECEIVED').length 
 
     }
 
@@ -151,7 +163,7 @@ export async function getPuchaseCardData() {
 export async function getPurchaseChartData() {
     const userId = await getUserId();
 
-       const start = new Date();
+    const start = new Date();
     start.setDate(start.getDate() - 13);
     start.setHours(0, 0, 0, 0);
 
@@ -159,10 +171,12 @@ export async function getPurchaseChartData() {
     end.setHours(23, 59, 59, 999);
 
     const purchases = await prisma.purchase.findMany({
-        where: { userId, status: { not: "DELAYED"},
-    createdAt:{
-        gte: start, lte: end
-    } },
+        where: {
+            userId,
+            createdAt: {
+                gte: start, lte: end
+            }
+        },
         select: {
             createdAt: true,
             status: true
@@ -182,7 +196,7 @@ export async function getPurchaseChartData() {
         if (purchase.status === "RECEIVED") {
             existing.received += 1;
         };
-            existing.placed += 1;
+        existing.placed += 1;
 
         map.set(dateKey, existing);
     }
@@ -211,30 +225,30 @@ export async function getPurchaseChartData() {
 };
 
 
-export async function getPurchaseTableData(){
+export async function getPurchaseTableData() {
     const userId = await getUserId();
 
     const data = await prisma.purchase.findMany({
-        where:{userId},
-        select:{
-            id:true,
-            createdAt:true,
-            vendor:{
-                select:{
-                    name:true
+        where: { userId },
+        select: {
+            id: true,
+            createdAt: true,
+            vendor: {
+                select: {
+                    name: true
                 }
             },
-            stockItem:{
-                select:{
-                    name:true
+            stockItem: {
+                select: {
+                    name: true
                 }
             },
             quantity: true,
-            status:true
+            status: true
         },
         take: 10,
-        orderBy:{
-            createdAt:"desc"
+        orderBy: {
+            createdAt: "desc"
         }
     });
 
@@ -246,19 +260,21 @@ export async function getPurchaseTableData(){
 
 export async function getDelayedPurchases() {
 
-     const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
+    const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
     const userId = await getUserId();
     const purchases = await prisma.purchase.findMany({
-        where: { userId, createdAt:{
-            lte: threeDaysAgo,
-        }, status: {not: "RECEIVED"}},
+        where: {
+            userId, createdAt: {
+                lte: threeDaysAgo,
+            }, status: { not: "RECEIVED" }
+        },
         select: {
-            id:true,
-            quantity:true,
+            id: true,
+            quantity: true,
             stockItem: {
                 select: {
                     name: true,
-                
+
                 }
             },
             vendor: {
@@ -266,10 +282,64 @@ export async function getDelayedPurchases() {
                     name: true
                 }
             },
-            createdAt:true
+            createdAt: true
         },
-        
+
     });
 
     return purchases;
+};
+
+
+
+export async function getPurchaseHealthPercentage(){
+    const userId = await getUserId();
+
+    const purchases = await prisma.purchase.findMany({
+        where:{userId},
+        select:{
+            status:true
+        }
+    });
+
+      if (purchases.length === 0) {
+    return {
+      health: 100,
+      breakdown: {
+        received: 0,
+        placed: 0,
+    
+      },
+    };
+  }
+
+
+
+    const received = purchases.filter(
+        p => p.status =="RECEIVED"
+    ).length;
+
+    const placed = purchases.filter(
+        p => p.status == "PLACED"
+    ).length;
+
+     const WEIGHTS = {
+    RECEIVED: 1,
+    PLACED: 0.75,
+  
+  } as const;
+   const totalScore = purchases.reduce((sum, p) => {
+    return sum + WEIGHTS[p.status];
+  }, 0);
+    const health = Math.round((totalScore / purchases.length) * 100);
+
+
+ return {
+  health,
+  breakdown: {
+    received,
+    placed,
+   
+  },
+};
 }

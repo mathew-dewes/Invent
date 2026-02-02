@@ -80,7 +80,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
   },
   {
     accessorKey: "status",
-    cell:({row}) => <PurchaseStatusBadge status={row.original.status}/>,
+    cell:({row}) => <PurchaseStatusBadge status={row.original.status} createdAt={row.original.createdAt}/>,
     header: "Status",
   },
    {

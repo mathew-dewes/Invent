@@ -203,7 +203,6 @@ enum RequestStatus {
 enum PurchaseStatus {
   PLACED
   RECEIVED
-  DELAYED
 }
 
 enum FinanceType {

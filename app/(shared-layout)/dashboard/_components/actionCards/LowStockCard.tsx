@@ -32,6 +32,14 @@ export default function LowStockCard({
   stock
 }: ActionCardProps) {
 
+const noStockCount = stock.filter(
+  s => s.quantity == 0
+).length;
+
+const lowStock = stock.filter(
+  s => s.quantity > 0
+).length;
+
   return (
     <Card className="w-full border-l-8 border-b-6 border-l-red-400 border-b-red-400 shadow-2xl">
       <CardHeader>
@@ -77,9 +85,12 @@ export default function LowStockCard({
 
 
       </CardContent>
-      <CardFooter className="flex-col gap-2 items-start">
 
-        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=low"}>View stock</Link>
+      <CardFooter className="flex gap-2">
+        <p>View:</p>
+        {noStockCount > 0 && <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=out"}>No stock</Link>}
+
+        {lowStock > 0 && <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=low"}>Low stock</Link> }
 
 
 

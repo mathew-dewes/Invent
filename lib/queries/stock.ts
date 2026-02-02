@@ -1,6 +1,5 @@
 "use server";
 
-
 import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
 
@@ -30,7 +29,8 @@ export async function getAllStock(filter?: string) {
         },
 
         orderBy: {
-            createdAt: "desc"
+            createdAt: "desc",
+        
         }
 
     });
@@ -44,15 +44,16 @@ export async function getAllStock(filter?: string) {
         item => item.quantity > item.reorderPoint
     );
     const lowStock = serialisedStock.filter(
-        item => item.quantity !== 0 && item.quantity < item.reorderPoint
-    );
+       item => item.quantity !== 0 && item.quantity < item.reorderPoint
+    )
 
-    const outOfStock = serialisedStock.filter(
+      const outOfStock = serialisedStock.filter(
         item => item.quantity == 0
     );
 
-    if (filter === "out") {
-        return outOfStock 
+
+      if (filter === "out") {
+        return outOfStock
     } else if (filter === "low") {
         return lowStock
     } else if (filter === "good") {
@@ -252,14 +253,16 @@ export async function getStockHealthPercentages(){
         }
     });
 
+    
+
     const total = stock.length;
 
     const healthy = stock.filter(
-        s => s.quantity > s.reorderPoint
+        s => s.quantity >= s.reorderPoint
     ).length;
 
     const low = stock.filter(
-        s => s.quantity > 0 && s.quantity <= s.reorderPoint
+        s => s.quantity > 0 && s.quantity < s.reorderPoint
     ).length;
 
 
@@ -268,13 +271,13 @@ export async function getStockHealthPercentages(){
     ).length;
 
 const stockHealthPercent = total === 0 ? 0 : Math.round((healthy / total) * 100);
-const lowStockPercent = total === 0 ? 0 : Math.round((low / total) * 100);
-const outStockPercent = total === 0 ? 0 : Math.round((out / total) * 100);
+
 
 return {
     percentage: stockHealthPercent,
-    low: lowStockPercent,
-    out: outStockPercent
+    totalStock: total,
+    low: low,
+    out: out
 }
 }
 

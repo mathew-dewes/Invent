@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { daysAgo } from "@/lib/helpers";
 
 import { cn } from "@/lib/utils";
 import { CircleAlert } from "lucide-react";
@@ -18,22 +19,27 @@ type ActionCardProps = {
   title: string,
   description: string,
   total: number,
-  details?: {
+
+  requests: {
+    id: string,
+    quantity: number,
+    customer: string,
+    createdAt:Date
     stockItem: {
       name: string,
-      quantity: number
+    
+},
 
-    }
   }[]
 }
 
 export default function RequestCollectionsCard({
   title,
   total,
-  details
+  requests
 }: ActionCardProps) {
   return (
-    <Card className="w-full border-l-8 border-b-6 border-l-yellow-300 border-b-yellow-300 shadow-2xl">
+    <Card className="w-full border-l-8 border-b-6 border-l-blue-300 border-b-blue-300 shadow-2xl">
       <CardHeader>
         <CardTitle className="text-xl">
           <div className="flex items-center gap-2">
@@ -51,33 +57,24 @@ export default function RequestCollectionsCard({
       </CardHeader>
       <CardContent>
  
-          <div>
-            <div className="flex w-full max-w-sm flex-col gap-2 text-sm">
-      <dl className="flex items-center justify-between">
-        <dt>Hammer - 2 left</dt>
-        <dd className="text-muted-foreground">ROP 5</dd>
-      </dl>
-      <Separator />
-      <dl className="flex items-center justify-between">
-        <dt>Skrew driver - 6 left</dt>
-        <dd className="text-muted-foreground">ROP 5</dd>
-      </dl>
-      <Separator />
-      <dl className="flex items-center justify-between">
-        <dt>Playstation 5 - 3 left</dt>
-        <dd className="text-muted-foreground">ROP 10</dd>
-      </dl>
-    </div>
-            <ul className="list-disc ml-5 mt-1">
-     
-        
-          {details?.map((d, key) => {
-              return <li className="tracking-tight text-muted-foreground" key={key}>{d.stockItem.name} x {d.stockItem.quantity}</li>
-            })}
-
-            </ul>
+        <div>
+              <div className="flex w-full max-w-lg flex-col gap-2 text-sm">
+                {requests.map((request)=>{
+                  return (
+                  <div className="flex flex-col gap-2" key={request.id}>
+            <dl className="flex items-center justify-between">
+          <dt>{request.stockItem.name} - x {request.quantity}</dt>
+          <dt>{request.customer}</dt>
+          <dd className="text-muted-foreground">{daysAgo(request.createdAt)}</dd>
+        </dl>
+        <Separator />
+                  </div>)
+                })}
+   
+      </div>
            
-          </div>
+             
+            </div>
 
 
 
@@ -86,7 +83,7 @@ export default function RequestCollectionsCard({
       </CardContent>
       <CardFooter className="flex-col gap-2 items-start">
 
-        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/stock?stock=low"}>View stock</Link>
+        <Link className={cn(buttonVariants({ variant: "outline" }),)} href={"/requests?status=READY"}>View requests</Link>
 
 
 
