@@ -1,5 +1,5 @@
 
-import HightestSpend from "./HighestSpend";
+
 import MostRequested from "./MostRequested";
 
 export default function Performance() {
@@ -9,7 +9,7 @@ export default function Performance() {
             <h1 className="font-semibold text-xl py-3 ml-1">Performance</h1>
             <div className="flex flex-col gap-5">
 
-                <HightestSpend/>
+    
 
                 <MostRequested/>
 

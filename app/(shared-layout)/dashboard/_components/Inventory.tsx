@@ -1,52 +1,33 @@
+import { getLowStock, getStockHealthPercentages } from "@/lib/queries/stock";
+import StockHealthBar from "./inventory/StockHealthBar";
+import CriticalStockCard from "./inventory/CriticalStockCard";
+import IncomingStockCard from "./inventory/IncomingStockCard";
+import { getIncomingPurchases } from "@/lib/queries/purchase";
 
-import { InventoryCard } from "./InventoryCard";
-import {
-  getStockHealthData,
-} from "@/lib/queries/stock";
-import HealthBar from "./bars/StockHealthBar";
 
 
 
 
 export default async function Inventory() {
 
-
-  const data = await getStockHealthData();
-
-
-  const outValues = data["out"];
-  const lowValues = data["low"];
-
-  const noAction = outValues.length == 0 && lowValues.length == 0;
+    const [stockHealthData, criticalStock, incomingPurchases] = await Promise.all([getStockHealthPercentages(), getLowStock(), getIncomingPurchases()])
 
 
+    return (
+        <div className={`border-2 p-5 rounded-xl bg-secondary`}>
+            <h1 className="font-semibold text-xl py-3">Inventory</h1>
+            <StockHealthBar stockData={stockHealthData}/>
+            <div className="mt-5 grid grid-cols-2 gap-3">
+           <CriticalStockCard tableData={criticalStock} headings={['Item', 'QTY', 'ROP', 'Vendor']} title="Low Stock" description="Items at or below reorder point"/>
+           <IncomingStockCard tableData={incomingPurchases} headings={['Ordered', 'Item', 'QTY', 'Vendor']} title="Incoming Stock" description="Stock arriving from recent purchases"/>
+            </div>
+ 
 
-  return (
-
-    <div className="border-2 p-5 rounded-xl bg-secondary">
-      <h1 className="font-semibold text-xl py-3">Inventory</h1>
-      <HealthBar />
-      
-      {noAction && <div className="mt-6">
-        <p>Inventory levels are good. No action required</p>
-      </div> }
-
-      <div className={`grid grid-cols-1 gap-3 mt-5 ${noAction ? "hidden": ""}`}>
-        {outValues.length != 0 && <InventoryCard description="Stock items with quantity zero" cardType="Out of stock" title={"Out of stock"} values={outValues} href="/stock?stock=out" />}
-        {lowValues.length != 0 && <InventoryCard description="Stock items below reorder point" cardType="Critical items" title={"Critical"} values={lowValues} href="/stock?stock=low" />}
-  
+       
 
 
 
 
-
-      </div>
-
-
-
-
-
-    </div>
-
-  )
+        </div>
+    )
 }

@@ -234,6 +234,7 @@ export async function getOpenRequests() {
             stockItem: {
                 select: {
                     name: true,
+                    location:true,
 
 
                 }
@@ -266,32 +267,6 @@ export async function getReadyRequests() {
     return requests;
 };
 
-
-export default async function getRequestTableData() {
-    const userId = await getUserId();
-
-    const data = await prisma.request.findMany({
-        where: { userId },
-        select: {
-            id: true,
-            createdAt: true,
-            customer: true,
-            stockItem: {
-                select: {
-                    name: true
-                }
-            },
-            quantity: true,
-            status: true
-        },
-        take: 10,
-        orderBy: {
-            createdAt: "desc"
-        }
-    });
-
-    return data;
-};
 
 
 export async function getRequestHealthPercentage() {
