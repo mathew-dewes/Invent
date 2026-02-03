@@ -1,72 +1,97 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { CircleAlert } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   title: string,
   description: string,
-  headings:string[],
-  tableData:{
+  headings: string[],
+  tableData: {
     name: string,
     quantity: number,
-    vendor:{
+    vendor: {
       name: string
     },
-    reorderPoint:number,
+    reorderPoint: number,
     id: string
 
   }[]
 
 }
 
-export default function CriticalStockCard({title, description, headings, tableData}:Props){
-    return (
-         <Card className="w-full">
+export default function CriticalStockCard({ title, description, headings, tableData }: Props) {
+  return (
+    <Card className="w-full border-b-red-300 border-l-red-300 border-b-8  border-l-6">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <div className="flex items-center gap-1.5">
+            <CircleAlert />
+            <h1 className="text-lg">{title}</h1>
+
+          </div>
+        </CardTitle>
         <CardDescription>
           {description}
         </CardDescription>
       </CardHeader>
       <CardContent>
 
-          <Table>
-        <TableHeader>
-          <TableRow>
-            {headings.map((head, key)=>{
-              return <TableHead key={key}>{head}</TableHead>
-            })}
-         
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {headings.map((head, key) => {
+                return <TableHead key={key}>{head}</TableHead>
+              })}
 
 
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-    {tableData.map((item)=>{
-      return (<TableRow key={item.id}>
-        
-                <TableCell>{item.name}</TableCell>
+
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tableData.map((item) => {
+              return (<TableRow key={item.id}>
+
+                <TableCell>
+                  <div className="flex items-center gap-1.5">
+                    <div className={`${item.quantity == 0 ? "bg-red-400" : "bg-orange-400"} rounded-full size-3`} />
+                    <p className="font-medium">{item.name}</p>
+                  </div>
+                </TableCell>
                 <TableCell>{item.quantity}</TableCell>
                 <TableCell>{item.reorderPoint}</TableCell>
                 <TableCell>{item.vendor.name}</TableCell>
-      
+                <TableCell className="flex justify-center">
+                  <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={`${item.quantity == 0 ? "/stock?stock=out" : "/stock?stock=low"}`}>
+                    View
+                  </Link>
+
+                </TableCell>
+
               </TableRow>)
-    })}
-      
-           
-    
-        </TableBody>
+            })}
 
-      </Table>
-   
 
-  
+
+          </TableBody>
+
+        </Table>
+
+
+
       </CardContent>
       <CardFooter>
-        <Button variant="outline" size="sm" className="w-full">
-          Action
-        </Button>
+      
+
+        <div className="flex gap-2 items-center">
+          <p>View:</p>
+          <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock'}>No Stock</Link>
+          <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock'}>Low Stock</Link>
+        </div>
+
+
       </CardFooter>
     </Card>
-    )
+  )
 }

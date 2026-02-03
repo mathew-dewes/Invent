@@ -1,7 +1,8 @@
 import { getLowStock, getStockHealthPercentages } from "@/lib/queries/stock";
 import StockHealthBar from "./inventory/StockHealthBar";
-import InventoryAlertCard from "./inventory/InventoryAlertCard";
 import CriticalStockCard from "./inventory/CriticalStockCard";
+import IncomingStockCard from "./inventory/IncomingStockCard";
+import { getIncomingPurchases } from "@/lib/queries/purchase";
 
 
 
@@ -9,11 +10,7 @@ import CriticalStockCard from "./inventory/CriticalStockCard";
 
 export default async function Inventory() {
 
-    const stockHealthData = await getStockHealthPercentages();
-    const criticalStock = await getLowStock();
-
-    console.log(criticalStock);
-    
+    const [stockHealthData, criticalStock, incomingPurchases] = await Promise.all([getStockHealthPercentages(), getLowStock(), getIncomingPurchases()])
 
 
     return (
@@ -21,8 +18,8 @@ export default async function Inventory() {
             <h1 className="font-semibold text-xl py-3">Inventory</h1>
             <StockHealthBar stockData={stockHealthData}/>
             <div className="mt-5 grid grid-cols-2 gap-3">
-           <CriticalStockCard tableData={criticalStock} headings={['Item', 'QTY', 'ROP', 'Vendor']} title="Critical - Low Stock" description="Items at or below reorder point"/>
-            <InventoryAlertCard tableData={criticalStock} headings={['Item', 'QTY', 'Status', 'Vendor']} title="Incoming Stock" description="Stock arriving from recent purchases"/>
+           <CriticalStockCard tableData={criticalStock} headings={['Item', 'QTY', 'ROP', 'Vendor']} title="Low Stock" description="Items at or below reorder point"/>
+           <IncomingStockCard tableData={incomingPurchases} headings={['Ordered', 'Item', 'QTY', 'Vendor']} title="Incoming Stock" description="Stock arriving from recent purchases"/>
             </div>
  
 
