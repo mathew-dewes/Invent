@@ -19,7 +19,7 @@ type Props = {
 
 }
 
-export default function InventoryAlertCard({title, description, headings, tableData}:Props){
+export default function CriticalStockCard({title, description, headings, tableData}:Props){
     return (
          <Card className="w-full">
       <CardHeader>

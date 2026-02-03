@@ -282,6 +282,11 @@ export async function getLowStock(){
         select:{
             name:true,
             quantity:true,
+            vendor:{
+                select:{
+                    name:true
+                }
+            },
             reorderPoint: true,
             id:true
         },
