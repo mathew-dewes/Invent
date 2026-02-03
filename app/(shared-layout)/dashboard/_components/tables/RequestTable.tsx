@@ -6,7 +6,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
 
 import Link from "next/link"
@@ -70,9 +69,8 @@ export default function RequestTable({ requests }:
 
 
     
-  return (<Card className="mx-auto w-full">
+  return (<Card className="mx-auto w-full min-h-100">
     <CardHeader>
-      <CardTitle>Recent requests</CardTitle>
       <CardDescription>
       Total requests: 112
       </CardDescription>

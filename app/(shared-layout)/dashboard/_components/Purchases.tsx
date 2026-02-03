@@ -17,25 +17,12 @@ export default async function Purchases() {
 
             <h1 className="font-semibold text-xl py-3 ml-2">Purchases</h1>
 
-            <div className="grid grid-cols-1 gap-5">
-                <div>
-                    <PurchaseChart data={chartData} />
-                </div>
+            <div className="flex flex-col gap-5">
+                <PurchaseTable purchases={tableData} />
+                {/* <PurchaseChart data={chartData} /> */}
+              
 
-                <div>
-       <PurchaseTable purchases={tableData} />
-
-        
-
-
-
-
-
-
-
-
-
-                </div>
+     
 
 
 

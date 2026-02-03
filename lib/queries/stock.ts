@@ -143,28 +143,6 @@ const stock = await prisma.stock.findMany({
 };
 
 
-export async function getStockHealthData(){
-          const userId = await getUserId();
-       const stock = await prisma.stock.findMany({
-      select:{
-        quantity: true,
-        reorderPoint: true,
-        name:true,
-      },
-      where:{userId}
-    });
-
-    
-
-      const results = {
-    out: stock.filter(s => s.quantity === 0),
-    low: stock.filter(s => s.quantity > 0 && s.quantity <= s.reorderPoint),
-
-  };
-
-  return results
-}
-
 export async function getStockNames() {
     const userId = await getUserId();
     const stock = await prisma.stock.findMany({
@@ -276,6 +254,7 @@ const stockHealthPercent = total === 0 ? 0 : Math.round((healthy / total) * 100)
 return {
     percentage: stockHealthPercent,
     totalStock: total,
+    good:healthy,
     low: low,
     out: out
 }
