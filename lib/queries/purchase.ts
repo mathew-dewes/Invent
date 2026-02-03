@@ -368,6 +368,7 @@ export async function getIncomingPurchases(){
             },
             stockItem:{
                 select:{
+                    id:true,
                     name:true
                 }
             }

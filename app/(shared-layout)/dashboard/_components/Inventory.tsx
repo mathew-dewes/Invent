@@ -10,7 +10,20 @@ import { getIncomingPurchases } from "@/lib/queries/purchase";
 
 export default async function Inventory() {
 
-    const [stockHealthData, criticalStock, incomingPurchases] = await Promise.all([getStockHealthPercentages(), getLowStock(), getIncomingPurchases()])
+    const [stockHealthData, criticalStock, incomingPurchases] = await Promise.all([getStockHealthPercentages(), getLowStock(), getIncomingPurchases()]);
+
+    const noStockIds = criticalStock.filter((i) => i.quantity == 0).map((i)=>{
+        return i.id
+    });
+
+ 
+    
+
+    const isOrdered = incomingPurchases.filter((purchase) => noStockIds.includes(purchase.stockItem.id)).map((i)=>{
+        return i.stockItem.id
+    });
+
+
 
 
     return (
@@ -18,7 +31,7 @@ export default async function Inventory() {
             <h1 className="font-semibold text-xl py-3">Inventory</h1>
             <StockHealthBar stockData={stockHealthData}/>
             <div className="mt-5 grid grid-cols-2 gap-3">
-           <CriticalStockCard tableData={criticalStock} headings={['Item', 'QTY', 'ROP', 'Vendor']} title="Low Stock" description="Items at or below reorder point"/>
+           <CriticalStockCard noStockIds={isOrdered} tableData={criticalStock} headings={['Item', 'QTY', 'ROP', 'Vendor']} title="Low Stock" description="Items at or below reorder point"/>
            <IncomingStockCard tableData={incomingPurchases} headings={['Ordered', 'Item', 'QTY', 'Vendor']} title="Incoming Stock" description="Stock arriving from recent purchases"/>
             </div>
  

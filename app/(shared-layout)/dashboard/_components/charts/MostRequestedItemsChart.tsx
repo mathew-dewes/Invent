@@ -57,7 +57,7 @@ export function MostRequestedItemsChart({requests}:
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="requests" fill="var(--color-desktop)" radius={8} />
+            <Bar dataKey="requests" fill="#4ade80" radius={8} />
           </BarChart>
         </ChartContainer>
       </CardContent>

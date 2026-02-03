@@ -35,11 +35,14 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
 
     cell:({row}) => {
       const quantity = row.original.quantity
-      const lowStock = row.original.lowStock
+      const lowStock = row.original.lowStock;
+      const itemOrdered = !!row.original.purchases?.find((i) => i.status == "PLACED");
+      console.log(itemOrdered);
+      
 
       
       
-    return <StockStatusBadge lowStock={lowStock} quantity={quantity}/>
+    return <StockStatusBadge stockOrdered={itemOrdered} lowStock={lowStock} quantity={quantity}/>
     },
     header: "Status",
   },

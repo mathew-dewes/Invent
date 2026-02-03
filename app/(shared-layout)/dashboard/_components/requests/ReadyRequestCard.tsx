@@ -26,11 +26,11 @@ type Props = {
 
 export default function ReadyRequestCard({ title, description, headings, tableData }: Props) {
     return (
-        <Card className="w-full border-b-blue-200 border-l-blue-200 border-b-8  border-l-6">
+        <Card className="w-full">
             <CardHeader>
                 <CardTitle>
                   <div className="flex items-center gap-1.5">
-            <CircleCheckBig/>
+            <CircleCheckBig className="text-blue-300"/>
             <h1 className="text-lg">{title}</h1>
      
           </div>

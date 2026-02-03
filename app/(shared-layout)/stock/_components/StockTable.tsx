@@ -9,6 +9,8 @@ export default async function StockTable({ filter }:
 
      const [stock, statusCounts] = await Promise.all([getAllStock(filter), getStockByStatusCount()]);
 
+     
+
 
 
 

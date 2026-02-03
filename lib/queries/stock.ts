@@ -25,7 +25,12 @@ export async function getAllStock(filter?: string) {
                 }
             },
             unitCost: true,
-            brand: true
+            brand: true,
+            purchases:{
+                select:{
+                    status:true
+                }
+            }
         },
 
         orderBy: {
@@ -299,3 +304,7 @@ export async function getLowStock(){
 
  
 }
+
+
+
+   

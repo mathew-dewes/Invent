@@ -1,12 +1,13 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CircleAlert } from "lucide-react";
+import { CircleAlert, ClipboardClock } from "lucide-react";
 import Link from "next/link";
 
 type Props = {
   title: string,
   description: string,
+  noStockIds:string[],
   headings: string[],
   tableData: {
     name: string,
@@ -21,13 +22,13 @@ type Props = {
 
 }
 
-export default function CriticalStockCard({ title, description, headings, tableData }: Props) {
+export default function CriticalStockCard({ title, description, headings, tableData, noStockIds }: Props) {
   return (
-    <Card className="w-full border-b-red-300 border-l-red-300 border-b-8  border-l-6">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center gap-1.5">
-            <CircleAlert />
+            <CircleAlert className="text-red-400" />
             <h1 className="text-lg">{title}</h1>
 
           </div>
@@ -51,12 +52,18 @@ export default function CriticalStockCard({ title, description, headings, tableD
           </TableHeader>
           <TableBody>
             {tableData.map((item) => {
+
+          
+              const noStock = noStockIds.find((i) => i == item.id);
               return (<TableRow key={item.id}>
 
                 <TableCell>
                   <div className="flex items-center gap-1.5">
+             
+                
                     <div className={`${item.quantity == 0 ? "bg-red-400" : "bg-orange-400"} rounded-full size-3`} />
-                    <p className="font-medium">{item.name}</p>
+                    <p className="font-medium">{item.name} </p>
+                  {noStock && <ClipboardClock size={20}/> }
                   </div>
                 </TableCell>
                 <TableCell>{item.quantity}</TableCell>
@@ -86,8 +93,8 @@ export default function CriticalStockCard({ title, description, headings, tableD
 
         <div className="flex gap-2 items-center">
           <p>View:</p>
-          <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock'}>No Stock</Link>
-          <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock'}>Low Stock</Link>
+          <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock?stock=out'}>No Stock</Link>
+          <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock?stock=low'}>Low Stock</Link>
         </div>
 
 
