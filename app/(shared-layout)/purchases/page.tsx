@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-// import { Suspense } from "react";
-
 import { PurchaseStatus } from "@/generated/prisma/enums";
-import { PurchaseTable } from "./_components/PurchaseTable";
-import { Purchasecolumns } from "./_components/PurchaseColumns";
-import { getPurchases, getPurchaseStatusCount } from "@/lib/queries/purchase";
+
+import PurchaseWrapper from "./_components/PurchaseWrapper";
+import { Suspense } from "react";
+import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 
 
@@ -16,17 +15,17 @@ export default  async function RequestsPage({searchParams}:
 
       const filters = ((await searchParams).status);
 
-          const [purchases, statusCounts] = await Promise.all([getPurchases(filters), getPurchaseStatusCount()]);
-        
     return (
         <div>
   <div className="flex justify-end">
       <Link href={'/purchases/new'}><Button>Create Purchase</Button></Link>
        
       </div>
-      {/* <Suspense fallback={<TableSkeleton/>}> */}
-        <PurchaseTable queryCounts={statusCounts} data={purchases} columns={Purchasecolumns} filter={"PO"} />
-      {/* </Suspense> */}
+      <Suspense fallback={<TableSkeleton/>}>
+     <PurchaseWrapper filter={filters}/>  
+      </Suspense>
+
+      
         </div>
     )
 }

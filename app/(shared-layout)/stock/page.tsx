@@ -1,18 +1,16 @@
 import Link from "next/link"
-
-import { StockTable } from "./_components/StockTable"
 import { Button } from "@/components/ui/button"
-import { getAllStock, getStockByStatusCount } from "@/lib/queries/stock"
-import { Stockcolumns } from "./_components/Stockcolumns";
+
+import StockWrapper from "./_components/StockWrapper";
+import { Suspense } from "react";
+import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 
-export default async function StockPage({searchParams}:
+export default async function page({searchParams}:
   {searchParams: Promise<{level: string}>}
 ) {
 
     const filters = ((await searchParams).level);
-      const stock = await getAllStock(filters);
-      const queryCounts = await getStockByStatusCount();
       
       
 
@@ -21,7 +19,10 @@ export default async function StockPage({searchParams}:
        <div className="flex justify-end">
       <Link href={'/requests/new'}><Button>Create Request</Button></Link>
       </div>
-      <StockTable queryCounts={queryCounts} filter={"name"} columns={Stockcolumns} data={stock} />
-    </div>
+      <Suspense fallback={<TableSkeleton/>}>
+      <StockWrapper filter={filters}/>
+      </Suspense>
+
+        </div>
   )
-} 
+};
