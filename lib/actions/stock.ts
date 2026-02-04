@@ -82,7 +82,6 @@ export async function updateStock(values: z.infer<typeof stockSchema>, stockId: 
                 partNumber,
                 reorderPoint: Number(reorderPoint),
                 vendorId,
-                lowStock: quantity < reorderPoint
             },
             where: { id: stockId }
         });
@@ -99,326 +98,62 @@ export async function updateStock(values: z.infer<typeof stockSchema>, stockId: 
 
 }
 
-export async function bulkUpdateStock(formData: FormData) {
-    const stockIds = formData.getAll("ids") as string[]
-    console.log(stockIds);
+export async function checkInventoryBatch(stockItems: {id: string, quantity: number }[]) {
+    const stockIds = stockItems.map((item) => item.id);
+    // id: string | undefined;
+    // quantity: number;
 
-}
-
-export async function deleteStock(formData: FormData) {
-    const stockId = formData.get("id") as string
-    const userId = await getUserId();
-
-    if (!stockId || !userId) return
-
-    try {
-
-        await prisma.stock.delete({
-            where: {
-                userId, id: stockId
-            }
-        })
-
-
-        revalidatePath('/stock')
-    } catch (error) {
-        console.error('Delete stock error:', error);
-        throw error;
-    }
-}
-
-
-export async function adjustInventory(id: string, requestedQuantity: number, requestId: string) {
-
-
-    const request = await prisma.request.findFirst({
-        where: { id: requestId },
-        include: { stockItem: true }
+    const stockRecords = await prisma.stock.findMany({
+        where: { id: { in: stockIds } },
+        select: {
+            id: true,
+            name: true,
+            quantity: true,
+            reorderPoint: true
+        }
     });
 
-    if (request) {
-
-        if (request.status == "COMPLETE") {
+    const results = stockItems.map((item) => {
+        const stock = stockRecords.find((s) => s.id === item.id);
+        if (!stock) {
             return {
-                success: false, message: "Request already marked complete"
-            }
+                stockId: item.id,
+                requestedQty: item.quantity,
+                availableQty: 0,
+                enoughStock: false,
+                shortage: item.quantity,
+                message: "Stock item not found",
+            };
         }
 
-        if (request.quantity <= request.stockItem.quantity) {
-
-            await prisma.stock.update({
-                data: {
-                    quantity: {
-                        decrement: requestedQuantity
-                    }
-                },
-                where: { id }
-            });
-
-            revalidatePath('/requests');
-
-            return {
-                success: true, message: "Inventory has been updated"
-            }
-
-
-        } else {
-            return {
-                success: false, message: "Inventory level is tow"
-            }
-
-        }
-
-
-    } else {
-
+        const enoughStock = stock.quantity >= item.quantity;
         return {
-            success: false, message: "Request not found"
-        }
-    }
+            stockId: stock.id,
+            itemName: stock.name,
 
+            requestedQty: item.quantity,
+            availableQty: stock.quantity,
 
-};
+            enoughStock,
+            shortage: enoughStock ? 0 : item.quantity - stock.quantity,
 
+            isLow: stock.quantity <= stock.reorderPoint,
+        };
 
-export async function massIncreaseStockQuantity(updateData: {
-    id: string | undefined, quantity: number | undefined
-}[]) {
-    const userId = await getUserId();
 
 
-    try {
 
-        await Promise.all(
-            updateData.map(async (item) => {
-
-                const stock = await prisma.stock.findUnique({
-                    where:{userId, id:item.id},
-                    select:{reorderPoint:true}
-                });
-                       if (!stock || !item.quantity) return
-            const reorderPoint = stock.reorderPoint;
-
-                const res = await prisma.stock.update({
-                    where: { userId, id: item.id },
-                    data: {
-                        quantity: {
-                            increment: item.quantity
-                        },
-                        lowStock: item.quantity < reorderPoint
-                    }
-                });
-
-                console.log(
-                    `Tried updating stock ${item.id}. Rows affected:`,
-                    res
-                );
-            })
-
-        )
-
-
-
-
-
-
-        console.log("Stock successfully updated 🚀");
-    } catch (error) {
-
-        console.error("Failed to update stock:", error);
-
-
-    }
-
-
-
-
-
-
-
-
-}
-
-export async function massDecreaseStockQuantity(updateData: {
-    id: string | undefined, quantity: number | undefined
-}[]) {
-    const userId = await getUserId();
-
-    console.log(updateData);
-
-
-
-
-
-    try {
-
-        await Promise.all(
-            updateData.map(async (item) => {
-                const res = await prisma.stock.updateMany({
-                    where: { userId, id: item.id, quantity: { gt: item.quantity, } },
-                    data: {
-                        quantity: {
-                            decrement: item.quantity
-                        }
-                    }
-                });
-
-                if (res.count === 0) {
-                    console.warn(`Cannot decrement stock ${item.id}: insufficient quantity`);
-                }
-            })
-
-        );
-
-
-
-
-
-
-
-
-        console.log("Stock successfully updated 🚀");
-    } catch (error) {
-
-        console.error("Failed to update stock:", error);
-
-
-    }
-
-
-
-
-
-
-
-
-}
-
-
-
-export async function checkSingleStockItemQuantity(stockId: string, requestedQuantity: number) {
-    const userId = await getUserId();
-
-    try {
-        const stockItem = await prisma.stock.count({
-            where: {
-                userId, id: stockId, quantity: {
-                    gte: requestedQuantity
-                }
-            },
-
-        });
-
-        if (stockItem > 0) {
-
-            return {
-                success: true
-            }
-        } else {
-
-            return {
-                success: false
-            }
-        }
-
-
-
-
-    } catch (error) {
-        console.log(error);
-        throw error
-
-    }
-};
-
-export async function decreaseStockQuantity(stockId: string, decreaseQuantity: number) {
-    const userId = await getUserId();
-
-
-    try {
-        const stock = await prisma.stock.findUnique({
-            where: { userId, id: stockId },
-            select: {
-                reorderPoint: true,
-                quantity: true
-            }
-        }
-        );
-
-        if (!stock) return
-
-        const reorderPoint = stock.reorderPoint;
-        const stockCount = stock.quantity - decreaseQuantity;
-
-        const updatedStock = await prisma.stock.update({
-            where: { userId, id: stockId },
-            data: {
-                quantity: {
-                    decrement: decreaseQuantity
-                },
-                lowStock: stockCount < reorderPoint
-
-            }
-        });
-
-        console.log(updatedStock);
-        
-    } catch (error) {
-        console.log("Stock adjustment failed", error);
-        throw error
-
-
-    }
-};
-
-
-export async function updateSingleStockItemQuantity(stockId: string, updateAmount: number) {
-    const userId = await getUserId();
-
-    const stockItem = await prisma.stock.findUnique({
-        where:{userId, id: stockId},
-        select:{
-            reorderPoint:true,
-
-        }
     });
 
 
-    if (!stockItem) return
-
-        const reorderPoint = stockItem.reorderPoint;
-
-
-
-
-
-    try {
-        const item = await prisma.stock.update({
-            where: { userId, id: stockId },
-            data: {
-                quantity: updateAmount,
-                lowStock: updateAmount < reorderPoint
-            },
-            select: {
-                name: true,
-                quantity: true,
-                lowStock:true
-            }
-        });
+    const canFulfillAll = results.every((r) => r.enoughStock);
 
     
-        
 
-        revalidatePath('/stock')
+    return {
+        canFulfillAll,
+        results,
+    };
 
-        return {
-            success: true, message: `${item.name} updated`
-        }
-    } catch (error) {
-        console.log('Stock quantity updated failed', error)
-        return {
-            success: false, message: `Update failed`
-        }
-    }
 
 }

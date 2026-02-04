@@ -29,7 +29,8 @@ import RequestFilters from "./RequestFilters"
 import { delay } from "@/lib/helpers"
 import { useSearchParams } from "next/navigation"
 import { RequestStatus } from "@/generated/prisma/enums"
-import { MarkAllReadyButton } from "./MassRequestUpdateButton"
+import { MarkAllReadyButton } from "./MarkAllReadyButton"
+import { MarkAllCompleteButton } from "./MarkAllCompleteButton"
 
 
 interface DataTableProps<TData, TValue> {
@@ -39,7 +40,7 @@ interface DataTableProps<TData, TValue> {
   queryCounts?: Record<string, number> 
   
 }
-interface ParsedDataTypes { id: string, stockItem?: { id: string }, quantity: number, }
+interface ParsedDataTypes { id: string, stockItem: { id: string }, quantity: number, }
 
 
 
@@ -83,18 +84,22 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
         },
       });
 
-       const selectedStockIds = table
+       const selectedRequestIds = table
     .getSelectedRowModel()
     .rows
     .map((row) => row.original.id);
+
+    const selectedStockIds = table.getSelectedRowModel().rows.map((row) => row.original.stockItem.id)
 
       const stockIdsAndQuantity = table
     .getSelectedRowModel()
     .rows
     .map(({ original }) => ({
-      id: original.stockItem?.id,
+      id: original.stockItem.id,
       quantity: original.quantity
     }));
+
+    const isSelected = selectedRequestIds.length > 0;
 
 
   return (
@@ -212,15 +217,16 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
           Next
         </Button>
       </div>
-       {
-        <div>
+       
+        <div className={`${!isSelected ? "hidden" : ""}`}>
           <p>Update (All) selected:</p>
           <div onClick={async () => {
             await delay(500)
             table.setRowSelection({})
           }} className="mt-2 flex gap-5">
-        {query == "OPEN" && <MarkAllReadyButton stockIdsAndQuantity={stockIdsAndQuantity} selectedIds={selectedStockIds}/>}
-        {query !== "COMPLETE" && query && <Button variant={"destructive"}>Cancel</Button>}
+        {query == "OPEN" && <MarkAllReadyButton stockIdsAndQuantity={stockIdsAndQuantity}/>}
+        {query == "READY" && <MarkAllCompleteButton selectedStockIds={selectedStockIds}/>}
+        {query !== "COMPLETE" && query && <Button disabled={!isSelected} variant={"destructive"}>Cancel</Button>}
    
             {/* <MassCancelButton selectedIds={selectedStockIds} table={selectedTable} status={selectedStatus} stockIdsAndQuantity={stockIdsAndQuantity}  /> */}
 
@@ -238,7 +244,7 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
 
 
 
-        </div>}
+        </div>
      </div>
    
   )

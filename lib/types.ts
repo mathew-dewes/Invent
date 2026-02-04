@@ -11,7 +11,6 @@ export type Stock = {
     location: string;
     brand: string;
     reorderPoint: number;
-    lowStock:boolean,
     vendor: {
         name: string;
     },

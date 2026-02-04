@@ -13,9 +13,7 @@ import { Button } from "@/components/ui/button"
 import { MoreHorizontal, ArrowUpDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Purchase } from "@/lib/types"
-
 import { startTransition } from "react"
-import { markReceived } from "@/lib/actions/purchase"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { toast } from "sonner"
@@ -172,11 +170,9 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
 
                     try {
 
-                      const res = await markReceived(purchaseId, purchaseQuantity);
+                 return
 
-                      if (res?.success){
-                        toast.success('Purchase has been charged')
-                      }
+            
               
                     } catch (error) {
                       console.log(error);

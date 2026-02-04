@@ -15,9 +15,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Request } from "@/lib/types"
 
 import { startTransition } from "react"
-import { cancelRequest, changeRequestStatus } from "@/lib/actions/request"
 import { toast } from "sonner"
-import {checkSingleStockItemQuantity, decreaseStockQuantity } from "@/lib/actions/stock"
+
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import RequestStatusBadge from "@/components/web/badges/RequestStatusBadge"
@@ -179,17 +178,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
                     try {
                       // Check inventory amount of selected stock item
-                      const inventoryCheck = await checkSingleStockItemQuantity(stockId, requestQuantity);
-
-                      if (inventoryCheck.success){
-                        await decreaseStockQuantity(stockId, requestQuantity);
-                        await changeRequestStatus(requestId, "READY")
-                        toast.success("Inventory check success!");
-            
-            
-                      } else {
-                        toast.warning("Insufficient stock levels")
-                      }
+                  return
                     
 
             
@@ -220,7 +209,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
                     try {
 
-                     await changeRequestStatus(requestId, 'COMPLETE');
+                     return
 
        
 
@@ -249,16 +238,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
                 (formData) => {
                   startTransition(async () => {
 
-
-                    try {
-
-                      await cancelRequest(formData);
-
-                    } catch (error) {
-                      console.log(error);
-                      toast.error("There was error deleting this stock item")
-
-                    }
+return
                   })
 
                 }

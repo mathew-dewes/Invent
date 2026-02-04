@@ -110,7 +110,6 @@ model Stock {
   brand        String
   unitCost     Decimal    @db.Decimal(10, 2)
   reorderPoint Int
-  lowStock Boolean @default(false)
   requests     Request[]
   purchases    Purchase[]
   costLedger CostLedger[]

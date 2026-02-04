@@ -4,10 +4,9 @@ import z from "zod";
 import { purchaseSchema } from "../schemas";
 import { getUserId } from "./auth";
 import prisma from "../prisma";
-import { PurchaseStatus } from "@/generated/prisma/enums";
+import { createPurchaseLedger } from "./ledger";
 import { revalidatePath } from "next/cache";
-import { massIncreaseStockQuantity } from "./stock";
-import { createLedger } from "./request";
+
 
 
 
@@ -34,13 +33,16 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
 
         const stockItem = await prisma.stock.findUnique({
             where: { id: item, userId },
-            include: { vendor: true }
+            include: { vendor: true },
+            
         });
+
+        if (!stockItem) return
 
         const totalCost = Number(stockItem!.unitCost) * Number(quantity);
 
 
-        await prisma.purchase.create({
+        const purchase = await prisma.purchase.create({
             data: {
                 stockId: item,
                 quantity: Number(quantity),
@@ -51,8 +53,13 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
                 notes,
                 PO: poNumber,
                 vendorId: stockItem!.vendorId
+            },
+            select:{
+                id: true
             }
-        })
+        });
+
+        await createPurchaseLedger(purchase.id)
 
 
 
@@ -113,54 +120,7 @@ export async function updatePurchase(values: z.infer<typeof purchaseSchema>, pur
     }
 }
 
-export async function massUpdatePurchase(stockIds: string[], status: PurchaseStatus | null, stockIdsAndQuantity:
-    { id: string | undefined, quantity: number | undefined }[]) {
 
-    if (!status || stockIds.length === 0) return
-
-    const userId = await getUserId();
-
-
-
-    try {
-
-        if (status === "RECEIVED") {
-
-            await massIncreaseStockQuantity(stockIdsAndQuantity);
-
-
-            await Promise.all(
-                stockIds.map(async (id) => {
-                    await createLedger("PURCHASE", id)
-
-
-                })
-
-            )
-
-        };
-
-        
-        await prisma.purchase.updateMany({
-            data: {
-                status: status as PurchaseStatus
-            },
-            where: { id: { in: stockIds }, userId },
-
-
-        })
-
-
-        revalidatePath('/purchases');
-
-
-    } catch (error) {
-        console.error('Update purchase error:', error);
-        throw error;
-
-    }
-
-}
 
 export async function generatePurchaseNumber(): Promise<number> {
     let unique = false;
@@ -182,96 +142,47 @@ export async function generatePurchaseNumber(): Promise<number> {
     return purchaseNumber
 };
 
-export async function changePurchaseStatus(formData: FormData, status: PurchaseStatus) {
-    const purchaseId = formData.get("purchaseId") as string;
-    const purchaseQuantity = formData.get("purchaseQuantity") as string;
 
-    console.log(purchaseQuantity);
-
-
-
+export async function markAllReceived(purchaseIds: string[]){
+    const userId = await getUserId();
+    
     try {
-        await prisma.purchase.update({
-            where: { id: purchaseId },
-            data: {
-                status, stockItem: {
-                    update: {
-                        quantity: {
-                            increment: Number(purchaseQuantity)
-                        }
+        purchaseIds.map(async(purchaseId)=>{
+            const purchase = await prisma.purchase.findFirst({
+                where:{id: purchaseId},
+                select:{
+                    id: true,
+                    quantity:true,
+                    stockId: true
+                }
+            });
+
+            if (!purchase) return;
+
+            await prisma.stock.update({
+                where:{userId, id: purchase.stockId },
+                data:{
+                    quantity:{
+                        increment: purchase.quantity
                     }
                 }
-            }
-        });
+            })
 
-        revalidatePath('/purchases')
-
-        return {
-            success: true
-        }
-    } catch (error) {
-        console.error('Purchase failed:', error);
-        throw error;
-    }
-
-
-};
-
-
-export async function markReceived(purchaseId: string, stockAmount: number){
-const userId = await getUserId();
-
-try {
-
-    const stock = await prisma.purchase.findFirst({
-    where:{userId, id: purchaseId},
-    select:{
-        stockItem:{
-            select:{
-                reorderPoint:true,
-                quantity:true
-            }
-        }
-    }
-});
-
-if (!stock) return
-
-const reorderPoint = stock.stockItem.reorderPoint;
-const newStockAmount = stockAmount + stock.stockItem.quantity;
-
-await prisma.purchase.update({
-        where:{userId, id: purchaseId},
-        data:{
-            status: "RECEIVED",
-            stockItem:{
-                update:{
-                    quantity:{
-                        increment: stockAmount
-                    },
-                    lowStock: newStockAmount > reorderPoint
-                }
-            }
-        }
     });
 
+        await prisma.purchase.updateMany({
+                where:{userId, id:{in: purchaseIds}},
+                data:{
+                    status:"RECEIVED"
+                }
+            });
 
+            revalidatePath('/purchases');
 
-    await createLedger("PURCHASE", purchaseId);
-
-    revalidatePath('/purchases');
-
-    return {
-        success: true, message:'Purchase marked Received'
-    }
-} catch (error) {
+               return {
+            success: true, message: "Stock levels updated"
+        }
+    } catch (error) {
         console.log(error);
-    throw error;
-   
-    
-    
+    }
 }
-
-}
-
-

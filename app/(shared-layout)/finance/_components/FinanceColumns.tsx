@@ -17,7 +17,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Finance } from "@/lib/types"
 
 import { startTransition } from "react"
-import { changePurchaseStatus } from "@/lib/actions/purchase"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
@@ -128,21 +127,13 @@ export const Financecolumns: ColumnDef<Finance>[] = [
     },
   },
     {
-    accessorKey: "plantNumber",
-    header: "Plant",
+    accessorKey: "costCentre",
+    header: "Cost Centre",
   },
-    {
-    accessorKey: "vendor.name",
-    header: "Vendor",
-    cell:({row})=>{
-      
-      const vendorName = row.original.vendorName;
-      return vendorName ?? "-"
-    }
-  },
+
     {
     accessorKey: "requestee",
-    header: "Customer",
+    header: "Customer / Vendor",
     cell:({row})=>{
       console.log(row.original);
       
@@ -179,12 +170,7 @@ export const Financecolumns: ColumnDef<Finance>[] = [
                 (formData) => {
                   startTransition(async () => {
 
-                    try {
-                      await changePurchaseStatus(formData, "RECEIVED");
-                    } catch (error) {
-                      console.log(error);
-                      
-                    }
+              return
 
             
                     

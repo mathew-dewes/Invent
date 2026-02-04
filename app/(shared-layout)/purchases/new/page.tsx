@@ -1,4 +1,4 @@
-import { getStockNames } from "@/lib/queries/stock";
+import { getStockNamesAndQuantity } from "@/lib/queries/stock";
 import PurchaseForm from "./_components/purchaseForm";
 
 export default async function Page({searchParams}:
@@ -8,7 +8,7 @@ export default async function Page({searchParams}:
 
   console.log(reorderStockId);
   
-    const stock = await getStockNames();
+    const stock = await getStockNamesAndQuantity();
 
     return (
         <div>

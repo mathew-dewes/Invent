@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { updateSingleStockItemQuantity } from "@/lib/actions/stock";
+// import { updateSingleStockItemQuantity } from "@/lib/actions/stock";
 
 export default function EditQuantityForm({stockId ,stockName, stockQuantity}:
     {stockId:string ,stockName: string, stockQuantity: number}
@@ -37,11 +37,8 @@ export default function EditQuantityForm({stockId ,stockName, stockQuantity}:
         
         startTransition(async () => {
             try {
-        const res = await updateSingleStockItemQuantity(stockId, stockAmount);
-        if (res?.success){
-            toast.success(res.message);
-            router.push('/stock')
-        }
+                // Create mutation function that updates stock QTY
+ return
         
             } catch (error) {
             console.log(error);
