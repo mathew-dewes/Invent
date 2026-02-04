@@ -26,7 +26,10 @@ import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import RequestFilters from "./RequestFilters"
-
+import { delay } from "@/lib/helpers"
+import { useSearchParams } from "next/navigation"
+import { RequestStatus } from "@/generated/prisma/enums"
+import { MarkAllReadyButton } from "./MassRequestUpdateButton"
 
 
 interface DataTableProps<TData, TValue> {
@@ -36,7 +39,7 @@ interface DataTableProps<TData, TValue> {
   queryCounts?: Record<string, number> 
   
 }
-interface ParsedDataTypes { id: string }
+interface ParsedDataTypes { id: string, stockItem?: { id: string }, quantity: number, }
 
 
 
@@ -52,6 +55,12 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [rowSelection, setRowSelection] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+    
+    const params = useSearchParams();
+    const query = params.get('status') as RequestStatus;
+
+
+    
 
       // eslint-disable-next-line react-hooks/incompatible-library
       const table = useReactTable({
@@ -73,6 +82,20 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
           columnVisibility
         },
       });
+
+       const selectedStockIds = table
+    .getSelectedRowModel()
+    .rows
+    .map((row) => row.original.id);
+
+      const stockIdsAndQuantity = table
+    .getSelectedRowModel()
+    .rows
+    .map(({ original }) => ({
+      id: original.stockItem?.id,
+      quantity: original.quantity
+    }));
+
 
   return (
      <div>
@@ -167,6 +190,55 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
         </TableBody>
       </Table>
     </div>
+     <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="text-muted-foreground flex-1 text-sm">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
+       {
+        <div>
+          <p>Update (All) selected:</p>
+          <div onClick={async () => {
+            await delay(500)
+            table.setRowSelection({})
+          }} className="mt-2 flex gap-5">
+        {query == "OPEN" && <MarkAllReadyButton stockIdsAndQuantity={stockIdsAndQuantity} selectedIds={selectedStockIds}/>}
+        {query !== "COMPLETE" && query && <Button variant={"destructive"}>Cancel</Button>}
+   
+            {/* <MassCancelButton selectedIds={selectedStockIds} table={selectedTable} status={selectedStatus} stockIdsAndQuantity={stockIdsAndQuantity}  /> */}
+
+
+          </div>
+         
+            <div className={`mt-5`}>
+              <p className="font-semibold">Attention:</p>
+              <ul className="mt-1 list-disc space-y-1 text-sm text-muted-foreground">
+                <li>Canceling completed requests will replenish inventory*</li>
+                <li>Completed requests statuses are fixed and wont be included in the mass update*</li>
+              </ul>
+
+            </div>
+
+
+
+        </div>}
      </div>
    
   )

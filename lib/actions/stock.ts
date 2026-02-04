@@ -295,61 +295,6 @@ export async function massDecreaseStockQuantity(updateData: {
 }
 
 
-export async function checkInventory(stockRequests: {
-    id: string | undefined, quantity: number | undefined
-}[]) {
-
-    const userId = await getUserId();
-    const aggregated: Record<string, number> = {};
-
-
-    stockRequests.forEach(({ id, quantity }) => {
-        if (!id || !quantity) return;
-        aggregated[id] = (aggregated[id] || 0) + quantity;
-    });
-
-    const stockIds = Object.keys(aggregated);
-
-    try {
-
-        const stockItems = await prisma.stock.findMany({
-            where: { userId, id: { in: stockIds } }
-        });
-
-        const insufficient: { id: string; name: string, requested: number; available: number }[] = [];
-        stockItems.forEach((stock) => {
-            const requested = aggregated[stock.id];
-
-
-            if (requested > stock.quantity) {
-                insufficient.push({
-                    id: stock.id,
-                    name: stock.name,
-                    requested,
-                    available: stock.quantity
-
-                });
-            }
-        });
-
-        // 4. Return results
-        if (insufficient.length > 0) {
-            return {
-                ok: false,
-                insufficient,
-            };
-        }
-
-        return { ok: true };
-
-    } catch (error) {
-        console.log(error);
-
-        return { ok: false };
-    }
-
-
-}
 
 export async function checkSingleStockItemQuantity(stockId: string, requestedQuantity: number) {
     const userId = await getUserId();
