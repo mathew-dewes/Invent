@@ -1,10 +1,8 @@
 import { Suspense } from "react";
 import Requests from "./_components/Requests";
-// import Purchases from "./_components/Purchases";
-import Budget from "./_components/Budget";
 import Performance from "./_components/Performance";
 import Inventory from "./_components/Inventory";
-import Insights from "./_components/insights/Insights";
+import Overview from "./_components/Overview";
 
 
 export default function page() {
@@ -17,14 +15,15 @@ export default function page() {
                     <Inventory />
                     <div className="grid grid-cols-1  gap-6">
                         <Requests />
-                        {/* <Purchases /> */}
+           
                     </div>
+                    <Overview/>
+    
+          <Performance/>
+     
+          
 
-
-                    <Budget />
-                    <Performance/>
-
-                 <Insights/>
+            
 
 
 

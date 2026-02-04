@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
-import VendorTable from "./_components/VendorTable";
+import VendorWrapper from "./_components/VendorWrapper";
 import { Suspense } from "react";
 import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 export default  function VendorPage(){
-
 
     return(
         <div>
@@ -15,7 +14,7 @@ export default  function VendorPage(){
         
       </div>
       <Suspense fallback={<TableSkeleton/>}>
-  <VendorTable/>
+<VendorWrapper/>
       </Suspense>
           
         </div>

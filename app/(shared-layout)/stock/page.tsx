@@ -1,40 +1,28 @@
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import StockTable from "./_components/StockTable";
+import StockWrapper from "./_components/StockWrapper";
 import { Suspense } from "react";
 import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 
-
-export default async function StockPage({ searchParams }:
-  { searchParams: Promise<{ stock: string }> }
+export default async function page({searchParams}:
+  {searchParams: Promise<{level: string}>}
 ) {
 
-  const filters = ((await searchParams).stock);
-
-
-
+    const filters = ((await searchParams).level);
+      
+      
 
   return (
     <div>
-
-      <div className="flex justify-end">
-
-        <Link href={'/stock/new'}><Button>Create Stock</Button></Link>
-
+       <div className="flex justify-end">
+      <Link href={'/requests/new'}><Button>Create Request</Button></Link>
       </div>
-
-
-      <Suspense fallback={<TableSkeleton />}>
-  
-          <StockTable filter={filters} />
-        
-
-       
-
+      <Suspense fallback={<TableSkeleton/>}>
+      <StockWrapper filter={filters}/>
       </Suspense>
 
-    </div>
+        </div>
   )
-}
+};

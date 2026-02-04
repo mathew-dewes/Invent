@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Suspense } from "react";
-import PurchaseTable from "./_components/PurchaseTable";
 import { PurchaseStatus } from "@/generated/prisma/enums";
+
+import PurchaseWrapper from "./_components/PurchaseWrapper";
+import { Suspense } from "react";
 import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
+
 
 
 
@@ -13,7 +15,6 @@ export default  async function RequestsPage({searchParams}:
 
       const filters = ((await searchParams).status);
 
-        
     return (
         <div>
   <div className="flex justify-end">
@@ -21,8 +22,10 @@ export default  async function RequestsPage({searchParams}:
        
       </div>
       <Suspense fallback={<TableSkeleton/>}>
-        <PurchaseTable filter={filters} />
+     <PurchaseWrapper filter={filters}/>  
       </Suspense>
+
+      
         </div>
     )
 }

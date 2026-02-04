@@ -1,18 +1,15 @@
 import { Button } from "@/components/ui/button";import Link from "next/link";
-import { Suspense } from "react";
-import RequestTable from "./_components/RequestTable";
 import { RequestStatus } from "@/generated/prisma/enums";
+import RequestWrapper from "./_components/RequestWrapper";
+import { Suspense } from "react";
 import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
+
+
 export default async function RequestsPage({searchParams}:
   {searchParams: Promise<{status: RequestStatus}>}
 ){
 
   const filters = ((await searchParams).status);
-
-
- 
-  
-
 
     return (
         <div>
@@ -20,9 +17,12 @@ export default async function RequestsPage({searchParams}:
       <Link href={'/requests/new'}><Button>Create Request</Button></Link>
         
       </div>
+
       <Suspense fallback={<TableSkeleton/>}>
-        <RequestTable filter={filters}/>
+   <RequestWrapper filter={filters}/>    
       </Suspense>
+
+     
 
         </div>
     )

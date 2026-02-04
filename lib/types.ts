@@ -14,7 +14,10 @@ export type Stock = {
     lowStock:boolean,
     vendor: {
         name: string;
-    };
+    },
+    purchases?:{
+      status: PurchaseStatus
+    }[]
 }
 
 export type SingleStockItem = {
@@ -111,7 +114,7 @@ export type Finance = {
     vendorId: string | null;
     userId: string;
     reference: string;
-    plantNumber: string | null;
+    plantNumber?: string | null;
     stockName: string;
     vendorName: string | null;
     quantity: number;

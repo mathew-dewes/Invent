@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 import { FinanceType, RequestStatus } from "@/generated/prisma/enums";
 import { Purchase, Request } from "@/generated/prisma/client";
 import { Decimal } from "@prisma/client/runtime/client";
+import { error } from "node:console";
 
 export async function createRequest(values: z.infer<typeof requestSchema>) {
 
@@ -143,20 +144,6 @@ export async function updateRequestStatus(selectedIds: string[], status: Request
 
     try {
 
-
-        if (status == "COMPLETE") {
-
-            await Promise.all(
-                selectedIds.map(async (id) => {
-                    await createLedger("REQUEST", id)
-
-
-                })
-
-            )
-
-
-        }
         await prisma.request.updateMany({
             data: {
                 status: status as RequestStatus,
@@ -211,59 +198,88 @@ export async function changeRequestStatus(requestId: string, status: RequestStat
 
 }
 
-export async function markRequestReady(requestsIds: string[], status: RequestStatus = "READY", stockIdsAndQuantity:
+export async function markRequestsReady(stockIdsAndQuantity:
     { id: string | undefined, quantity: number | undefined }[]) {
-    if (!status || requestsIds.length === 0) return;
+
     const userId = await getUserId();
+    const lowStockItems: string[] = []
 
-    if (status == "READY") {
-
-        try {
-            await Promise.all(
-                stockIdsAndQuantity.map(async (item) => {
-
-
-                    const stock = await prisma.stock.findUnique({
-                        where: { userId, id: item.id },
-                        select: {
-                            reorderPoint: true
-                        }
-                    });
-                    if (!stock || !item.quantity) return
-
-                    const reorderPoint = stock.reorderPoint;
+    try {
+        await Promise.all(
+            stockIdsAndQuantity.map(async (item) => {
 
 
-
-             await prisma.stock.update({
-                        where: { id: item.id, userId },
-                        data: {
-                            quantity: {
-                                decrement: item.quantity
-                            },
-                            lowStock: item.quantity > reorderPoint
-
-                        },
-
+                const stock = await prisma.stock.findUnique({
+                    where: { userId, id: item.id },
+                    select: {
+                        reorderPoint: true,
+                        quantity: true,
+                        name:true
                     }
-                    )
+                });
+                if (!stock || !item.quantity) return
 
-                }));
-
-                return {
-                    success:true, message: "Stock has been adjusted"
+                if (stock.quantity < item.quantity) {
+                    lowStockItems.push(stock.name)
+                    return 
                 }
-        } catch (error) {
-            console.log(error);
-                return {
-                    success:false, message: "Inventory updated failed. See"
-                }
-            
 
+                const newQty = stock.quantity - item.quantity
+                const isLowStock = newQty <= stock.reorderPoint
+
+
+
+
+                await prisma.stock.update({
+                    where: { id: item.id, userId },
+                    data: {
+                        quantity: {
+                            decrement: item.quantity
+                        },
+                        lowStock: isLowStock,
+                        requests: {
+                            updateMany: {
+                                where: {
+                                    stockId: item.id,
+                                    status: "OPEN"
+                                },
+                                data: {
+                                    status: "READY"
+                                }
+                            }
+                        }
+
+                    },
+
+                }
+                )
+
+            }));
+
+        revalidatePath('/requests');
+
+          if (lowStockItems.length > 0) {
+    return {
+      success: false,
+      message: `insufficient stock: ${lowStockItems.join(", ")}`,
+    }
+  }
+
+        return {
+            success: true, message: "Stock has been adjusted"
+        };
+
+
+    } catch (error) {
+        console.log(error);
+        return {
+            success: false, message: "Inventory updated failed"
         }
 
 
     }
+
+
 
 }
 

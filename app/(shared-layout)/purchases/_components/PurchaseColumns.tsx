@@ -19,7 +19,8 @@ import { markReceived } from "@/lib/actions/purchase"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { toast } from "sonner"
-import PurchaseStatusBadge from "../badges/PurchaseStatusBadge"
+import PurchaseStatusBadge from "@/components/web/badges/PurchaseStatusBadge"
+
 
 const HideCheckboxes = () =>{
   const searchParams = useSearchParams().get('status');
