@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Suspense } from "react";
-import PurchaseTable from "./_components/PurchaseTable";
+// import { Suspense } from "react";
+
 import { PurchaseStatus } from "@/generated/prisma/enums";
-import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
+import { PurchaseTable } from "./_components/PurchaseTable";
+import { Purchasecolumns } from "./_components/PurchaseColumns";
+import { getPurchases, getPurchaseStatusCount } from "@/lib/queries/purchase";
+
 
 
 
@@ -13,6 +16,7 @@ export default  async function RequestsPage({searchParams}:
 
       const filters = ((await searchParams).status);
 
+          const [purchases, statusCounts] = await Promise.all([getPurchases(filters), getPurchaseStatusCount()]);
         
     return (
         <div>
@@ -20,9 +24,9 @@ export default  async function RequestsPage({searchParams}:
       <Link href={'/purchases/new'}><Button>Create Purchase</Button></Link>
        
       </div>
-      <Suspense fallback={<TableSkeleton/>}>
-        <PurchaseTable filter={filters} />
-      </Suspense>
+      {/* <Suspense fallback={<TableSkeleton/>}> */}
+        <PurchaseTable queryCounts={statusCounts} data={purchases} columns={Purchasecolumns} filter={"PO"} />
+      {/* </Suspense> */}
         </div>
     )
 }

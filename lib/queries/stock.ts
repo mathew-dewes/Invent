@@ -4,7 +4,7 @@ import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
 
 
-export async function getAllStock(filter?: string) {
+export async function getAllStock(level?: string) {
     const userId = await getUserId();
 
 
@@ -57,11 +57,11 @@ export async function getAllStock(filter?: string) {
     );
 
 
-      if (filter === "out") {
+      if (level === "out") {
         return outOfStock
-    } else if (filter === "low") {
+    } else if (level === "low") {
         return lowStock
-    } else if (filter === "good") {
+    } else if (level === "good") {
         return inStock
     } else {
         return serialisedStock

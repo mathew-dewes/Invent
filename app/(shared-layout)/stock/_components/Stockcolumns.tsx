@@ -12,11 +12,12 @@ import {
 import { Button } from "@/components/ui/button"
 import { MoreHorizontal } from "lucide-react"
 import { Stock } from "@/lib/types"
-import StockStatusBadge from "../badges/StockStatusBadge"
+
 import { deleteStock } from "@/lib/actions/stock"
 import { startTransition } from "react"
 import { toast } from "sonner"
 import Link from "next/link"
+import StockStatusBadge from "@/components/web/badges/StockStatusBadge"
 
 
 export const Stockcolumns: ColumnDef<Stock>[] = [
@@ -36,11 +37,7 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
     cell:({row}) => {
       const quantity = row.original.quantity
       const lowStock = row.original.lowStock;
-      const itemOrdered = !!row.original.purchases?.find((i) => i.status == "PLACED");
-      console.log(itemOrdered);
-      
-
-      
+      const itemOrdered = !!row.original.purchases?.find((i) => i.status == "PLACED");      
       
     return <StockStatusBadge stockOrdered={itemOrdered} lowStock={lowStock} quantity={quantity}/>
     },

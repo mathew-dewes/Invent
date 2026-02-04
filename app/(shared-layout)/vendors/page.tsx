@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
-import VendorTable from "./_components/VendorTable";
-import { Suspense } from "react";
-import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
-export default  function VendorPage(){
+import { VendorTable } from "./_components/VendorTable";
+import { getVendors } from "@/lib/queries/vendor";
+import { VendorColumns } from "./_components/VendorColumns";
+
+export default  async function VendorPage(){
+
+       const vendors = await getVendors();
 
 
     return(
@@ -14,9 +17,9 @@ export default  function VendorPage(){
       <Link href={'/vendors/new'}><Button>Create Vendor</Button></Link>
         
       </div>
-      <Suspense fallback={<TableSkeleton/>}>
-  <VendorTable/>
-      </Suspense>
+      {/* <Suspense fallback={<TableSkeleton/>}> */}
+  <VendorTable columns={VendorColumns} data={vendors} filter="name"/>
+      {/* </Suspense> */}
           
         </div>
     )

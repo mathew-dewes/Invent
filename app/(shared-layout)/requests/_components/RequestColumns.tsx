@@ -20,13 +20,14 @@ import { toast } from "sonner"
 import {checkSingleStockItemQuantity, decreaseStockQuantity } from "@/lib/actions/stock"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import RequestStatusBadge from "../badges/RequestStatusBadge"
+import RequestStatusBadge from "@/components/web/badges/RequestStatusBadge"
+
 
 
 const HideFields = () =>{
   const searchParams = useSearchParams().get('status');
 
-  console.log(searchParams);
+
   
   
 

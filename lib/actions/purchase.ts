@@ -249,7 +249,7 @@ await prisma.purchase.update({
                     quantity:{
                         increment: stockAmount
                     },
-                    lowStock: newStockAmount < reorderPoint
+                    lowStock: newStockAmount > reorderPoint
                 }
             }
         }
