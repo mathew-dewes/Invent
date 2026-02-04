@@ -147,7 +147,7 @@ const stock = await prisma.stock.findMany({
 };
 
 
-export async function getStockNames() {
+export async function getStockNamesAndQuantity() {
     const userId = await getUserId();
     const stock = await prisma.stock.findMany({
         where: {
@@ -156,6 +156,7 @@ export async function getStockNames() {
         select: {
             id: true,
             name: true,
+            quantity:true
 
         },
 
@@ -165,8 +166,7 @@ export async function getStockNames() {
 
     });
 
-
-    return stock;
+return stock
 }
 
 

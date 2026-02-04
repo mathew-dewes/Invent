@@ -217,7 +217,7 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
           Next
         </Button>
       </div>
-       {
+       
         <div className={`${!isSelected ? "hidden" : ""}`}>
           <p>Update (All) selected:</p>
           <div onClick={async () => {
@@ -244,7 +244,7 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
 
 
 
-        </div>}
+        </div>
      </div>
    
   )

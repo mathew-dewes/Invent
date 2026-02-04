@@ -53,3 +53,49 @@ export async function createRequestLedger(requestId: string){
         
     }
 }
+
+export async function createPurchaseLedger(purchaseId: string){
+        const userId = await getUserId();
+
+             const purchase = await prisma.purchase.findUnique({
+            where:{userId, id: purchaseId},
+            select:{
+                id:true,
+                purchaseNumber:true,
+                vendor:{
+                    select:{
+                        name:true
+                    }
+                },
+                quantity:true,
+                stockItem:{
+                    select:{
+                        unitCost:true,
+                        id:true,
+                        name:true
+                 
+                    }
+                }
+            }
+        });
+
+
+        if (!purchase) return;
+
+        await prisma.costLedger.create({
+            data:{
+                 type: "PURCHASE",
+                month: new Date().getMonth() + 1,
+                year: new Date().getFullYear(),
+                stockId: purchase.stockItem.id,
+                stockName: purchase.stockItem.name,
+                quantity: purchase.quantity,
+                reference: String(purchase.purchaseNumber),
+                totalCost: Number(purchase.stockItem.unitCost) * purchase.quantity,
+                unitCost: purchase.stockItem.unitCost,
+                userId,
+                requestId: purchase.id,
+                requestee: purchase.vendor.name
+            }
+        })
+}

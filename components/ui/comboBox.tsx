@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/popover"
 
 type ComboboxProps = {
-  values: { id: string; name: string }[];
+  values: { id: string; name: string, quantity?: number }[];
   value?: string;
   onChange: (value: string) => void;
 };
@@ -38,20 +38,23 @@ export function Combobox({ values, value, onChange }: ComboboxProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[250px] justify-between"
+          className="w-62.5 justify-between"
         >
         {selectedItem ? selectedItem.name : "Select stock item..."}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[250px] p-0">
+      <PopoverContent className="w-62.5 p-0">
         <Command>
           <CommandInput placeholder="Search stock item..." />
           <CommandList>
             <CommandEmpty>No stock found.</CommandEmpty>
             <CommandGroup>
-              {values.map((item) => (
-                <CommandItem
+              {values.map((item) => {
+                
+                const label = item.name;
+                
+                return <CommandItem
                   key={item.id}
                   value={item.name}
                   onSelect={() => {
@@ -65,9 +68,9 @@ export function Combobox({ values, value, onChange }: ComboboxProps) {
                       value === item.id ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {item.name}
+                  {label}
                 </CommandItem>
-              ))}
+})}
             </CommandGroup>
           </CommandList>
         </Command>

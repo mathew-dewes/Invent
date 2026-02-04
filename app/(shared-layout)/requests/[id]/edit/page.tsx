@@ -1,4 +1,4 @@
-import { getStockNames } from "@/lib/queries/stock";
+import { getStockNamesAndQuantity } from "@/lib/queries/stock";
 import EditRequestForm from "./_components/EditRequestForm";
 import { getRequestById } from "@/lib/queries/request";
 
@@ -8,7 +8,7 @@ export default async function editRequestPage({params}:
 
           const {id} = await params;
 
-        const stockNames = await getStockNames();
+        const stockNames = await getStockNamesAndQuantity();
         const stockValues = await getRequestById(id);
 
         if (!stockValues) return;

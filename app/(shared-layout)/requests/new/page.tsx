@@ -1,9 +1,10 @@
-import { getStockNames } from "@/lib/queries/stock";
+
+import { getStockNamesAndQuantity } from "@/lib/queries/stock";
 import RequestForm from "./_components/RequestForm";
 
 export default async function Page(){
 
-    const stock = await getStockNames();
+    const stock = await getStockNamesAndQuantity();
     return (
         <div>
             <RequestForm stock={stock}/>

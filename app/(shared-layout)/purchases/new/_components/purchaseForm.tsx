@@ -24,11 +24,10 @@ import z from "zod";
 
 
 export default function PurchaseForm({stock, reorderStockId}:
-    {stock: {id: string, name: string}[], reorderStockId?: string}
+    {stock: {id: string, name: string, quantity: number}[], reorderStockId?: string}
 ){
         const [isPending, startTransition] = useTransition();
-         const router = useRouter()
-
+         const router = useRouter();
         
         const form = useForm({
             resolver: zodResolver(purchaseSchema),
@@ -43,7 +42,7 @@ export default function PurchaseForm({stock, reorderStockId}:
         });
 
             function onSubmit(values: z.infer<typeof purchaseSchema>) {
-
+          
                 
                 startTransition(async () => {
                     
@@ -59,7 +58,14 @@ export default function PurchaseForm({stock, reorderStockId}:
        
 
 
-        })
+        });
+
+
+
+
+
+
+
         
         
             }
@@ -74,11 +80,21 @@ export default function PurchaseForm({stock, reorderStockId}:
                     <FieldGroup>
 
                               <Controller name="item" control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field>
+                            render={({ field, fieldState }) => {
+                                
+const selectedStock = stock.find(
+  (item) => item.id === field.value
+);
+
+                                return <Field>
                                     <FieldLabel>Stock Item</FieldLabel>
-                                    <div>
-      <Combobox aria-invalid={fieldState.invalid} values={stock} value={field.value} onChange={field.onChange}/>
+                                    <div className="flex items-center gap-3">
+      <Combobox 
+      aria-invalid={fieldState.invalid} 
+      values={stock} 
+      value={field.value} 
+      onChange={field.onChange}/>
+      <p className={ !selectedStock ? "hidden" : ""}>SOH: {selectedStock?.quantity}</p>
                                     </div>
                                   
                 
@@ -86,8 +102,9 @@ export default function PurchaseForm({stock, reorderStockId}:
                                         <FieldError errors={[fieldState.error]} />
                                     }
                                 </Field>
-                            )}
+                            }}
                         />
+                   
 
                                               <div className="flex gap-5">
       <Controller name="quantity" control={form.control}
