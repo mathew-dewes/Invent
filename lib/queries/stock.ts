@@ -18,7 +18,6 @@ export async function getAllStock(level?: string) {
             name: true,
             location: true,
             reorderPoint: true,
-            lowStock:true,
             vendor: {
                 select: {
                     name: true
@@ -283,7 +282,7 @@ export async function getLowStock(){
     const userId = await getUserId();
 
     const stockItems = await prisma.stock.findMany({
-        where:{userId, lowStock:true},
+        where:{userId},
         select:{
             name:true,
             quantity:true,

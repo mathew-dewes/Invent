@@ -8,7 +8,10 @@ export default async function FinanceWrapper({filter, timeFrame}:
     {filter: FinanceType, timeFrame: TimeFrame}
 ){
      
-const [finances, financeTypeCount] = await Promise.all([getFinanceData(filter, timeFrame), getFinanceTypeCount()])
+const [finances, financeTypeCount] = await Promise.all([getFinanceData(filter, timeFrame), getFinanceTypeCount()]);
+
+console.log(finances);
+
     return   <FinanceTable queryCounts={financeTypeCount} data={finances} columns={Financecolumns} filter={"reference"} />
        
 }

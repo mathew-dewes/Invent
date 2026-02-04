@@ -13,9 +13,7 @@ import { Button } from "@/components/ui/button"
 import { MoreHorizontal } from "lucide-react"
 import { Stock } from "@/lib/types"
 
-import { deleteStock } from "@/lib/actions/stock"
 import { startTransition } from "react"
-import { toast } from "sonner"
 import Link from "next/link"
 import StockStatusBadge from "@/components/web/badges/StockStatusBadge"
 
@@ -36,10 +34,10 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
 
     cell:({row}) => {
       const quantity = row.original.quantity
-      const lowStock = row.original.lowStock;
-      const itemOrdered = !!row.original.purchases?.find((i) => i.status == "PLACED");      
+      const itemOrdered = !!row.original.purchases?.find((i) => i.status == "PLACED");
+      const reorderPoint = row.original.reorderPoint;     
       
-    return <StockStatusBadge stockOrdered={itemOrdered} lowStock={lowStock} quantity={quantity}/>
+    return <StockStatusBadge stockOrdered={itemOrdered}  quantity={quantity} reorderPoint={reorderPoint}/>
     },
     header: "Status",
   },
@@ -126,14 +124,8 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
               <form action={
                 (formData: FormData)=>{
                   startTransition(async()=>{
-                    try {
-                        await deleteStock(formData);
-                        toast.success(`${row.original.name} was deleted`);
-                    } catch (error) {
-                      console.log(error);
-                      toast.error("There was error deleting this stock item")
-                      
-                    }
+                   return
+                  //  Create delete function
                   })
           
                 }

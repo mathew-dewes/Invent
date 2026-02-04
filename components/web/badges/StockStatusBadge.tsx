@@ -3,16 +3,16 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export default function StockStatusBadge({ lowStock, quantity, stockOrdered }: {
-    lowStock: boolean, quantity: number, stockOrdered: boolean
+export default function StockStatusBadge({ quantity, stockOrdered, reorderPoint }: {
+     quantity: number, stockOrdered: boolean, reorderPoint: number
 }) {
 
     function status() {
         if (stockOrdered && quantity === 0) {
     return { style: "bg-red-400", label: "Ordered" }
-        } else if (stockOrdered && lowStock && quantity > 0){
+        } else if (stockOrdered && quantity <= reorderPoint && quantity > 0){
             return { style: "bg-orange-400", label: "Ordered" }
-        } else if (lowStock && quantity > 0) {
+        } else if (quantity <= reorderPoint  && quantity > 0) {
             return { style: "bg-orange-400", label: "Low Stock" }
         } else if (quantity === 0) {
             return { style: "bg-red-400", label: "Out of stock" }
@@ -22,7 +22,7 @@ export default function StockStatusBadge({ lowStock, quantity, stockOrdered }: {
     };
 
     return <div>
-        <Badge className={cn(status()?.style, "uppercase font-semibold")}>
-            {status()?.label}</Badge>
+        <Badge className={cn(status().style)}>
+            {status().label}</Badge>
     </div>
 }
