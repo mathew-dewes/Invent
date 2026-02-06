@@ -14,7 +14,7 @@ export default function StockHealthBar({stockData}:
     {stockData: Props}
 ){
     return (
-                  <Field className="w-1/3">
+                  <Field className="w-100">
       <FieldLabel htmlFor="progress-upload">
         <span>Stock Health</span>
         <span className="ml-auto">{stockData.percentage}%</span>

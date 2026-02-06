@@ -25,9 +25,15 @@ export default function PurchaseFilters({
   const { replace } = useRouter();
 
 
+  
+
+
   const visibleFilters =
     purchaseFilters.filter(f => (queryCounts[f.filter] ?? 0) > 0
     ) || purchaseFilters;
+
+
+    
 
 
 
@@ -58,7 +64,7 @@ export default function PurchaseFilters({
   return (
     <div className="flex gap-4">
 
-      <Button variant={searchParams.get("status") ? "outline" : "default"}
+      <Button  variant={searchParams.get("status") ? "outline" : "default"}
         onClick={() => clearQuery()}>View All</Button>
 
 

@@ -23,7 +23,6 @@ export async function getPurchases(filter?: PurchaseStatus) {
             purchaseNumber: true,
 
             quantity: true,
-            PO: true,
             totalCost: true,
             status: true,
             stockItem: {
@@ -33,7 +32,8 @@ export async function getPurchases(filter?: PurchaseStatus) {
                     id: true,
                     vendor: {
                         select: {
-                            name: true
+                            name: true,
+                            PONumber:true
                         }
                     }
                 }
@@ -87,7 +87,6 @@ export async function getPurchaseById(id: string) {
             purchaseNumber: true,
             notes: true,
             quantity: true,
-            PO: true,
             totalCost: true,
             status: true,
             stockItem: {

@@ -15,7 +15,8 @@ const vendors = await prisma.vendor.findMany({
         address: true,
         phone: true,
         email: true,
-        contactName: true
+        contactName: true,
+        PONumber:true
     },
     orderBy:{
         createdAt: "desc"

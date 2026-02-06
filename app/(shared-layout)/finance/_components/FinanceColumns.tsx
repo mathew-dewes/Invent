@@ -59,16 +59,12 @@ export const Financecolumns: ColumnDef<Finance>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
+    
   },
-      {
-    accessorKey: "reference",
-
-    header: "Reference",
-  },
-  {
+    {
     accessorKey: "createdAt",
 
-    header: "Date",
+    header: "Created",
             cell: ({ getValue }) => {
       const date = new Date(getValue() as string);
       return date.toLocaleString("en-NZ", {
@@ -79,15 +75,31 @@ export const Financecolumns: ColumnDef<Finance>[] = [
       });
   },
   },
+      {
+    accessorKey: "reference",
+
+    header: "Reference - PO / CC",
+  },
+
   {
     accessorKey: "type",
     cell:({row}) => 
       <Badge variant={"secondary"}>{row.getValue("type")}</Badge>,
     header: "Type",
   },
+      {
+    accessorKey: "requestee",
+    header: "Customer / Vendor",
+    cell:({row})=>{
+      console.log(row.original);
+      
+      const customer = row.original.requestee;
+      return customer ?? "-"
+    }
+  },
    {
     accessorKey: "stockName",
-    header: "Stock item",
+    header: "Item",
   },
 
 
@@ -126,21 +138,8 @@ export const Financecolumns: ColumnDef<Finance>[] = [
       return <div className="font-medium">{formatted}</div>
     },
   },
-    {
-    accessorKey: "costCentre",
-    header: "Cost Centre",
-  },
 
-    {
-    accessorKey: "requestee",
-    header: "Customer / Vendor",
-    cell:({row})=>{
-      console.log(row.original);
-      
-      const customer = row.original.requestee;
-      return customer ?? "-"
-    }
-  },
+
 
 
   {
@@ -167,7 +166,7 @@ export const Financecolumns: ColumnDef<Finance>[] = [
 
 
               <form action={
-                (formData) => {
+                () => {
                   startTransition(async () => {
 
               return

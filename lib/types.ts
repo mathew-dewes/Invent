@@ -89,7 +89,6 @@ export type Purchase = {
     createdAt: Date;
     quantity: number;
     purchaseNumber: number;
-    PO: string;
     totalCost: string;
     notes?: string | null
     stockItem: {
@@ -98,6 +97,7 @@ export type Purchase = {
         quantity: number;
         vendor:{
           name: string
+          PONumber: number
         }
     };
 }

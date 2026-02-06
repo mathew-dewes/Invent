@@ -9,6 +9,6 @@ export default async function PurchaseWrapper({filter}:
 
        const [purchases, statusCounts] = await Promise.all([getPurchases(filter), getPurchaseStatusCount()]);
      
-    return  <PurchaseTable queryCounts={statusCounts} data={purchases} columns={Purchasecolumns} filter={"PO"} />
+    return  <PurchaseTable queryCounts={statusCounts} data={purchases} columns={Purchasecolumns} filter={"purchaseNumber"} />
     
 }

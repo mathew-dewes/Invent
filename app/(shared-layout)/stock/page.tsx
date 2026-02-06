@@ -17,7 +17,7 @@ export default async function page({searchParams}:
   return (
     <div>
        <div className="flex justify-end">
-      <Link href={'/requests/new'}><Button>Create Request</Button></Link>
+      <Link href={'/stock/new'}><Button>Create Stock</Button></Link>
       </div>
       <Suspense fallback={<TableSkeleton/>}>
       <StockWrapper filter={filters}/>

@@ -18,6 +18,7 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 import PurchaseStatusBadge from "@/components/web/badges/PurchaseStatusBadge"
+import { markReceived } from "@/lib/actions/purchase"
 
 
 const HideCheckboxes = () =>{
@@ -120,7 +121,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
   },
 
     {
-    accessorKey: "PO",
+    accessorKey: "stockItem.vendor.PONumber",
 
     header: "PO#",
   },
@@ -170,7 +171,13 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
 
                     try {
 
-                 return
+                 const res = await markReceived(purchaseId);
+
+                 if (!res?.success){
+                  toast.error(res?.message)
+                 } else {
+                  toast.success(res.message);
+                 }
 
             
               

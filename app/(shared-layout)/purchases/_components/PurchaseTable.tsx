@@ -210,11 +210,6 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
           table.setRowSelection({})
         }} className="mt-2 flex gap-5">
           {query == "PLACED" && <MarkAllReceivedButton selectedPurchaseIds={selectedPurchaseIds} />}
-          {query !== "RECEIVED" && query && <Button disabled={!isSelected} variant={"destructive"}>Cancel</Button>}
-
-          {/* <MassCancelButton selectedIds={selectedStockIds} table={selectedTable} status={selectedStatus} stockIdsAndQuantity={stockIdsAndQuantity}  /> */}
-
-
         </div>
 
         <div className={`mt-5`}>
