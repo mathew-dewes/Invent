@@ -29,7 +29,7 @@ export function Combobox({ values, value, onChange }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
 
 
-    const selectedItem = values.find((v) => v.id === value)
+  const selectedItem = values.find((v) => v.id === value)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -40,7 +40,7 @@ export function Combobox({ values, value, onChange }: ComboboxProps) {
           aria-expanded={open}
           className="w-62.5 justify-between"
         >
-        {selectedItem ? selectedItem.name : "Select stock item..."}
+          {selectedItem ? selectedItem.name : "Select stock item..."}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -51,14 +51,14 @@ export function Combobox({ values, value, onChange }: ComboboxProps) {
             <CommandEmpty>No stock found.</CommandEmpty>
             <CommandGroup>
               {values.map((item) => {
-                
+
                 const label = item.name;
-                
+
                 return <CommandItem
                   key={item.id}
                   value={item.name}
                   onSelect={() => {
-                    onChange(item.id) 
+                    onChange(item.id)
                     setOpen(false)
                   }}
                 >
@@ -69,8 +69,13 @@ export function Combobox({ values, value, onChange }: ComboboxProps) {
                     )}
                   />
                   {label}
+                  {item.quantity !== undefined && (
+                    <span className="text-gray-500 ml-2 font-mono">
+                      SOH: {item.quantity}
+                    </span>
+                  )}
                 </CommandItem>
-})}
+              })}
             </CommandGroup>
           </CommandList>
         </Command>

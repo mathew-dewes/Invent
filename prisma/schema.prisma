@@ -134,7 +134,6 @@ model Request {
 model Purchase {
   id             String   @id @default(cuid())
   createdAt      DateTime @default(now())
-  PO String
   purchaseNumber Int @unique
   status PurchaseStatus
   notes String?

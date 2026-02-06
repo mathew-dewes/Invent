@@ -27,7 +27,8 @@ export async function getRequests(filter?: RequestStatus) {
                     id: true,
                     name: true,
                     quantity: true,
-                    reorderPoint: true
+                    reorderPoint: true,
+                    
                 }
             },
             quantity: true,

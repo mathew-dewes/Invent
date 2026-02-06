@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createPurchase } from "@/lib/actions/purchase";
 import { purchaseSchema } from "@/lib/schemas";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -34,7 +35,6 @@ export default function PurchaseForm({stock, reorderStockId}:
             defaultValues: {
                 item: reorderStockId,
                 quantity: "",
-                poNumber: "",
                 notes: undefined
     
     
@@ -88,13 +88,15 @@ const selectedStock = stock.find(
 
                                 return <Field>
                                     <FieldLabel>Stock Item</FieldLabel>
-                                    <div className="flex items-center gap-3">
+                                    <div className="">
       <Combobox 
       aria-invalid={fieldState.invalid} 
       values={stock} 
       value={field.value} 
-      onChange={field.onChange}/>
-      <p className={ !selectedStock ? "hidden" : ""}>SOH: {selectedStock?.quantity}</p>
+      onChange={field.onChange}
+      
+      />
+      <p className={cn(!selectedStock ? "invisible" : "", "mt-3")}>SOH: {selectedStock?.quantity}</p>
                                     </div>
                                   
                 
@@ -104,6 +106,7 @@ const selectedStock = stock.find(
                                 </Field>
                             }}
                         />
+                   
                    
 
                                               <div className="flex gap-5">
@@ -118,17 +121,7 @@ const selectedStock = stock.find(
                                 </Field>
                             )}
                         />
-                        <Controller name="poNumber" control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field>
-                                    <FieldLabel>PO number</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter PO number" {...field} />
-                                    {fieldState.invalid &&
-                                        <FieldError errors={[fieldState.error]} />
-                                    }
-                                </Field>
-                            )}
-                        />
+          
                             </div>
 
 

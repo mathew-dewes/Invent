@@ -102,37 +102,45 @@ export const Requestcolumns: ColumnDef<Request>[] = [
   },
   {
     accessorKey: "quantity",
-    header: () => <div className={`${HideFields() ? "hidden" : ""}`}>Requested</div>,
+    header: () => <div>Requested</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("quantity"));
     const stockQuantity = row.original.stockItem?.quantity ?? 0;
           const requestQuantity = row.original.quantity;
           const status = row.original.status;
 
+          const style = () =>{
+            if (status == "OPEN" && requestQuantity > stockQuantity){
+              return 'text-red-400'
+            } else if (status !== "OPEN") {
+              return 'text-white'
+            } else {
+              return 'text-green-400'
+            }
+          }
 
-
-      
-      return <div className={`${status !== "OPEN" ? "hidden" : requestQuantity > stockQuantity ? "text-red-400" : "text-green-400"}`}>{amount}</div>
+      return <div className={style()}>{amount}</div>
     },
   },
 
 
   {
     accessorKey: "stockItem.quantity",
-    header: () => <div>Stock QTY</div>,
+    header: () => <div>SOH</div>,
+    enableHiding:true,
+    
     cell: ({ row }) => {
           const stockQuantity = row.original.stockItem?.quantity ?? 0;
-             const status = row.original.status;
-  
         
-      return <div className={`${status !== "OPEN" ? "hidden" : ""}`}>{stockQuantity}</div>
+  
+      return <div>{stockQuantity}</div>
     },
   },
 
 
   {
-    accessorKey: "plantNumber",
-    header: "Plant",
+    accessorKey: "costCentre",
+    header: "Cost centre",
   },
   {
     accessorKey: "note",

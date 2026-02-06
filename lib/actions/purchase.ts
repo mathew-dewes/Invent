@@ -28,7 +28,7 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
         };
         const purchaseNumber = await generatePurchaseNumber();
 
-        const { item, quantity, poNumber, notes } = parsed.data;
+        const { item, quantity, notes } = parsed.data;
 
 
         const stockItem = await prisma.stock.findUnique({
@@ -51,7 +51,6 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
                 userId,
                 status: "PLACED",
                 notes,
-                PO: poNumber,
                 vendorId: stockItem!.vendorId
             },
             select: {
@@ -88,7 +87,7 @@ export async function updatePurchase(values: z.infer<typeof purchaseSchema>, pur
         };
 
 
-        const { item, quantity, poNumber, notes } = parsed.data;
+        const { item, quantity, notes } = parsed.data;
 
 
         const stockItem = await prisma.stock.findUnique({
@@ -105,7 +104,7 @@ export async function updatePurchase(values: z.infer<typeof purchaseSchema>, pur
                 totalCost,
                 userId,
                 notes,
-                PO: poNumber
+    
             },
             where: { id: purchaseId }
         })

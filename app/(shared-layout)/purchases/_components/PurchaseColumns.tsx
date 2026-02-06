@@ -121,7 +121,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
   },
 
     {
-    accessorKey: "PO",
+    accessorKey: "stockItem.vendor.PONumber",
 
     header: "PO#",
   },
