@@ -34,7 +34,7 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
         const stockItem = await prisma.stock.findUnique({
             where: { id: item, userId },
             include: { vendor: true },
-            
+
         });
 
         if (!stockItem) return
@@ -54,7 +54,7 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
                 PO: poNumber,
                 vendorId: stockItem!.vendorId
             },
-            select:{
+            select: {
                 id: true
             }
         });
@@ -143,46 +143,122 @@ export async function generatePurchaseNumber(): Promise<number> {
 };
 
 
-export async function markAllReceived(purchaseIds: string[]){
+export async function markReceived(purchaseId: string) {
     const userId = await getUserId();
-    
+
     try {
-        purchaseIds.map(async(purchaseId)=>{
-            const purchase = await prisma.purchase.findFirst({
-                where:{id: purchaseId},
-                select:{
-                    id: true,
-                    quantity:true,
-                    stockId: true
+        await prisma.$transaction(async (tx) => {
+            const purchase = await tx.purchase.findUnique({
+                where: { id: purchaseId, userId },
+                select: {
+                    id: true, quantity: true, stockId: true,
+                    stockItem: {
+                        select: {
+                            name: true
+                        }
+                    }
                 }
             });
 
-            if (!purchase) return;
+            if (!purchase) {
+                throw new Error("Request not found");
+            };
 
-            await prisma.stock.update({
-                where:{userId, id: purchase.stockId },
-                data:{
-                    quantity:{
+            await tx.stock.update({
+                where: { userId, id: purchase.stockId },
+                data: {
+                    quantity: {
                         increment: purchase.quantity
                     }
                 }
-            })
+            });
 
-    });
-
-        await prisma.purchase.updateMany({
-                where:{userId, id:{in: purchaseIds}},
-                data:{
-                    status:"RECEIVED"
+            await tx.purchase.update({
+                where: { userId, id: purchase.id },
+                data: {
+                    status: "RECEIVED"
                 }
             });
 
-            revalidatePath('/purchases');
 
-               return {
-            success: true, message: "Stock levels updated"
+        });
+
+        revalidatePath('/purchases');
+
+        return {
+            success: true,
+            message: 'Puchases updated',
+
         }
     } catch (error) {
-        console.log(error);
+        return {
+            success: false,
+            message: error instanceof Error ? error.message : "Something went wrong",
+        };
     }
+}
+
+export async function markAllReceived(purchaseIds: string[]) {
+    const userId = await getUserId();
+
+    try {
+
+        const updatedPurchases: string[] = [];
+
+        await prisma.$transaction(async (tx) => {
+            for (const puchaseId of purchaseIds) {
+                const purchase = await tx.purchase.findUnique({
+                    where: { id: puchaseId, userId },
+                    select: {
+                        id: true,
+                        quantity: true,
+                        stockId: true,
+                        stockItem: {
+                            select: {
+                                name: true,
+
+                            }
+                        }
+                    }
+                });
+
+                if (!purchase) {
+                    throw new Error("Request not found");
+                }
+                await tx.stock.update({
+                    where: { userId, id: purchase.stockId },
+                    data: {
+                        quantity: {
+                            increment: purchase.quantity
+                        }
+                    }
+                });
+
+                await tx.purchase.update({
+                    where: { userId, id: purchase.id },
+                    data: {
+                        status: "RECEIVED"
+                    }
+                });
+                updatedPurchases.push(purchase.stockItem.name)
+            };
+        });
+
+        revalidatePath('/purchases');
+
+        return {
+            success: true,
+            message: 'Puchases updated',
+            updatedPurchases
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            success: false,
+            message: error instanceof Error ? error.message : "Something went wrong",
+        };
+
+    }
+
 }

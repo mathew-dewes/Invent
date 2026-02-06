@@ -88,6 +88,7 @@ model Vendor {
   email       String
   contactName String
   userId      String
+  PONumber Int
   stock       Stock[]
   purchase    Purchase[]
   user        User       @relation(fields: [userId], references: [id])

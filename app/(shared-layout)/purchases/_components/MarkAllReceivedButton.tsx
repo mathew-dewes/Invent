@@ -24,29 +24,16 @@ export function MarkAllReceivedButton({selectedPurchaseIds}:{selectedPurchaseIds
                     const res = await markAllReceived(selectedPurchaseIds);
 
                     if (res?.success){
+
+                        res.updatedPurchases?.map((message)=>{
+                            toast.success(message + " stock received")
+                        })
                         toast.success(res.message);
                         router.push('/purchases?status=RECEIVED')
+                    } else {
+                        toast.error(res.message)
                     }
-                    
 
-
-                    // const res = await markAllComplete(selectedStockIds);
-
-                    // if (res?.success){
-                    //     toast.success(res.message);
-                    //     router.push('requests?status=COMPLETE')
-                    // }
-           
-            
-                    
-
-            
-
-    
-                    
-
-
-           
 
                 })
             }}

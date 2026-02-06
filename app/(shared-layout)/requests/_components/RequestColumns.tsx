@@ -20,6 +20,7 @@ import { toast } from "sonner"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import RequestStatusBadge from "@/components/web/badges/RequestStatusBadge"
+import { cancelRequest, MarkComplete, markReady } from "@/lib/actions/request"
 
 
 
@@ -146,10 +147,12 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     cell: ({ row }) => {
 
       const requestId = row.original.id;
-      const stockId = row.original.stockItem.id;
-      const requestQuantity = row.original.quantity;
+      // const stockId = row.original.stockItem.id;
+      // const requestQuantity = row.original.quantity;
       const requestStatus = row.original.status;
-      const stockQuantity = row.original.stockItem?.quantity ?? 0;
+      // const stockQuantity = row.original.stockItem?.quantity ?? 0;
+
+      
     
 
 
@@ -168,57 +171,44 @@ export const Requestcolumns: ColumnDef<Request>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
       
 
-            <DropdownMenuItem className={`${["READY", "COMPLETE"].includes(requestStatus) || requestQuantity > stockQuantity ? "hidden" : ""}`} asChild>
+            <DropdownMenuItem hidden={requestStatus == "COMPLETE" || requestStatus == "READY"} asChild>
 
 
               <form action={
                 () => {
                   startTransition(async () => {
 
+                    const res = await markReady(requestId);
 
-                    try {
-                      // Check inventory amount of selected stock item
-                  return
-                    
-
-            
-
-                    } catch (error) {
-                      console.log(error);
-                      toast.error("There was error deleting this stock item")
-
+                    if (res?.success){
+                      toast.success(res.message)
+                    } else {
+                      toast.error(res?.message)
                     }
+
+              
                   })
 
                 }
               }>
           
-                <button type="submit">Mark as Ready</button>
+                <button type="submit">Mark Ready</button>
               </form>
 
 
             </DropdownMenuItem>
             
-            <DropdownMenuItem className={`${["OPEN", "COMPLETE"].includes(requestStatus) ?  "hidden" : ""}`} asChild>
-
-
+            <DropdownMenuItem hidden={requestStatus == "COMPLETE" || requestStatus == "OPEN"} asChild>
               <form action={
                 () => {
                   startTransition(async () => {
 
+                    const res = await MarkComplete(requestId);
 
-                    try {
-
-                     return
-
-       
-
-  
-
-                    } catch (error) {
-                      console.log(error);
-                      toast.error("There was error deleting this stock item")
-
+                    if (res.success){
+                      toast.success(res.message);
+                    } else {
+                      toast.error(res.message)
                     }
                   })
 
@@ -235,16 +225,19 @@ export const Requestcolumns: ColumnDef<Request>[] = [
   
             <DropdownMenuItem>
                        <form action={
-                (formData) => {
+                () => {
                   startTransition(async () => {
-
+                    const res = await cancelRequest(requestId, requestStatus);
+                    if (res.success){
+                      toast.success(res.message)
+                    }
 return
                   })
 
                 }
               }>
                 <input type="hidden" name="requestId" value={requestId} />
-                <button type="submit">{requestStatus == "COMPLETE" ? "Cancel" : "Delete"} Request</button>
+                <button type="submit">Cancel request</button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>

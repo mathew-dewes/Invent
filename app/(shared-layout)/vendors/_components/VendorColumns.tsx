@@ -45,6 +45,11 @@ export const VendorColumns: ColumnDef<Vendor>[] = [
     header: "Contact Person",
     
   },
+    {
+    accessorKey: "PONumber",
+    header: "#PO",
+    
+  },
 
   {
     id: "actions",

@@ -22,7 +22,8 @@ export default function VendorForm(){
                 address: "",
                 email: "",
                 phone: "",
-                contactName: ""
+                contactName: "",
+                PONumber: ""
     
     
             }
@@ -32,7 +33,7 @@ export default function VendorForm(){
 
                 
                 startTransition(async () => {
-                    console.log(values);
+                        
                     await createVendor(values)
         
         
@@ -82,11 +83,23 @@ export default function VendorForm(){
                                 </Field>
                             )}
                         />
+
+                            <Controller name="PONumber" control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field>
+                                    <FieldLabel>PO number</FieldLabel>
+                                    <Input type="number" aria-invalid={fieldState.invalid} placeholder="Enter PO number" {...field} />
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />
+                                    }
+                                </Field>
+                            )}
+                        />
                         <Controller name="phone" control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field>
                                     <FieldLabel>Phone number</FieldLabel>
-                                    <Input type="number" aria-invalid={fieldState.invalid} placeholder="Enter phone number" {...field} />
+                                    <Input type="number" aria-invalid={fieldState.invalid} placeholder="Enter phone number - Optional" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />
                                     }

@@ -9,7 +9,6 @@ import { revalidatePath } from "next/cache";
 
 export async function createVendor(values: z.infer<typeof vendorSchema>){
 
-
     const userId = await getUserId();
 
     try {
@@ -19,7 +18,7 @@ export async function createVendor(values: z.infer<typeof vendorSchema>){
             throw new Error('Validation failed');
         };
 
-        const { name, address, email, phone, contactName } = parsed.data;
+        const { name, address, email, phone, contactName, PONumber } = parsed.data;
 
     await prisma.vendor.create({
         data:{
@@ -28,7 +27,8 @@ export async function createVendor(values: z.infer<typeof vendorSchema>){
             email,
             phone,
             contactName,
-            userId
+            userId,
+            PONumber: Number(PONumber)
         }
     });
 

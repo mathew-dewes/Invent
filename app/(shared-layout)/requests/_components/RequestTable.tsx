@@ -31,6 +31,7 @@ import { useSearchParams } from "next/navigation"
 import { RequestStatus } from "@/generated/prisma/enums"
 import { MarkAllReadyButton } from "./MarkAllReadyButton"
 import { MarkAllCompleteButton } from "./MarkAllCompleteButton"
+import { ClearDataButton } from "./ClearRequests"
 
 
 interface DataTableProps<TData, TValue> {
@@ -63,6 +64,9 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
 
     
 
+
+    
+
       // eslint-disable-next-line react-hooks/incompatible-library
       const table = useReactTable({
         getRowId: (row) => row.id,
@@ -90,16 +94,8 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
     .map((row) => row.original.id);
 
     const selectedStockIds = table.getSelectedRowModel().rows.map((row) => row.original.stockItem.id)
-
-      const stockIdsAndQuantity = table
-    .getSelectedRowModel()
-    .rows
-    .map(({ original }) => ({
-      id: original.stockItem.id,
-      quantity: original.quantity
-    }));
-
     const isSelected = selectedRequestIds.length > 0;
+    
 
 
   return (
@@ -217,6 +213,7 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
           Next
         </Button>
       </div>
+      <ClearDataButton hidden={data.length == 0 || isSelected}/>
        
         <div className={`${!isSelected ? "hidden" : ""}`}>
           <p>Update (All) selected:</p>
@@ -224,10 +221,9 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
             await delay(500)
             table.setRowSelection({})
           }} className="mt-2 flex gap-5">
-        {query == "OPEN" && <MarkAllReadyButton stockIdsAndQuantity={stockIdsAndQuantity}/>}
+        {query == "OPEN" && <MarkAllReadyButton requestIds={selectedRequestIds}/>}
         {query == "READY" && <MarkAllCompleteButton selectedStockIds={selectedStockIds}/>}
-        {query !== "COMPLETE" && query && <Button disabled={!isSelected} variant={"destructive"}>Cancel</Button>}
-   
+  
             {/* <MassCancelButton selectedIds={selectedStockIds} table={selectedTable} status={selectedStatus} stockIdsAndQuantity={stockIdsAndQuantity}  /> */}
 
 
