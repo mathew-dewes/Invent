@@ -51,7 +51,7 @@ export default function FinanceFilters({
   }
 
   function clearQuery() {
-    if (!searchParams.get("status")) return
+    if (!searchParams.get("type")) return
     replace(pathname)
   }
 
@@ -72,7 +72,7 @@ export default function FinanceFilters({
   return (
     <div className="flex gap-4">
 
-      <Button variant={searchParams.get("status") ? "outline" : "default"}
+      <Button variant={searchParams.get("type") ? "outline" : "default"}
         onClick={() => clearQuery()}>View All</Button>
 
 
@@ -80,13 +80,13 @@ export default function FinanceFilters({
         const query = filter.filter;
         return <Button
           onClick={() => {
-            setQueryFilter(query, "status"!)
+            setQueryFilter(query, "type"!)
           }}
           
 
 
           key={key}
-          variant={searchParams.get("status"!) !== query ? "outline" : "default"}
+          variant={searchParams.get("type"!) !== query ? "outline" : "default"}
         >{filter.label}</Button>
       })}
 

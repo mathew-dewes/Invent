@@ -7,7 +7,7 @@ export async function generateRequestNumber(): Promise<number> {
     let requestNumber = 0;
 
     while (!unique) {
-        requestNumber = Math.floor(Math.random() * 99999) + 1
+        requestNumber = Math.floor(Math.random() * 9999) + 1
 
         const existing = await prisma.request.findUnique({
             where: { requestNumber }

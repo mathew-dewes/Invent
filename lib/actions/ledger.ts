@@ -12,6 +12,7 @@ export async function createRequestLedger(requestId: string){
             where:{userId, id: requestId},
             select:{
                 id:true,
+                requestNumber:true,
                 customer:true,
                 quantity:true,
                 costCentre:true,
@@ -19,30 +20,40 @@ export async function createRequestLedger(requestId: string){
                     select:{
                         unitCost:true,
                         id:true,
-                        name:true
+                        name:true,
+                        vendor:{
+                            select:{
+                                name:true
+                            }
+                        }
                  
                     }
-                }
+                },
+                
             }
         });
 
-        if (!request) return
+        if (!request) return;
+
+        const reference = `REQ-${request.requestNumber}`;
+
 
         await prisma.costLedger.create({
             data:{
-                type: "REQUEST",
+                sourceType: "REQUEST",
                 month: new Date().getMonth() + 1,
                 year: new Date().getFullYear(),
                 stockId: request.stockItem.id,
                 stockName: request.stockItem.name,
                 quantity: request.quantity,
-                reference: request.costCentre,
                 totalCost: Number(request.stockItem.unitCost) * request.quantity,
                 unitCost: request.stockItem.unitCost,
                 costCentre:request.costCentre,
                 userId,
-                requestId: request.id,
-                requestee: request.customer
+                sourceId: requestId,
+                reference,
+                vendorName: request.stockItem.vendor.name
+
 
             }
         })
@@ -82,20 +93,23 @@ export async function createPurchaseLedger(purchaseId: string){
 
         if (!purchase) return;
 
+        const reference = `PUR-${purchase.purchaseNumber}`;
+
         await prisma.costLedger.create({
             data:{
-                 type: "PURCHASE",
+                sourceType: "PURCHASE",
                 month: new Date().getMonth() + 1,
                 year: new Date().getFullYear(),
                 stockId: purchase.stockItem.id,
                 stockName: purchase.stockItem.name,
                 quantity: purchase.quantity,
-                reference: String(purchase.purchaseNumber),
                 totalCost: Number(purchase.stockItem.unitCost) * purchase.quantity,
                 unitCost: purchase.stockItem.unitCost,
                 userId,
-                requestId: purchase.id,
-                requestee: purchase.vendor.name
+                costCentre: "STOCK",
+                sourceId: purchaseId,
+                reference,
+                vendorName:purchase.vendor.name
             }
         })
 }

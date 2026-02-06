@@ -12,6 +12,9 @@ import { TimeFrame } from "../types";
 export async function getFinanceData(filter?: FinanceType, timeFrame?:TimeFrame){
     const userId = await getUserId();
 
+    console.log(filter);
+    
+
     const startDate = getStartDate(timeFrame)
 
 
@@ -36,11 +39,11 @@ export async function getFinanceData(filter?: FinanceType, timeFrame?:TimeFrame)
     }));
 
     const requests = serialisedFinances.filter(
-        item => item.type === "REQUEST"
+        item => item.sourceType === "REQUEST"
     );
 
     const purchases = serialisedFinances.filter(
-        item => item.type === "PURCHASE"
+        item => item.sourceType === "PURCHASE"
     );
 
     if (filter === "REQUEST"){
@@ -61,12 +64,12 @@ export async function getFinanceTypeCount(){
 
     const finances = await prisma.costLedger.findMany({
         where:{userId},
-        select:{type: true}
+        select:{sourceType: true}
     });
 
     const typeCounts = {
-        REQUEST: finances.filter((t => t.type === "REQUEST" )).length,
-        PURCHASE: finances.filter((t => t.type === 'PURCHASE')).length
+        REQUEST: finances.filter((t => t.sourceType === "REQUEST" )).length,
+        PURCHASE: finances.filter((t => t.sourceType === 'PURCHASE')).length
     };
 
     return typeCounts

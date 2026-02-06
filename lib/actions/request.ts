@@ -357,7 +357,7 @@ export async function cancelRequest(requestId: string, requestStatus: RequestSta
     if (requestStatus == "COMPLETE"){
 
         await prisma.costLedger.deleteMany({
-            where:{userId, requestId}
+            where:{userId, sourceId: requestId}
         });
     }
 

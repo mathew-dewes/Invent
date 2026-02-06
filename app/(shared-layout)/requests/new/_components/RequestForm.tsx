@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createRequest } from "@/lib/actions/request";
 import { requestSchema } from "@/lib/schemas";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -18,48 +19,48 @@ import z from "zod";
 
 
 
-export default function RequestForm({stock}:
-    {stock: {id: string, name: string}[]}
-){
-        const [isPending, startTransition] = useTransition();
-         const router = useRouter()
+export default function RequestForm({ stock }:
+    { stock: { id: string, name: string, quantity: number }[] }
+) {
+    const [isPending, startTransition] = useTransition();
+    const router = useRouter()
 
-        
-        const form = useForm({
-            resolver: zodResolver(requestSchema),
-            defaultValues: {
-                customer:"",
-                stockItem: "",
-                quantity: "",
-                costCentre: "",
-                notes: ""
-    
-    
-            }
-        });
 
-            function onSubmit(values: z.infer<typeof requestSchema>) {
+    const form = useForm({
+        resolver: zodResolver(requestSchema),
+        defaultValues: {
+            customer: "",
+            stockItem: "",
+            quantity: "",
+            costCentre: "",
+            notes: ""
 
-                
-                startTransition(async () => {
+
+        }
+    });
+
+    function onSubmit(values: z.infer<typeof requestSchema>) {
+
+
+        startTransition(async () => {
             try {
-        await createRequest(values);
-        toast.success(`Request was placed successfully`);
-        router.push('/requests')
-        
+                await createRequest(values);
+                toast.success(`Request was placed successfully`);
+                router.push('/requests')
+
             } catch (error) {
-            console.log(error);
-            toast.error("There was error. Please advise admin")
+                console.log(error);
+                toast.error("There was error. Please advise admin")
             }
-       
+
 
 
         })
-        
-        
-            }
+
+
+    }
     return (
-          <Card className="w-full max-w-xl mx-auto mt-15">
+        <Card className="w-full max-w-xl mx-auto mt-15">
             <CardHeader className="text-center">
                 <CardTitle className="text-xl">Create Request</CardTitle>
                 <CardDescription>Please fill out the required fields to create a new request</CardDescription>
@@ -80,75 +81,72 @@ export default function RequestForm({stock}:
                         />
 
                         <Controller name="stockItem" control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field>
+                            render={({ field, fieldState }) => {
+                                const selectedStock = stock.find(
+                                    (item) => item.id === field.value
+                                );
+
+                                return <Field>
                                     <FieldLabel>Stock Item</FieldLabel>
                                     <div>
-      <Combobox aria-invalid={fieldState.invalid} values={stock} value={field.value} onChange={field.onChange}/>
+                                        <Combobox aria-invalid={fieldState.invalid} values={stock} value={field.value} onChange={field.onChange} />
+                                       <p className={cn(!selectedStock ? "invisible" : "", "mt-3 text-sm")}><span className="font-semibold">SOH:</span>  {selectedStock?.quantity} units</p>
+                                             
                                     </div>
-                                  
-                
+
+
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />
                                     }
                                 </Field>
-                            )}
+                            }}
                         />
 
 
+                        <div className="flex gap-5">
+                            <Controller name="quantity" control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field>
+                                        <FieldLabel>Quantity</FieldLabel>
+                                        <Input type="number" aria-invalid={fieldState.invalid} placeholder="Enter email address" {...field} />
+                                        {fieldState.invalid &&
+                                            <FieldError errors={[fieldState.error]} />
+                                        }
+                                    </Field>
+                                )}
+                            />
+                            <Controller name="costCentre" control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field>
+                                        <FieldLabel>Cost centre</FieldLabel>
+                                        <Input aria-invalid={fieldState.invalid} placeholder="Enter cost center code" {...field} />
+                                        {fieldState.invalid &&
+                                            <FieldError errors={[fieldState.error]} />
+                                        }
+                                    </Field>
+                                )}
+                            />
+                        </div>
 
-                        {/* <Field>
-                               <FieldLabel>Stock Item</FieldLabel>
-                            <div>
-    <Combobox values={stock}/>
-                            </div>
 
-                        </Field> */}
-                            
-                            <div className="flex gap-5">
-      <Controller name="quantity" control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field>
-                                    <FieldLabel>Quantity</FieldLabel>
-                                    <Input type="number" aria-invalid={fieldState.invalid} placeholder="Enter email address" {...field} />
-                                    {fieldState.invalid &&
-                                        <FieldError errors={[fieldState.error]} />
-                                    }
-                                </Field>
-                            )}
-                        />
-                        <Controller name="costCentre" control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field>
-                                    <FieldLabel>Cost centre</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter cost center code" {...field} />
-                                    {fieldState.invalid &&
-                                        <FieldError errors={[fieldState.error]} />
-                                    }
-                                </Field>
-                            )}
-                        />
-                            </div>
 
-                            
-                    
 
-        
+
 
 
                         <Controller name="notes" control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field >
                                     <FieldLabel>Notes:</FieldLabel>
-                          <Textarea aria-invalid={fieldState.invalid} placeholder="Write a note - Optional" {...field} />
+                                    <Textarea aria-invalid={fieldState.invalid} placeholder="Write a note - Optional" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />}
                                 </Field>
                             )} />
 
 
-            
-                  
+
+
 
                         <Button className="mt-3" disabled={isPending}>
                             {isPending ? (
@@ -161,7 +159,7 @@ export default function RequestForm({stock}:
 
 
                     </FieldGroup>
-         
+
                 </form>
             </CardContent>
 

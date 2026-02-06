@@ -31,7 +31,7 @@ export default function OpenRequestsCard({ title, description, headings, tableDa
             <CardHeader>
                 <CardTitle>
                   <div className="flex items-center gap-1.5">
-            <CircleAlert className="text-red-400"/>
+            <CircleAlert className="text-yellow-400"/>
             <h1 className="text-lg">{title}</h1>
      
           </div>

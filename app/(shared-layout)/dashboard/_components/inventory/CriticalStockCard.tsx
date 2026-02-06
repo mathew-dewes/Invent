@@ -24,7 +24,7 @@ type Props = {
 
 export default function CriticalStockCard({ title, description, headings, tableData, noStockIds }: Props) {
   return (
-    <Card className="w-full">
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>
           <div className="flex items-center gap-1.5">

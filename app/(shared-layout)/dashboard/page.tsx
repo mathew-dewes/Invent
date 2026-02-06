@@ -1,8 +1,12 @@
 import { Suspense } from "react";
-import Requests from "./_components/Requests";
-import Performance from "./_components/Performance";
+import CompletedRequests from "./_components/CompletedRequests";
+import TotalSpend from "./_components/TotalSpend";
+import MostRequested from "./_components/MostRequested";
+import CriticalStock from "./_components/CriticalStock";
+import OpenRequests from "./_components/OpenRequests";
+import ReadyRequests from "./_components/ReadyRequests";
+import IncomingPurchases from "./_components/IncomingPurchases";
 import Inventory from "./_components/Inventory";
-import Overview from "./_components/Overview";
 
 
 export default function page() {
@@ -11,29 +15,19 @@ export default function page() {
         <div>
 
             <Suspense fallback={'Loading Stock health data...'}>
-                <div className="flex flex-col gap-6">
+                <div className="grid grid-cols-2 gap-6">
 
-                    <div className="grid grid-cols-2 gap-6">
-                     
-                        <Inventory />
-            
-                    <Requests />
-                    </div>
-
-
-              
-                    <Overview/>
-    
-          <Performance/>
-     
-          
-
-            
-
-
-
-
-
+                    <CriticalStock/>
+                    <OpenRequests/>
+                    <ReadyRequests/>
+                    <IncomingPurchases/>
+                    <Inventory/>
+                    <CompletedRequests/>
+                    <TotalSpend/>
+        
+                    <MostRequested />
+                  
+               
 
                 </div>
 
