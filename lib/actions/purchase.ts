@@ -126,7 +126,7 @@ export async function generatePurchaseNumber(): Promise<number> {
     let purchaseNumber = 0;
 
     while (!unique) {
-        purchaseNumber = Math.floor(Math.random() * 99999) + 1
+        purchaseNumber = Math.floor(Math.random() * 9999) + 1
 
         const existing = await prisma.purchase.findUnique({
             where: { purchaseNumber }

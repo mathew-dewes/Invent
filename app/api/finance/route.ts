@@ -24,11 +24,11 @@ export async function GET(req: NextRequest) {
 
   const data = ledger.map(row => ({
     Date: row.createdAt.toISOString().split("T")[0],
-    Type: row.type,
+    Type: row.sourceType,
     Reference: row.reference,
     Stock: row.stockName,
     Quantity: row.quantity,
-    Plant: row.plantNumber,
+    costCentre: row.costCentre,
     Vendor: row.vendorName,
     UnitCost: Number(row.unitCost).toFixed(2),
     TotalCost: Number(row.totalCost).toFixed(2),

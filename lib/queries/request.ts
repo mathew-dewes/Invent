@@ -270,55 +270,6 @@ export async function getReadyRequests() {
 
 
 
-export async function getRequestHealthPercentage() {
-    const userId = await getUserId();
-
-    const requests = await prisma.request.findMany({
-        where: { userId },
-        select: {
-            status: true,
-        },
-    });
-
-
-    if (requests.length === 0) {
-        return {
-            health: 100,
-            breakdown: {
-                complete: 0,
-                ready: 0,
-                open: 0,
-            },
-        };
-    }
-
-
-    const complete = requests.filter(r => r.status === "COMPLETE").length;
-    const ready = requests.filter(r => r.status === "READY").length;
-    const open = requests.filter(r => r.status === "OPEN").length;
-
-    const WEIGHTS = {
-        COMPLETE: 1,
-        READY: 0.75,
-        OPEN: 0.4,
-    } as const;
-
-    const totalScore = requests.reduce((sum, r) => {
-        return sum + WEIGHTS[r.status];
-    }, 0);
-
-    const health = Math.round((totalScore / requests.length) * 100);
-
-    return {
-        health,
-        breakdown: {
-            complete,
-            ready,
-            open,
-        },
-    };
-};
-
 
 export async function getMonthlyHighestSpendingChartData(){
     const userId = await getUserId();

@@ -96,7 +96,7 @@ const selectedStock = stock.find(
       onChange={field.onChange}
       
       />
-      <p className={cn(!selectedStock ? "invisible" : "", "mt-3")}>SOH: {selectedStock?.quantity}</p>
+<p className={cn(!selectedStock ? "invisible" : "", "mt-3 text-sm")}><span className="font-semibold">SOH:</span>  {selectedStock?.quantity} units</p>
                                     </div>
                                   
                 

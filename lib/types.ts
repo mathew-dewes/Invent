@@ -106,13 +106,10 @@ export type Finance = {
    totalCost: string;
     id: string;
     createdAt: Date;
-    type: FinanceType;
-    requestId: string | null;
-    purchaseId: string | null;
+    sourceType: FinanceType;
     stockId: string;
     vendorId: string | null;
     userId: string;
-    reference: string;
     plantNumber?: string | null;
     stockName: string;
     vendorName: string | null;
@@ -120,7 +117,7 @@ export type Finance = {
     unitCost: string;
     month: number;
     year: number;
-    requestee: string | null;
+
 }
 
 export type InventoryStatus = "out" | "low" | "good";

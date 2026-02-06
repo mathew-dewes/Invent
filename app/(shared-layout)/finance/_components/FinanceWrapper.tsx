@@ -11,6 +11,9 @@ export default async function FinanceWrapper({filter, timeFrame}:
 const [finances, financeTypeCount] = await Promise.all([getFinanceData(filter, timeFrame), getFinanceTypeCount()]);
 
 
-    return   <FinanceTable queryCounts={financeTypeCount} data={finances} columns={Financecolumns} filter={"reference"} />
+
+
+
+    return   <FinanceTable queryCounts={financeTypeCount} data={finances} columns={Financecolumns} filter={{label: "reference", source: "reference"}} />
        
 }

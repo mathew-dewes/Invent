@@ -64,7 +64,7 @@ export const Financecolumns: ColumnDef<Finance>[] = [
     {
     accessorKey: "createdAt",
 
-    header: "Created",
+    header: "Date",
             cell: ({ getValue }) => {
       const date = new Date(getValue() as string);
       return date.toLocaleString("en-NZ", {
@@ -75,37 +75,37 @@ export const Financecolumns: ColumnDef<Finance>[] = [
       });
   },
   },
-      {
-    accessorKey: "reference",
-
-    header: "Reference - PO / CC",
-  },
-
-  {
-    accessorKey: "type",
+    {
+    accessorKey: "sourceType",
     cell:({row}) => 
-      <Badge variant={"secondary"}>{row.getValue("type")}</Badge>,
+      <Badge variant={"secondary"}>{row.getValue("sourceType")}</Badge>,
     header: "Type",
   },
+     {
+    accessorKey: "reference",
+
+    header: "Reference",
+  },
+    {
+    accessorKey: "stockName",
+    header: "Stock Item",
+  },
       {
-    accessorKey: "requestee",
-    header: "Customer / Vendor",
+    accessorKey: "vendorName",
+
+    header: "Vendor",
     cell:({row})=>{
-      console.log(row.original);
-      
-      const customer = row.original.requestee;
-      return customer ?? "-"
+      return row.getValue('vendorName') ?? '-'
     }
   },
-   {
-    accessorKey: "stockName",
-    header: "Item",
-  },
+
+
+
 
 
       {
     accessorKey: "quantity",
-      header: () => <div>Quantity</div>,
+      header: () => <div>QTY</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("quantity")) 
       return <div className="font-medium">{amount}</div>
@@ -137,6 +137,13 @@ export const Financecolumns: ColumnDef<Finance>[] = [
  
       return <div className="font-medium">{formatted}</div>
     },
+  },
+     {
+    accessorKey: "costCentre",
+    header: "Cost Centre",
+    cell:({row})=>{
+      return <p className="uppercase">{row.getValue('costCentre')}</p>
+    }
   },
 
 

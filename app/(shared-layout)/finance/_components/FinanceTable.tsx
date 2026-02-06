@@ -33,7 +33,7 @@ import FinanceFilters from "./FinanceFilters"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
-  filter: string,
+  filter: {label: string, source: string},
   queryCounts?: Record<string, number> 
   
 }
@@ -81,10 +81,10 @@ export function FinanceTable<TData extends ParsedDataTypes, TValue>({
       <div className="flex items-center py-4 mt-2">
         <div className="flex gap-3">
           <Input
-            placeholder={`Filter ${filter}...`}
-            value={(table.getColumn(filter)?.getFilterValue() as string) ?? ""}
+            placeholder={`Filter ${filter.label}...`}
+            value={(table.getColumn(filter.source)?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn(filter)?.setFilterValue(event.target.value)
+              table.getColumn(filter.source)?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />

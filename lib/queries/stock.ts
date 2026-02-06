@@ -243,25 +243,11 @@ export async function getStockHealthPercentages(){
         s => s.quantity >= s.reorderPoint
     ).length;
 
-    const low = stock.filter(
-        s => s.quantity > 0 && s.quantity < s.reorderPoint
-    ).length;
-
-
-    const out = stock.filter(
-        s => s.quantity === 0
-    ).length;
 
 const stockHealthPercent = total === 0 ? 0 : Math.round((healthy / total) * 100);
 
 
-return {
-    percentage: stockHealthPercent,
-    totalStock: total,
-    good:healthy,
-    low: low,
-    out: out
-}
+return stockHealthPercent
 }
 
 export async function getStockNameAndQuantityById(stockId: string){
@@ -306,6 +292,34 @@ export async function getLowStock(){
  
 }
 
+
+export async function getInventoryChartData(){
+
+    const userId = await getUserId();
+
+    const stockItems = await prisma.stock.findMany({
+        where: {userId},
+            select: {
+      name: true,
+      quantity: true,
+    },
+    });
+
+    const stockMap = new Map<string, number>();
+
+    for (const stock of stockItems){
+        const current = stockMap.get(stock.name) ?? 0;
+        stockMap.set(stock.name, current + stock.quantity);
+    };
+
+   const data = Array.from(stockMap.entries()).map(([name, count]) => ({
+    name,
+    count,
+  }));
+
+  return data;
+
+}
 
 
    
