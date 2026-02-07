@@ -1,7 +1,12 @@
 import { convertToMoney } from "@/lib/helpers";
 import { TotalSpendChart } from "./charts/TotalSpendChart";
+import { getTotalSpend } from "@/lib/queries/purchase";
 
-export default function TotalSpend(){
+export default async function TotalSpend(){
+
+    const totalSpend = await getTotalSpend();
+
+    
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary">
                     <div>
@@ -12,7 +17,7 @@ export default function TotalSpend(){
                 <p>Monthly: {convertToMoney(12)} </p>
                 <p>Quarterly: {convertToMoney(12)} </p>
                </div>
-                <TotalSpendChart/>
+                <TotalSpendChart data={totalSpend}/>
                     </div>
          
               

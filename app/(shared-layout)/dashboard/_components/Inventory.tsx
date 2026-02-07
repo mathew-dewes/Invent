@@ -5,10 +5,9 @@ import { getInventoryChartData, getStockHealthPercentages } from "@/lib/queries/
 
 export default async function Inventory(){
 
-    const percentage = await getStockHealthPercentages();
-    const chartData = await getInventoryChartData();
+    const [percentage, chartData] = await Promise.all([getStockHealthPercentages(), getInventoryChartData()]);
 
-    console.log(chartData);
+    
     
     return (
          <div className="border-2 p-5 rounded-xl bg-secondary">

@@ -6,11 +6,9 @@ export default async function IncomingPurchases(){
 
     const openRequests = await getIncomingPurchases();
     return (
-        <div  className={`border-2 p-5 rounded-xl bg-secondary`}>
+        <div hidden={openRequests.length == 0}  className={`border-2 p-5 rounded-xl bg-secondary`}>
        
-        
-
-            { <IncomingStockCard tableData={openRequests}  headings={['Placed', 'Item', 'QTY', 'Customer']} title="Incoming Purchases" description="Order which have been placed"/>}
+            <IncomingStockCard tableData={openRequests}  headings={['Placed', 'Item', 'QTY', 'Customer']} title="Incoming Purchases" description="Order which have been placed"/>
          
         
         

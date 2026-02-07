@@ -315,7 +315,7 @@ export async function getInventoryChartData(){
    const data = Array.from(stockMap.entries()).map(([name, count]) => ({
     name,
     count,
-  }));
+  })).sort((a, b) => a.count - b.count);
 
   return data;
 

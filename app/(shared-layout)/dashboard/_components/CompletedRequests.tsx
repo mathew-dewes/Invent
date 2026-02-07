@@ -1,6 +1,10 @@
+import { getRequestChartData } from "@/lib/queries/request";
 import { RequestTrendChart } from "./charts/RequestTrendChart";
 
-export default function CompletedRequests(){
+export default async function CompletedRequests(){
+
+    const data = await getRequestChartData();
+    
     return (
               <div className="border-2 p-5 rounded-xl bg-secondary">
                     <div>
@@ -11,7 +15,7 @@ export default function CompletedRequests(){
                 <p>Monthly: 12</p>
                 <p>Quarterly: 554 </p>
                </div>
-                <RequestTrendChart/>
+                <RequestTrendChart data={data}/>
                     </div>
                    </div>
     )

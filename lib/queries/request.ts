@@ -71,7 +71,7 @@ export async function getRequests(filter?: RequestStatus) {
 export async function getRequestChartData() {
     const userId = await getUserId();
     const start = new Date();
-    start.setDate(start.getDate() - 6);
+    start.setDate(start.getDate() - 90);
     start.setHours(0, 0, 0, 0);
 
     const end = new Date();
@@ -90,28 +90,24 @@ export async function getRequestChartData() {
         }
     });
 
-    const map = new Map<string, { date: string; open: number; ready: number, complete: number }>();
+    const map = new Map<string, { date: string; requests: number }>();
 
     for (const request of requests) {
         const dateKey = getNZDateKey(request.createdAt);
         const existing = map.get(dateKey) ?? {
             date: dateKey,
-            open: 0,
-            ready: 0,
-            complete: 0
+      
+            requests: 0
         };
 
         if (request.status == "COMPLETE") {
-            existing.complete += 1;
-        } else if (request.status == "OPEN") {
-            existing.open += 1;
-        }
-        existing.ready += 1;
+            existing.requests += 1;
+        } 
 
         map.set(dateKey, existing)
     };
 
-    const result: { date: string; open:number; ready: number; complete: number }[] = [];
+    const result: { date: string; requests: number }[] = [];
     const current = new Date(start);
 
     while (getNZDateKey(current) <= getNZDateKey(end)) {
@@ -120,9 +116,8 @@ export async function getRequestChartData() {
         result.push(
             map.get(key) ?? {
                 date: key,
-                open: 0,
-                ready: 0,
-                complete: 0
+    
+                requests: 0
             }
         );
         current.setDate(current.getDate() + 1);

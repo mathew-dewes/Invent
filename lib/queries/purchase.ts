@@ -156,114 +156,6 @@ export async function getPuchaseCardData() {
 }
 
 
-
-
-
-export async function getPurchaseChartData() {
-    const userId = await getUserId();
-    const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
-
-    const start = new Date();
-    start.setDate(start.getDate() - 6);
-    start.setHours(0, 0, 0, 0);
-
-    const end = new Date();
-    end.setHours(23, 59, 59, 999);
-
-    const purchases = await prisma.purchase.findMany({
-        where: {
-            userId,
-            createdAt: {
-                gte: start, lte: end
-            }
-        },
-        select: {
-            createdAt: true,
-            status: true
-        }
-    });
-
-    const map = new Map<string, { date: string; received: number, placed: number; delayed: number }>();
-
-    for (const purchase of purchases) {
-        const dateKey = getNZDateKey(purchase.createdAt);
-        const existing = map.get(dateKey) ?? {
-            date: dateKey,
-            received: 0,
-            placed: 0,
-            delayed: 0
-        };
-
-        if (purchase.status === "RECEIVED") {
-            existing.received += 1;
-        } else if (purchase.createdAt < threeDaysAgo){
-            existing.delayed += 1;
-        } else {
-     existing.placed += 1;
-        }
-   
-
-        map.set(dateKey, existing);
-    }
-
-
-
-    const result: { date: string; received: number; placed: number; delayed: number  }[] = [];
-    const current = new Date(start);
-
-    while (getNZDateKey(current) <= getNZDateKey(end)) {
-
-        const key = getNZDateKey(current);
-
-        result.push(
-            map.get(key) ?? {
-                date: key,
-                received: 0,
-                placed: 0,
-                delayed: 0
-            }
-        );
-        current.setDate(current.getDate() + 1);
-    };
-
-    return result;
-
-};
-
-
-export async function getPurchaseTableData() {
-    const userId = await getUserId();
-
-    const data = await prisma.purchase.findMany({
-        where: { userId },
-        select: {
-            id: true,
-            createdAt: true,
-            vendor: {
-                select: {
-                    name: true
-                }
-            },
-            stockItem: {
-                select: {
-                    name: true
-                }
-            },
-            quantity: true,
-            status: true
-        },
-        take: 10,
-        orderBy: {
-            createdAt: "desc"
-        }
-    });
-
-    return data;
-};
-
-
-
-
 export async function getDelayedPurchases() {
 
     const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
@@ -375,4 +267,56 @@ export async function getIncomingPurchases(){
     });
 
     return purchases
+};
+
+export async function getTotalSpend(){
+    const userId = await getUserId();
+    const start = new Date();
+    start.setDate(start.getDate() - 90);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    const purchases = await prisma.costLedger.findMany({
+        where:{userId, sourceType: "PURCHASE",
+            createdAt:{
+                gte: start,
+                lte: end
+            }
+        }
+    });
+
+    const map = new Map<string, {date: string, spend: number}>();
+
+    for (const purchase of purchases){
+        const dateKey = getNZDateKey(purchase.createdAt);
+        const existing = map.get(dateKey) ?? {
+            date: dateKey,
+            spend: 0
+        };
+
+        existing.spend += Number(purchase.totalCost)
+
+
+        map.set(dateKey, existing);
+
+    };
+
+    const result: {date: string, spend: number}[] = [];
+      const current = new Date(start);
+
+    while(getNZDateKey(current) <= getNZDateKey(end)){
+      const key = getNZDateKey(current);
+
+      result.push(
+        map.get(key) ?? {
+            date: key,
+            spend: 0
+        }
+      );
+      current.setDate(current.getDate() + 1)
+    };
+
+    return result
 }
