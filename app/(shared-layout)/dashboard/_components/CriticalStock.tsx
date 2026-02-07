@@ -15,11 +15,11 @@ export default async function CriticalStock(){
         return i.stockItem.id
     });
     return (
-          <div className={`border-2 p-5 rounded-xl bg-secondary`}>
+          <div hidden={criticalStock.length == 0} className={`border-2 p-5 rounded-xl bg-secondary`}>
             
 
          
-                    {criticalStock.length > 0 && <CriticalStockCard noStockIds={isOrdered} tableData={criticalStock} headings={['Item', 'QTY', 'ROP', 'Vendor']} title="Critical Stock" description="Items at or below reorder point"/>}
+                <CriticalStockCard noStockIds={isOrdered} tableData={criticalStock} headings={['Item', 'QTY', 'ROP', 'Vendor']} title="Critical Stock" description="Items at or below reorder point"/>
                      
              
            

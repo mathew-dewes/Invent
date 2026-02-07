@@ -20,18 +20,10 @@ import {
 
 export const description = "A bar chart with a custom label"
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  requests: {
+    label: "Units",
     color: "var(--chart-2)",
   },
   mobile: {
@@ -43,7 +35,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function MostRequestedItemsChart() {
+export function MostRequestedItemsChart({data}:
+  {data: {stock: string, requests: number}[]}
+) {
   return (
     <Card>
       <CardHeader>
@@ -54,7 +48,7 @@ export function MostRequestedItemsChart() {
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             layout="vertical"
             margin={{
               right: 16,
@@ -62,7 +56,7 @@ export function MostRequestedItemsChart() {
           >
             <CartesianGrid horizontal={false} />
             <YAxis
-              dataKey="month"
+              dataKey="stock"
               type="category"
               tickLine={false}
               tickMargin={10}
@@ -70,26 +64,26 @@ export function MostRequestedItemsChart() {
               tickFormatter={(value) => value.slice(0, 3)}
               hide
             />
-            <XAxis dataKey="desktop" type="number" hide />
+            <XAxis dataKey="requests" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
             <Bar
-              dataKey="desktop"
+              dataKey="requests"
               layout="vertical"
-              fill="var(--color-desktop)"
+              fill="#22c55e"
               radius={4}
             >
               <LabelList
-                dataKey="month"
+                dataKey="stock"
                 position="insideLeft"
                 offset={8}
                 className="fill-(--color-label)"
                 fontSize={12}
               />
               <LabelList
-                dataKey="desktop"
+                dataKey="requests"
                 position="right"
                 offset={8}
                 className="fill-foreground"

@@ -8,6 +8,8 @@ export default async function MostRequested(){
 
   const requests = await getMostRequestedChartData();
 
+  
+
 
   
     return (
@@ -21,7 +23,7 @@ export default async function MostRequested(){
                                               <p>Monthly: {convertToMoney(12)} </p>
                                               <p>Quarterly: {convertToMoney(12)} </p>
                                              </div>
-                                <MostRequestedItemsChart />
+                                <MostRequestedItemsChart data={requests} />
                             </div>
        
    

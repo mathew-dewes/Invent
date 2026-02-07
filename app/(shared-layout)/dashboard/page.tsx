@@ -24,7 +24,6 @@ export default function page() {
                     <Inventory/>
                     <CompletedRequests/>
                     <TotalSpend/>
-        
                     <MostRequested />
                   
                
