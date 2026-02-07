@@ -2,11 +2,12 @@ import { Suspense } from "react";
 import CompletedRequests from "./_components/CompletedRequests";
 import TotalSpend from "./_components/TotalSpend";
 import MostRequested from "./_components/MostRequested";
-import CriticalStock from "./_components/CriticalStock";
+import CriticalStock from "./_components/criticalStock/CriticalStock";
 import OpenRequests from "./_components/OpenRequests";
-import ReadyRequests from "./_components/ReadyRequests";
+
 import IncomingPurchases from "./_components/IncomingPurchases";
 import Inventory from "./_components/Inventory";
+import ReadyRequests from "./_components/readyRequests/ReadyRequests";
 
 
 export default function page() {

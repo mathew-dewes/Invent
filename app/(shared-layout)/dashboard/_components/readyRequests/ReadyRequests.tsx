@@ -1,6 +1,6 @@
 import { getReadyRequests } from "@/lib/queries/request";
+import ReadyRequestCard from "./ReadyRequestCard";
 
-import ReadyRequestCard from "./requests/ReadyRequestCard";
 
 export default async function ReadyRequests(){
 

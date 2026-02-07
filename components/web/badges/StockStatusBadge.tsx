@@ -3,15 +3,13 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export default function StockStatusBadge({ quantity, stockOrdered, reorderPoint }: {
-     quantity: number, stockOrdered: boolean, reorderPoint: number
+export default function StockStatusBadge({ quantity, reorderPoint }: {
+     quantity: number, reorderPoint: number
 }) {
 
     function status() {
-        if (stockOrdered && quantity === 0) {
+        if (quantity === 0) {
     return { style: "bg-red-400", label: "Ordered" }
-        } else if (stockOrdered && quantity <= reorderPoint && quantity > 0){
-            return { style: "bg-orange-400", label: "Ordered" }
         } else if (quantity <= reorderPoint  && quantity > 0) {
             return { style: "bg-orange-400", label: "Low Stock" }
         } else if (quantity === 0) {

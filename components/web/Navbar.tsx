@@ -30,9 +30,9 @@ export function Navbar() {
 
      const generateStyling = (link: string) =>{
         if (!pathname.startsWith(link)){
-            return buttonVariants({ variant: "ghost" })
+            return buttonVariants({ variant: "ghost", size: "sm" })
         } else {
-            return buttonVariants({ variant: "secondary" })
+            return buttonVariants({ variant: "default", size: "sm" })
         }
      }
      
@@ -45,7 +45,7 @@ export function Navbar() {
                     <h1 className="text-3xl font-bold">Invent
            
                     </h1></Link>
-                <div className="lg:flex items-center gap-2 hidden">
+                <div className="lg:flex items-center gap-4 hidden">
                     {session && links.map((link, key)=>{
                         return <Link 
                         key={key} 

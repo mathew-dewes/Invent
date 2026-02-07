@@ -41,7 +41,14 @@ interface DataTableProps<TData, TValue> {
   queryCounts?: Record<string, number> 
   
 }
-interface ParsedDataTypes { id: string, stockItem: { id: string }, quantity: number, }
+interface ParsedDataTypes { 
+  id: string, 
+  stockItem: { id: string, quantity: number }, 
+  quantity: number,
+
+
+
+}
 
 
 
@@ -60,11 +67,6 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
     
     const params = useSearchParams();
     const query = params.get('status') as RequestStatus;
-
-
-    
-
-
     
 
       // eslint-disable-next-line react-hooks/incompatible-library
@@ -169,8 +171,8 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
+            table.getRowModel().rows.map((row) => {
+              return <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
@@ -180,7 +182,7 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
                   </TableCell>
                 ))}
               </TableRow>
-            ))
+})
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
@@ -213,6 +215,7 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
           Next
         </Button>
       </div>
+      
       <ClearDataButton hidden={data.length == 0 || isSelected}/>
        
         <div className={`${!isSelected ? "hidden" : ""}`}>
@@ -224,8 +227,6 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
         {query == "OPEN" && <MarkAllReadyButton requestIds={selectedRequestIds}/>}
         {query == "READY" && <MarkAllCompleteButton selectedStockIds={selectedStockIds}/>}
   
-            {/* <MassCancelButton selectedIds={selectedStockIds} table={selectedTable} status={selectedStatus} stockIdsAndQuantity={stockIdsAndQuantity}  /> */}
-
 
           </div>
          

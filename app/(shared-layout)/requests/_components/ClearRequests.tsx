@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { clearData, markAllComplete } from "@/lib/actions/request";
+import { clearData } from "@/lib/actions/request";
 
-import { useRouter } from "next/navigation";
+
 import { startTransition } from "react";
 import { toast } from "sonner";
 
@@ -12,16 +12,20 @@ import { toast } from "sonner";
 
 export function ClearDataButton({hidden}:{hidden: boolean}) {
 
-    const router = useRouter();
-
     return (
-        <Button hidden={hidden} variant={"destructive"} className="cursor-pointer hover:bg-primary"
+        <Button hidden={hidden} variant={"outline"} className="cursor-pointer"
 
             onClick={() => {
                 startTransition(async () => {
 
 
-                     await clearData();
+                    const res = await clearData();
+
+                    if (res.success){
+                        toast.success(res.message)
+                    } else {
+                        toast.error(res.message)
+                    }
 
                
            

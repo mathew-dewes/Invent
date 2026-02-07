@@ -23,7 +23,6 @@ model User {
   requests      Request[]
   purchases Purchase[]
   costLedger CostLedger[]
-  budget Budget[]
 
   @@unique([email])
   @@map("user")
@@ -176,18 +175,6 @@ model CostLedger {
 
   @@unique([sourceType, sourceId])
 
-}
-
-model Budget {
-    id             String   @id @default(cuid())
-    createdAt      DateTime @default(now())
-    userId String
-    month Int
-    year Int
-    amount Decimal @db.Decimal(10, 2)
-
-    user User @relation(fields: [userId], references: [id])
-     @@unique([userId, month, year])
 }
 
 

@@ -72,7 +72,7 @@ export function MostRequestedItemsChart({data}:
             <Bar
               dataKey="requests"
               layout="vertical"
-              fill="#22c55e"
+              fill="#38bdf8"
               radius={4}
             >
               <LabelList

@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {CircleCheckBig } from "lucide-react";
 import Link from "next/link";
+import { ReadyRequestDropDown } from "./ReadyRequestDropDown";
 
 type Props = {
 
@@ -63,6 +64,7 @@ export default function ReadyRequestCard({ title, description, headings, tableDa
                                 <TableCell>
                                     <p className="font-medium">{item.stockItem.name}</p></TableCell>
                                 <TableCell>{item.quantity}</TableCell>
+                                <TableCell><ReadyRequestDropDown requestId={item.id}/></TableCell>
                  
                         
 

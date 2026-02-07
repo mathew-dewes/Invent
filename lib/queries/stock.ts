@@ -270,6 +270,7 @@ export async function getLowStock(){
     const stock = await prisma.stock.findMany({
         where:{userId},
         select:{
+            id:true,
             name:true,
             quantity:true,
             vendor:{
@@ -278,7 +279,7 @@ export async function getLowStock(){
                 }
             },
             reorderPoint: true,
-            id:true
+        
         },
         orderBy:{
             quantity: 'asc'

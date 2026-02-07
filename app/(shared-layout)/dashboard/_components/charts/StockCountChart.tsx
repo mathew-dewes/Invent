@@ -86,7 +86,7 @@ export function StockCountChart({data}:
           ? "#f87171"
           : entry.count < 5
           ? "#fb923c"
-          : "#22c55e"
+          : "#38bdf8"
       }
     />
               })}

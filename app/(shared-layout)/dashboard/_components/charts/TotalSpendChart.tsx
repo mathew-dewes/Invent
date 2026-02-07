@@ -102,24 +102,24 @@ export function TotalSpendChart({data}:
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="#4ade80"
+                  stopColor="#38bdf8"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="#4ade80)"
+                  stopColor="#38bdf8"
                   stopOpacity={0.1}
                 />
               </linearGradient>
               <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="#4ade80"
+                  stopColor="#38bdf8"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="#4ade80"
+                  stopColor="#38bdf8"
                   stopOpacity={0.1}
                 />
               </linearGradient>
@@ -157,8 +157,8 @@ export function TotalSpendChart({data}:
             <Area
               dataKey="spend"
               type="natural"
-              fill="#4ade80"
-              stroke="#4ade80"
+              fill="#38bdf8"
+              stroke="#38bdf8"
               stackId="a"
             />
             <ChartLegend content={<ChartLegendContent />} />
