@@ -12,9 +12,6 @@ import { TimeFrame } from "../types";
 export async function getFinanceData(filter?: FinanceType, timeFrame?:TimeFrame){
     const userId = await getUserId();
 
-    console.log(filter);
-    
-
     const startDate = getStartDate(timeFrame)
 
 
@@ -73,4 +70,35 @@ export async function getFinanceTypeCount(){
     };
 
     return typeCounts
+};
+
+export async function getRecentActivity(){
+    const userId = await getUserId();
+
+    const activities = await prisma.costLedger.findMany({
+        where:{userId},
+        orderBy:{
+            createdAt: "desc"
+        },
+        take: 10,
+        select:{
+            id: true,
+            createdAt:true,
+            sourceType:true,
+            reference: true,
+            stockName: true,
+            vendorName: true,
+            costCentre:true,
+            quantity:true,
+            totalCost:true
+        }
+    });
+
+       const serialisedActivities = activities.map((item) => ({
+        ...item,
+        totalCost: item.totalCost.toNumber(),
+  
+    }));
+
+    return serialisedActivities;
 }
