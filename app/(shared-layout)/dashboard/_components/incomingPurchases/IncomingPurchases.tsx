@@ -1,6 +1,7 @@
 
-import IncomingStockCard from "./inventory/IncomingStockCard";
+
 import { getIncomingPurchases } from "@/lib/queries/purchase";
+import IncomingStockCard from "./IncomingStockCard";
 
 export default async function IncomingPurchases(){
 

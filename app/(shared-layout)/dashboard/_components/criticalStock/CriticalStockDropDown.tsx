@@ -18,12 +18,10 @@ export function CriticalStockDropDown({stockId, incomingStock}:
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-            <Link href={'/purchases/new?reorder=' + stockId}><DropdownMenuItem>Purchase Stock</DropdownMenuItem></Link>
-
-            {/* /stock/cmlbsuurl000354uh8tr0qqwn/edit/quantity */}
+            <Link hidden={incomingStock} href={'/purchases/new?reorder=' + stockId}><DropdownMenuItem>Purchase Stock</DropdownMenuItem></Link>
+    
     
           <DropdownMenuItem>Copy vendor email</DropdownMenuItem>
-          {/* <Link href={`/stock/${stockId}/edit/quantity`}><DropdownMenuItem>Update Quantity</DropdownMenuItem></Link> */}
           <Link hidden={!incomingStock} href={'/purchases?status=PLACED'}><DropdownMenuItem>View purchase</DropdownMenuItem></Link>
       
           

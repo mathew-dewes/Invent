@@ -1,8 +1,9 @@
 
 import { convertToMoney } from "@/lib/helpers";
-import { MostRequestedItemsChart } from "./charts/MostRequestedItemsChart"
+
 
 import { getMostRequestedChartData } from "@/lib/queries/request"
+import { MostRequestedItemsChart } from "../charts/MostRequestedItemsChart";
 
 export default async function MostRequested(){
 

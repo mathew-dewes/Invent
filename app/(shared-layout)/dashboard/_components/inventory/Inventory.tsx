@@ -1,7 +1,8 @@
 
-import { StockCountChart } from "./charts/StockCountChart";
-import StockHealthBar from "./inventory/StockHealthBar";
+
 import { getInventoryChartData, getStockHealthPercentages } from "@/lib/queries/stock";
+import StockHealthBar from "./StockHealthBar";
+import { StockCountChart } from "../charts/StockCountChart";
 
 export default async function Inventory(){
 

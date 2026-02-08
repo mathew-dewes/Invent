@@ -1,5 +1,6 @@
 import { getOpenRequests } from "@/lib/queries/request";
-import OpenRequestsCard from "./requests/OpenRequestsCard";
+import OpenRequestsCard from "./OpenRequestsCard";
+
 
 export default async function OpenRequests(){
 
