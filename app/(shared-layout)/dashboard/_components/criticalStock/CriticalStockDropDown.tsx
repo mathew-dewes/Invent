@@ -20,8 +20,7 @@ export function CriticalStockDropDown({stockId, incomingStock}:
         <DropdownMenuGroup>
             <Link hidden={incomingStock} href={'/purchases/new?reorder=' + stockId}><DropdownMenuItem>Purchase Stock</DropdownMenuItem></Link>
     
-    
-          <DropdownMenuItem>Copy vendor email</DropdownMenuItem>
+  
           <Link hidden={!incomingStock} href={'/purchases?status=PLACED'}><DropdownMenuItem>View purchase</DropdownMenuItem></Link>
       
           

@@ -10,9 +10,6 @@ export default async function CriticalStock(){
     const noStockItems = criticalStock.filter((stock) => stock.quantity == 0).length > 0;
     const lowStockItems = criticalStock.filter((stock) => stock.quantity <= stock.reorderPoint).length > 0;
 
-
-    
-
     const stockIds = criticalStock.map((item)=>{
         return item.id
         
@@ -24,8 +21,6 @@ export default async function CriticalStock(){
         return i.stockItem.id
     });
 
-   
-    
 
     
     return (

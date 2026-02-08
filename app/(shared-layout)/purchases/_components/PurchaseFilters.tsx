@@ -33,22 +33,16 @@ export default function PurchaseFilters({
     ) || purchaseFilters;
 
 
-    
-
-
 
   function setQueryFilter(term: string, filter: string) {
-
-    if (term === searchParams.get(filter)) {
-
-      return
-    }
+    if (term === searchParams.get(filter)) return
     const params = new URLSearchParams(searchParams);
 
     if (term) {
-      params.set(filter, term)
+      params.set(filter, term);
+      params.delete("search");
     } else {
-      params.delete('query');
+      params.delete(filter);
     }
     replace(`${pathname}?${params.toString()}`, { scroll: false });
   }

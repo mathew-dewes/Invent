@@ -6,9 +6,12 @@ import { ThemeToggle } from "./ThemeToggle";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
+import { UserAvatar } from "@/app/(shared-layout)/dashboard/_components/action/UserAvatar";
 
 
 const { useSession } = authClient;
+
+
 
 
 const links = [
@@ -26,6 +29,7 @@ export function Navbar() {
     } = useSession();
 
      const pathname = usePathname();
+     const userName = session?.user.name;
 
 
      const generateStyling = (link: string) =>{
@@ -53,17 +57,22 @@ export function Navbar() {
                         href={link.href}>
                             {link.label}</Link>
                     })}
+
+             
         
                 </div>
+                 
 
 
             </div>
+             
 
-            <div className="flex items-center gap-2">
-                <div className="hidden md:block mr-2">
-                    {/* <SearchInput/> */}
-                </div>
-                {isPending ? null : session ? (
+            <div className="flex items-center gap-5">
+                {session && userName && <UserAvatar name={userName}/> }
+          
+
+                  <div className="flex gap-3 items-center">
+          {isPending ? null : session ? (
                     <Button onClick={()=> authClient.signOut({
                         fetchOptions:{
                             onSuccess:()=>{
@@ -83,6 +92,9 @@ export function Navbar() {
                     <Link className={buttonVariants({ variant: "outline" })} href={'/auth/login'}>Login</Link>
                     </>}
                     <ThemeToggle />
+                  </div>
+        
+      
 
             </div>
 

@@ -10,10 +10,13 @@ import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 
 export default  async function RequestsPage({searchParams}:
-  {searchParams: Promise<{status: PurchaseStatus}>}
+  {searchParams: Promise<{status: PurchaseStatus, search: string}>}
 ){
 
       const filters = ((await searchParams).status);
+      const search = ((await searchParams).search) ?? "";
+
+      
 
     return (
         <div>
@@ -22,7 +25,7 @@ export default  async function RequestsPage({searchParams}:
        
       </div>
       <Suspense fallback={<TableSkeleton/>}>
-     <PurchaseWrapper filter={filters}/>  
+     <PurchaseWrapper filter={filters} search={search}/>  
       </Suspense>
 
       

@@ -5,6 +5,7 @@ import { PurchaseStatus } from "@/generated/prisma/enums";
 import { daysAgo } from "@/lib/helpers";
 import { ClipboardClock } from "lucide-react";
 import Link from "next/link";
+import { IncomingPurchasesDropDown } from "./IncomingPurchasesDropDown";
 
 type Props = {
 
@@ -16,6 +17,7 @@ type Props = {
         createdAt: Date,
         quantity: number,
         status: PurchaseStatus,
+        purchaseNumber: number,
         vendor: {
             name: string
         },
@@ -64,7 +66,8 @@ export default function IncomingStockCard({ title, description, headings, tableD
                                     <p className="font-medium">{item.stockItem.name}</p></TableCell>
                                 <TableCell>{item.quantity}</TableCell>
                                 <TableCell>{item.vendor.name}</TableCell>
-
+                                <TableCell><IncomingPurchasesDropDown purchaseId={item.id}/></TableCell>
+                       
                             </TableRow>)
                         })}
 

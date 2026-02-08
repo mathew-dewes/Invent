@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useState } from "react"
+import {useState } from "react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
@@ -36,6 +36,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
   filter: {label: string, query: string},
+  search?: string
   queryCounts?: Record<string, number>
 
 }
@@ -47,10 +48,11 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
   columns,
   data,
   filter,
+
   queryCounts
 }: DataTableProps<TData, TValue>) {
 
-  console.log(filter.query);
+
   
 
 
@@ -81,6 +83,9 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
   });
 
   const params = useSearchParams();
+
+
+
   const query = params.get('status') as PurchaseStatus;
 
   const selectedPurchaseIds = table
@@ -96,7 +101,7 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
           <div className="flex gap-3">
             <Input
               placeholder={`Filter ${filter.label}...`}
-              value={(table.getColumn(filter.query)?.getFilterValue() as string) ?? ""}
+              value={(table.getColumn(filter.query)?.getFilterValue() as string)}
               onChange={(event) =>
                 table.getColumn(filter.query)?.setFilterValue(event.target.value)
               }
