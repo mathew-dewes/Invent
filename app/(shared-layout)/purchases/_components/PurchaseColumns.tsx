@@ -21,12 +21,12 @@ import PurchaseStatusBadge from "@/components/web/badges/PurchaseStatusBadge"
 import { markReceived } from "@/lib/actions/purchase"
 
 
-const HideCheckboxes = () =>{
+const HideCheckboxes = () => {
   const searchParams = useSearchParams().get('status');
 
-  if (searchParams == "RECEIVED" || !searchParams){
+  if (searchParams == "RECEIVED" || !searchParams) {
     return true
-  } else{
+  } else {
 
     return false
   }
@@ -35,11 +35,11 @@ const HideCheckboxes = () =>{
 
 
 export const Purchasecolumns: ColumnDef<Purchase>[] = [
-      {
+  {
     id: "select",
     header: ({ table }) => (
       <Checkbox
-           hidden={HideCheckboxes()}
+        hidden={HideCheckboxes()}
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -50,7 +50,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     ),
     cell: ({ row }) => (
       <Checkbox
-           hidden={HideCheckboxes()}
+        hidden={HideCheckboxes()}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
@@ -60,38 +60,40 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     enableHiding: false,
   },
   {
+    accessorFn: row => String(row.purchaseNumber),
     accessorKey: "purchaseNumber",
 
-    header: "ID",
+    header: "Purchase No",
   },
   {
+
     accessorKey: "createdAt",
 
     header: "Date",
-            cell: ({ getValue }) => {
+    cell: ({ getValue }) => {
       const date = new Date(getValue() as string);
       return date.toLocaleString("en-NZ", {
         year: "numeric",
         month: "numeric",
         day: "numeric",
-    
+
       });
-  },
+    },
   },
   {
     accessorKey: "status",
-    cell:({row}) => <PurchaseStatusBadge status={row.original.status} createdAt={row.original.createdAt}/>,
+    cell: ({ row }) => <PurchaseStatusBadge status={row.original.status} createdAt={row.original.createdAt} />,
     header: "Status",
   },
-   {
+  {
     accessorKey: "stockItem.name",
     header: "Item",
   },
-      {
+  {
     accessorKey: "quantity",
-      header: () => <div>Quantity</div>,
+    header: () => <div>Quantity</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("quantity")) 
+      const amount = parseFloat(row.getValue("quantity"))
       return <div className="font-medium">{amount}</div>
     },
   },
@@ -111,32 +113,32 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
         </Button>
       )
     },
-    cell:({row})=>{
-      
+    cell: ({ row }) => {
+
 
       const vendor = row.original.stockItem.vendor.name
       return vendor
     }
-    
+
   },
 
-    {
+  {
     accessorKey: "stockItem.vendor.PONumber",
 
     header: "PO#",
   },
 
 
-   {
+  {
     accessorKey: "totalCost",
-      header: () => <div>Cost</div>,
+    header: () => <div>Cost</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("totalCost"))
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       }).format(amount)
- 
+
       return <div className="font-medium">{formatted}</div>
     },
   },
@@ -150,7 +152,7 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
       const purchaseQuantity = row.original.quantity;
 
 
-      
+
 
       return (
         <DropdownMenu>
@@ -171,26 +173,27 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
 
                     try {
 
-                 const res = await markReceived(purchaseId);
+                      const res = await markReceived(purchaseId);
 
-                 if (!res?.success){
-                  toast.error(res?.message)
-                 } else {
-                  toast.success(res.message);
-                 }
+                      if (!res?.success) {
+                        toast.error(res?.message)
+                      } else {
+                        toast.success(res.message);
+                      }
 
-            
-              
+
+
                     } catch (error) {
                       console.log(error);
-                      
+
                     }
 
-            
-                    
-                  
 
-                })}
+
+
+
+                  })
+                }
               }>
                 <input type="hidden" name="purchaseId" value={purchaseId} />
                 <input type="hidden" name="purchaseQuantity" value={purchaseQuantity} />

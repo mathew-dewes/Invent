@@ -28,7 +28,8 @@ export default function EditVendorForm({values, vendorId}:
                 address: values.address ?? "",
                 email: values.email,
                 phone: values.phone ?? "",
-                contactName: values.contactName
+                contactName: values.contactName,
+                PONumber: String(values.PONumber)
     
     
             }
@@ -90,6 +91,17 @@ export default function EditVendorForm({values, vendorId}:
                                 <Field>
                                     <FieldLabel>Email</FieldLabel>
                                     <Input aria-invalid={fieldState.invalid} placeholder="Enter email address" {...field} />
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />
+                                    }
+                                </Field>
+                            )}
+                        />
+                                   <Controller name="PONumber" control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field>
+                                    <FieldLabel>PO number</FieldLabel>
+                                    <Input type="number" aria-invalid={fieldState.invalid} placeholder="Enter PO number" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />
                                     }

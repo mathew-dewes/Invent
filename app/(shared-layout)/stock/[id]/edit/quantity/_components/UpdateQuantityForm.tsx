@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { updateStockCount } from "@/lib/actions/stock";
 // import { updateSingleStockItemQuantity } from "@/lib/actions/stock";
 
-export default function EditQuantityForm({stockId ,stockName, stockQuantity}:
+export default function UpdateQuantityForm({stockId ,stockName, stockQuantity}:
     {stockId:string ,stockName: string, stockQuantity: number}
 ) {
     const [isPending, startTransition] = useTransition();
@@ -32,13 +33,25 @@ export default function EditQuantityForm({stockId ,stockName, stockQuantity}:
 
     function onSubmit(values: z.infer<typeof stockUpdateQuantitySchema>) {
 
-        const stockAmount = Number(values.quantity)
+        const stockAmount = Number(values.quantity);
+
+        console.log(values);
         
+            
         
         startTransition(async () => {
             try {
                 // Create mutation function that updates stock QTY
- return
+
+                const res = await updateStockCount(stockId, stockAmount);
+
+                if (res.success){
+                    toast.success(res.message);
+                    router.push('/stock')
+                } else {
+                    toast.error(res.message)
+                }
+ 
         
             } catch (error) {
             console.log(error);

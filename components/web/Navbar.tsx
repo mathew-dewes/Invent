@@ -6,9 +6,12 @@ import { ThemeToggle } from "./ThemeToggle";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
+import { UserAvatar } from "@/app/(shared-layout)/dashboard/_components/action/UserAvatar";
 
 
 const { useSession } = authClient;
+
+
 
 
 const links = [
@@ -26,13 +29,14 @@ export function Navbar() {
     } = useSession();
 
      const pathname = usePathname();
+     const userName = session?.user.name;
 
 
      const generateStyling = (link: string) =>{
         if (!pathname.startsWith(link)){
-            return buttonVariants({ variant: "ghost" })
+            return buttonVariants({ variant: "ghost", size: "sm" })
         } else {
-            return buttonVariants({ variant: "secondary" })
+            return buttonVariants({ variant: "default", size: "sm" })
         }
      }
      
@@ -45,7 +49,7 @@ export function Navbar() {
                     <h1 className="text-3xl font-bold">Invent
            
                     </h1></Link>
-                <div className="lg:flex items-center gap-2 hidden">
+                <div className="lg:flex items-center gap-4 hidden">
                     {session && links.map((link, key)=>{
                         return <Link 
                         key={key} 
@@ -53,17 +57,22 @@ export function Navbar() {
                         href={link.href}>
                             {link.label}</Link>
                     })}
+
+             
         
                 </div>
+                 
 
 
             </div>
+             
 
-            <div className="flex items-center gap-2">
-                <div className="hidden md:block mr-2">
-                    {/* <SearchInput/> */}
-                </div>
-                {isPending ? null : session ? (
+            <div className="flex items-center gap-5">
+                {session && userName && <UserAvatar name={userName}/> }
+          
+
+                  <div className="flex gap-3 items-center">
+          {isPending ? null : session ? (
                     <Button onClick={()=> authClient.signOut({
                         fetchOptions:{
                             onSuccess:()=>{
@@ -83,6 +92,9 @@ export function Navbar() {
                     <Link className={buttonVariants({ variant: "outline" })} href={'/auth/login'}>Login</Link>
                     </>}
                     <ThemeToggle />
+                  </div>
+        
+      
 
             </div>
 

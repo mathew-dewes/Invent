@@ -1,8 +1,11 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import {CircleCheckBig } from "lucide-react";
+import { PurchaseStatus } from "@/generated/prisma/enums";
+import { daysAgo } from "@/lib/helpers";
+import { ClipboardClock } from "lucide-react";
 import Link from "next/link";
+import { IncomingPurchasesDropDown } from "./IncomingPurchasesDropDown";
 
 type Props = {
 
@@ -13,10 +16,13 @@ type Props = {
         id: string,
         createdAt: Date,
         quantity: number,
-        customer: string,
+        status: PurchaseStatus,
+        purchaseNumber: number,
+        vendor: {
+            name: string
+        },
         stockItem: {
-            name: string,
-       
+            name: string
         }
 
 
@@ -24,16 +30,15 @@ type Props = {
 
 }
 
-export default function ReadyRequestCard({ title, description, headings, tableData }: Props) {
+export default function IncomingStockCard({ title, description, headings, tableData }: Props) {
     return (
-        <Card className="h-full">
+        <Card className="w-full">
             <CardHeader>
                 <CardTitle>
-                  <div className="flex items-center gap-1.5">
-            <CircleCheckBig className="text-blue-300"/>
-            <h1 className="text-lg">{title}</h1>
-     
-          </div>
+                    <div className="flex items-center gap-1.5">
+                        <ClipboardClock className="text-blue-300"/>
+                    <h1 className="text-lg">{title}</h1>
+                    </div>
                   </CardTitle>
                 <CardDescription>
                     {description}
@@ -45,7 +50,7 @@ export default function ReadyRequestCard({ title, description, headings, tableDa
                     <TableHeader>
                         <TableRow>
                             {headings.map((head, key) => {
-                                return <TableHead className={head === "Location" ? "text-right" : ""} key={key}>{head}</TableHead>
+                                return <TableHead key={key}>{head}</TableHead>
                             })}
 
 
@@ -54,18 +59,15 @@ export default function ReadyRequestCard({ title, description, headings, tableDa
                     </TableHeader>
                     <TableBody>
                         {tableData.map((item) => {
-         
-                                               return (<TableRow key={item.id}>
+                            return (<TableRow key={item.id}>
 
-                                <TableCell>
-                                   <p>{item.customer}</p>
-                              </TableCell>
+                                <TableCell>{daysAgo(item.createdAt)}</TableCell>
                                 <TableCell>
                                     <p className="font-medium">{item.stockItem.name}</p></TableCell>
                                 <TableCell>{item.quantity}</TableCell>
-                 
-                        
-
+                                <TableCell>{item.vendor.name}</TableCell>
+                                <TableCell><IncomingPurchasesDropDown purchaseId={item.id}/></TableCell>
+                       
                             </TableRow>)
                         })}
 
@@ -79,12 +81,9 @@ export default function ReadyRequestCard({ title, description, headings, tableDa
 
             </CardContent>
             <CardFooter>
-            
-                         <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/requests?status=READY'}>View Requests</Link>
-                
-       
-           
-             
+                <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/purchases?status=PLACED'}>
+                View Purchases</Link>
+
             </CardFooter>
         </Card>
     )

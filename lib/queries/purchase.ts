@@ -7,14 +7,24 @@ import { getNZDateKey } from "../helpers";
 
 
 
-export async function getPurchases(filter?: PurchaseStatus) {
+export async function getPurchases(filter?: PurchaseStatus, search?: string) {
     const userId = await getUserId();
+
+
+    
 
 
     const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
 
     const purchases = await prisma.purchase.findMany({
-        where: { userId },
+        where: { userId,
+      ...(search && !isNaN(Number(search)) && {
+  purchaseNumber: {
+    equals: Number(search),
+  },
+}),
+         },
+       
         orderBy:
             { createdAt: "desc" },
         select: {
@@ -252,6 +262,7 @@ export async function getIncomingPurchases(){
             createdAt:true,
             quantity:true,
             status:true,
+            purchaseNumber:true,
             vendor:{
                 select:{
                     name:true

@@ -33,22 +33,16 @@ export default function PurchaseFilters({
     ) || purchaseFilters;
 
 
-    
-
-
 
   function setQueryFilter(term: string, filter: string) {
-
-    if (term === searchParams.get(filter)) {
-
-      return
-    }
+    if (term === searchParams.get(filter)) return
     const params = new URLSearchParams(searchParams);
 
     if (term) {
-      params.set(filter, term)
+      params.set(filter, term);
+      params.delete("search");
     } else {
-      params.delete('query');
+      params.delete(filter);
     }
     replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
@@ -64,13 +58,13 @@ export default function PurchaseFilters({
   return (
     <div className="flex gap-4">
 
-      <Button  variant={searchParams.get("status") ? "outline" : "default"}
+      <Button size="sm"  variant={searchParams.get("status") ? "outline" : "default"}
         onClick={() => clearQuery()}>View All</Button>
 
 
       {visibleFilters?.map((filter, key) => {
         const query = filter.filter;
-        return <Button
+        return <Button size="sm"
           onClick={() => {
             setQueryFilter(query, "status"!)
           }}

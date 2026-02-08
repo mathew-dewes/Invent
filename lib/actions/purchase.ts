@@ -186,7 +186,7 @@ export async function markReceived(purchaseId: string) {
 
         return {
             success: true,
-            message: 'Puchases updated',
+            message: 'Puchase received',
 
         }
     } catch (error) {

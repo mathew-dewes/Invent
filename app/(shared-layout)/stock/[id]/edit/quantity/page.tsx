@@ -1,5 +1,5 @@
 import { getStockNameAndQuantityById } from "@/lib/queries/stock";
-import EditQuantityForm from "./_components/EditQuantityForm";
+import UpdateQuantityForm from "./_components/UpdateQuantityForm";
 
 export default async function page({params}:
     {params: Promise<{id: string}>}
@@ -11,7 +11,7 @@ export default async function page({params}:
     
 return (
     <div>
-        <EditQuantityForm stockId={id} stockName={stockItem.name} stockQuantity={stockItem?.quantity}/>
+        <UpdateQuantityForm stockId={id} stockName={stockItem.name} stockQuantity={stockItem?.quantity}/>
     </div>
 )
 }

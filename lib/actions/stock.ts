@@ -156,4 +156,28 @@ export async function checkInventoryBatch(stockItems: {id: string, quantity: num
     };
 
 
+};
+
+export async function updateStockCount(stockId: string, updateAmount: number){
+    const userId = await getUserId();
+
+    try {
+    const stock = await prisma.stock.update({
+        where:{userId, id: stockId},
+        data:{
+            quantity: updateAmount
+        },
+        select:{
+            name:true
+        }
+    });
+
+    return {success: true, message: `${stock.name} was updated`}
+    } catch (error) {
+        console.log(error);
+        
+    return {success: false, message: `There was an error`}
+    }
+
+
 }

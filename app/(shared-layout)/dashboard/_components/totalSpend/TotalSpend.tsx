@@ -1,6 +1,6 @@
 import { convertToMoney } from "@/lib/helpers";
-import { TotalSpendChart } from "./charts/TotalSpendChart";
 import { getTotalSpend } from "@/lib/queries/purchase";
+import { TotalSpendChart } from "../charts/TotalSpendChart";
 
 export default async function TotalSpend(){
 

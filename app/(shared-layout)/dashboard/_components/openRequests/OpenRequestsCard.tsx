@@ -1,26 +1,23 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { PurchaseStatus } from "@/generated/prisma/enums";
 import { daysAgo } from "@/lib/helpers";
-import { ClipboardClock } from "lucide-react";
+import { CircleAlert } from "lucide-react";
 import Link from "next/link";
+import { OpenRequestsDropDown } from "./OpenRequestsDropDown";
 
 type Props = {
 
     title: string,
     description: string,
-    headings: string[],
     tableData: {
         id: string,
         createdAt: Date,
         quantity: number,
-        status: PurchaseStatus,
-        vendor: {
-            name: string
-        },
+        customer: string,
         stockItem: {
-            name: string
+            name: string,
+           
         }
 
 
@@ -28,15 +25,18 @@ type Props = {
 
 }
 
-export default function IncomingStockCard({ title, description, headings, tableData }: Props) {
+const headings = ['Placed', 'Item', 'QTY', 'Customer']
+
+export default function OpenRequestsCard({ title, description, tableData }: Props) {
     return (
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>
-                    <div className="flex items-center gap-1.5">
-                        <ClipboardClock className="text-blue-300"/>
-                    <h1 className="text-lg">{title}</h1>
-                    </div>
+                  <div className="flex items-center gap-1.5">
+            <CircleAlert className="text-yellow-400"/>
+            <h1 className="text-lg">{title}</h1>
+     
+          </div>
                   </CardTitle>
                 <CardDescription>
                     {description}
@@ -48,7 +48,7 @@ export default function IncomingStockCard({ title, description, headings, tableD
                     <TableHeader>
                         <TableRow>
                             {headings.map((head, key) => {
-                                return <TableHead key={key}>{head}</TableHead>
+                                return <TableHead className={head === "Location" ? "text-right" : ""} key={key}>{head}</TableHead>
                             })}
 
 
@@ -57,14 +57,18 @@ export default function IncomingStockCard({ title, description, headings, tableD
                     </TableHeader>
                     <TableBody>
                         {tableData.map((item) => {
-                            return (<TableRow key={item.id}>
+               
+                            
+                 return (<TableRow key={item.id}>
 
-                                <TableCell>{daysAgo(item.createdAt)}</TableCell>
+                                <TableCell>
+                                   <p>{daysAgo(item.createdAt)}</p>
+                              </TableCell>
                                 <TableCell>
                                     <p className="font-medium">{item.stockItem.name}</p></TableCell>
                                 <TableCell>{item.quantity}</TableCell>
-                                <TableCell>{item.vendor.name}</TableCell>
-
+                                <TableCell>{item.customer}</TableCell>
+                                <TableCell><OpenRequestsDropDown requestId={item.id}/></TableCell>
                             </TableRow>)
                         })}
 
@@ -78,9 +82,13 @@ export default function IncomingStockCard({ title, description, headings, tableD
 
             </CardContent>
             <CardFooter>
-                <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/purchases?status=PLACED'}>
-                View Purchases</Link>
-
+                
+            
+                         <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/requests?status=OPEN'}>View Requests</Link>
+                
+       
+           
+             
             </CardFooter>
         </Card>
     )

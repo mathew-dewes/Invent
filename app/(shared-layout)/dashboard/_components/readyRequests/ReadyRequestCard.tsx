@@ -1,9 +1,9 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { daysAgo } from "@/lib/helpers";
-import { CircleAlert } from "lucide-react";
+import {CircleCheckBig } from "lucide-react";
 import Link from "next/link";
+import { ReadyRequestDropDown } from "./ReadyRequestDropDown";
 
 type Props = {
 
@@ -17,7 +17,7 @@ type Props = {
         customer: string,
         stockItem: {
             name: string,
-            location: string
+       
         }
 
 
@@ -25,13 +25,13 @@ type Props = {
 
 }
 
-export default function OpenRequestsCard({ title, description, headings, tableData }: Props) {
+export default function ReadyRequestCard({ title, description, headings, tableData }: Props) {
     return (
-        <Card className="w-full">
+        <Card className="h-full">
             <CardHeader>
                 <CardTitle>
                   <div className="flex items-center gap-1.5">
-            <CircleAlert className="text-yellow-400"/>
+            <CircleCheckBig className="text-blue-300"/>
             <h1 className="text-lg">{title}</h1>
      
           </div>
@@ -55,18 +55,18 @@ export default function OpenRequestsCard({ title, description, headings, tableDa
                     </TableHeader>
                     <TableBody>
                         {tableData.map((item) => {
-               
-                            
-                 return (<TableRow key={item.id}>
+         
+                                               return (<TableRow key={item.id}>
 
                                 <TableCell>
-                                   <p>{daysAgo(item.createdAt)}</p>
+                                   <p>{item.customer}</p>
                               </TableCell>
                                 <TableCell>
                                     <p className="font-medium">{item.stockItem.name}</p></TableCell>
                                 <TableCell>{item.quantity}</TableCell>
-                                <TableCell>{item.customer}</TableCell>
-                                <TableCell className="text-right">{item.stockItem.location}</TableCell>
+                                <TableCell><ReadyRequestDropDown requestId={item.id}/></TableCell>
+                 
+                        
 
                             </TableRow>)
                         })}
@@ -81,9 +81,8 @@ export default function OpenRequestsCard({ title, description, headings, tableDa
 
             </CardContent>
             <CardFooter>
-                
             
-                         <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/requests?status=OPEN'}>View Requests</Link>
+                         <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/requests?status=READY'}>View Requests</Link>
                 
        
            

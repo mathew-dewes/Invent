@@ -270,6 +270,7 @@ export async function getLowStock(){
     const stock = await prisma.stock.findMany({
         where:{userId},
         select:{
+            id:true,
             name:true,
             quantity:true,
             vendor:{
@@ -278,7 +279,7 @@ export async function getLowStock(){
                 }
             },
             reorderPoint: true,
-            id:true
+        
         },
         orderBy:{
             quantity: 'asc'
@@ -319,6 +320,36 @@ export async function getInventoryChartData(){
 
   return data;
 
+}
+
+
+export async function getStockCount(){
+    const userId = await getUserId();
+    const stockCount = await prisma.stock.count({
+        where:{userId}
+    });
+
+    return stockCount;
+}
+
+export async function getStockValue(){
+    const userId = await getUserId();
+
+    const stock = await prisma.stock.findMany(
+        {where:{userId},
+    select:{
+        unitCost:true,
+        quantity:true
+    }},
+    );
+
+    let stockValue = 0;
+
+    stock.forEach(item => {
+        stockValue += item.quantity * Number(item.unitCost)
+    });
+
+    return stockValue 
 }
 
 

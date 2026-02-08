@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useState } from "react"
+import {useState } from "react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
@@ -30,14 +30,13 @@ import { useSearchParams } from "next/navigation"
 import { PurchaseStatus } from "@/generated/prisma/enums"
 import { MarkAllReceivedButton } from "./MarkAllReceivedButton"
 import { delay } from "@/lib/helpers"
-// import RequestFilters from "./RequestFilters"
-
 
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
-  filter: string,
+  filter: {label: string, query: string},
+  search?: string
   queryCounts?: Record<string, number>
 
 }
@@ -49,8 +48,12 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
   columns,
   data,
   filter,
+
   queryCounts
 }: DataTableProps<TData, TValue>) {
+
+
+  
 
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -80,6 +83,9 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
   });
 
   const params = useSearchParams();
+
+
+
   const query = params.get('status') as PurchaseStatus;
 
   const selectedPurchaseIds = table
@@ -94,10 +100,10 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
         <div className="flex items-center py-4 mt-2">
           <div className="flex gap-3">
             <Input
-              placeholder={`Filter ${filter}...`}
-              value={(table.getColumn(filter)?.getFilterValue() as string) ?? ""}
+              placeholder={`Filter ${filter.label}...`}
+              value={(table.getColumn(filter.query)?.getFilterValue() as string)}
               onChange={(event) =>
-                table.getColumn(filter)?.setFilterValue(event.target.value)
+                table.getColumn(filter.query)?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />

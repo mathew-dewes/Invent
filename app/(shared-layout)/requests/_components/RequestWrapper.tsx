@@ -10,6 +10,6 @@ export default async function RequestWrapper({filter}:
 
           
     
-    return   <RequestTable queryCounts={queryCounts} data={requests} columns={Requestcolumns} filter={"customer"}/>
+    return   <RequestTable  queryCounts={queryCounts} data={requests} columns={Requestcolumns} filter={"customer"}/>
     
 }

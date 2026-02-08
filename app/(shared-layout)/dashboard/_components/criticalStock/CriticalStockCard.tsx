@@ -3,12 +3,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CircleAlert, ClipboardClock } from "lucide-react";
 import Link from "next/link";
+import { CriticalStockDropDown } from "./CriticalStockDropDown";
 
 type Props = {
   title: string,
   description: string,
-  noStockIds:string[],
-  headings: string[],
+  purchases:string[],
+  noStockItems: boolean,
+  lowStockItems: boolean
+
   tableData: {
     name: string,
     quantity: number,
@@ -22,7 +25,11 @@ type Props = {
 
 }
 
-export default function CriticalStockCard({ title, description, headings, tableData, noStockIds }: Props) {
+
+
+export default function CriticalStockCard({ title, description, tableData, purchases, noStockItems, lowStockItems }: Props) {
+
+  
   return (
     <Card className="h-full">
       <CardHeader>
@@ -42,7 +49,7 @@ export default function CriticalStockCard({ title, description, headings, tableD
         <Table>
           <TableHeader>
             <TableRow>
-              {headings.map((head, key) => {
+              {['Item', 'QTY', 'ROP', 'Vendor'].map((head, key) => {
                 return <TableHead key={key}>{head}</TableHead>
               })}
 
@@ -52,9 +59,8 @@ export default function CriticalStockCard({ title, description, headings, tableD
           </TableHeader>
           <TableBody>
             {tableData.map((item) => {
-
+          const noStock = purchases.some((i:string) => i == item.id)
           
-              const noStock = noStockIds.find((i) => i == item.id);
               return (<TableRow key={item.id}>
 
                 <TableCell>
@@ -70,9 +76,8 @@ export default function CriticalStockCard({ title, description, headings, tableD
                 <TableCell>{item.reorderPoint}</TableCell>
                 <TableCell>{item.vendor.name}</TableCell>
                 <TableCell className="flex justify-center">
-                  <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={`${item.quantity == 0 ? "/stock?stock=out" : "/stock?stock=low"}`}>
-                    View
-                  </Link>
+                  <CriticalStockDropDown stockId={item.id} incomingStock={noStock}/>
+   
 
                 </TableCell>
 
@@ -92,9 +97,8 @@ export default function CriticalStockCard({ title, description, headings, tableD
       
 
         <div className="flex gap-2 items-center">
-          <p>View:</p>
-          <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock?stock=out'}>No Stock</Link>
-          <Link className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock?stock=low'}>Low Stock</Link>
+          <Link hidden={!noStockItems} className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock/?level=out'}>View Stock - Out</Link>
+          <Link hidden={!lowStockItems} className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock/?level=low'}>View Stock - low</Link>
         </div>
 
 

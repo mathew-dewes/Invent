@@ -1,5 +1,6 @@
 import { getRequestChartData } from "@/lib/queries/request";
-import { RequestTrendChart } from "./charts/RequestTrendChart";
+import { RequestTrendChart } from "../charts/RequestTrendChart";
+
 
 export default async function CompletedRequests(){
 

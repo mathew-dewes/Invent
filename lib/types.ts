@@ -42,6 +42,7 @@ export type Vendor = {
   phone: string | null
   email: string
   contactName: string
+  PONumber: number
 }
 
 

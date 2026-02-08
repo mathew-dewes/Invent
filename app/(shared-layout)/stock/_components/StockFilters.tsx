@@ -57,7 +57,7 @@ export default function StockFilters({
   return (
     <div className="flex gap-4">
 
-      <Button 
+      <Button  size="sm"
 
         variant={searchParams.get("level") ? "outline" : "default"}
         onClick={() => clearQuery()}>View All</Button>
@@ -65,7 +65,7 @@ export default function StockFilters({
 
       {visibleFilters?.map((filter, key) => {
         const query = filter.filter;
-        return <Button
+        return <Button size="sm"
           onClick={() => {
             setQueryFilter(query, "level"!)
           }}
