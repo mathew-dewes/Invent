@@ -8,7 +8,7 @@ import { CriticalStockDropDown } from "./CriticalStockDropDown";
 type Props = {
   title: string,
   description: string,
-  incomingPurchases:string[],
+  purchases:string[],
   noStockItems: boolean,
   lowStockItems: boolean
 
@@ -27,9 +27,8 @@ type Props = {
 
 
 
-export default function CriticalStockCard({ title, description, tableData, incomingPurchases, noStockItems, lowStockItems }: Props) {
+export default function CriticalStockCard({ title, description, tableData, purchases, noStockItems, lowStockItems }: Props) {
 
-  const incomingStock = incomingPurchases.length > 0;
   
   return (
     <Card className="h-full">
@@ -60,7 +59,8 @@ export default function CriticalStockCard({ title, description, tableData, incom
           </TableHeader>
           <TableBody>
             {tableData.map((item) => {
-          const noStock = incomingPurchases.find((i) => i == item.id);
+          const noStock = purchases.some((i:string) => i == item.id)
+          
               return (<TableRow key={item.id}>
 
                 <TableCell>
@@ -76,7 +76,7 @@ export default function CriticalStockCard({ title, description, tableData, incom
                 <TableCell>{item.reorderPoint}</TableCell>
                 <TableCell>{item.vendor.name}</TableCell>
                 <TableCell className="flex justify-center">
-                  <CriticalStockDropDown stockId={item.id} incomingStock={incomingStock}/>
+                  <CriticalStockDropDown stockId={item.id} incomingStock={noStock}/>
    
 
                 </TableCell>

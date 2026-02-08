@@ -54,7 +54,7 @@ export async function updateVendor(values: z.infer<typeof vendorSchema>, vendorI
             throw new Error('Validation failed');
         };
 
-        const { name, address, email, phone, contactName } = parsed.data;
+        const { name, address, email, phone, PONumber, contactName } = parsed.data;
 
     await prisma.vendor.update({
         data:{
@@ -63,7 +63,8 @@ export async function updateVendor(values: z.infer<typeof vendorSchema>, vendorI
             email,
             phone,
             contactName,
-            userId
+            userId, 
+            PONumber: Number(PONumber)
         },
         where:{id: vendorId}
     });

@@ -31,7 +31,7 @@ export default async function CriticalStock(){
                 <CriticalStockCard 
                 lowStockItems={lowStockItems}
                 noStockItems={noStockItems}
-                incomingPurchases={incomingPurchases} 
+                purchases={incomingPurchases} 
                 tableData={criticalStock} 
                 title="Critical Stock"
                  description="Items at or below reorder point"/>

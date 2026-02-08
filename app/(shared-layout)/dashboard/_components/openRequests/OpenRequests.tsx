@@ -11,7 +11,7 @@ export default async function OpenRequests(){
        
         
 
-            {openRequests.length > 0 && <OpenRequestsCard tableData={openRequests}  headings={['Placed', 'Item', 'QTY', 'Customer', 'Location']} title="Open Requests" description="Items at or below reorder point"/>}
+            {openRequests.length > 0 && <OpenRequestsCard tableData={openRequests} title="Open Requests" description="Items at or below reorder point"/>}
          
         
         

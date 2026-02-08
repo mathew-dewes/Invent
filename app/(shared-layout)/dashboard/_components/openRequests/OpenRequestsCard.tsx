@@ -4,12 +4,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { daysAgo } from "@/lib/helpers";
 import { CircleAlert } from "lucide-react";
 import Link from "next/link";
+import { OpenRequestsDropDown } from "./OpenRequestsDropDown";
 
 type Props = {
 
     title: string,
     description: string,
-    headings: string[],
     tableData: {
         id: string,
         createdAt: Date,
@@ -17,7 +17,7 @@ type Props = {
         customer: string,
         stockItem: {
             name: string,
-            location: string
+           
         }
 
 
@@ -25,7 +25,9 @@ type Props = {
 
 }
 
-export default function OpenRequestsCard({ title, description, headings, tableData }: Props) {
+const headings = ['Placed', 'Item', 'QTY', 'Customer']
+
+export default function OpenRequestsCard({ title, description, tableData }: Props) {
     return (
         <Card className="w-full">
             <CardHeader>
@@ -66,8 +68,7 @@ export default function OpenRequestsCard({ title, description, headings, tableDa
                                     <p className="font-medium">{item.stockItem.name}</p></TableCell>
                                 <TableCell>{item.quantity}</TableCell>
                                 <TableCell>{item.customer}</TableCell>
-                                <TableCell className="text-right">{item.stockItem.location}</TableCell>
-
+                                <TableCell><OpenRequestsDropDown requestId={item.id}/></TableCell>
                             </TableRow>)
                         })}
 

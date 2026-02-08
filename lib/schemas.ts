@@ -12,7 +12,7 @@ export const signUpSchema = z.object({
 });
 
 export const stockSchema = z.object({
-    name: z.string().min(1, "Name is required").min(3, "Stock item name must be 3 more than characters").max(25, "Stock name must be less than 25 characters"),
+    name: z.string().min(1, "Name is required").min(3, "Stock item name must be 3 more than characters").max(15, "Stock name must be 15 or less characters"),
     quantity: z.string().min(1, "Quantity is required")
         .refine((val) => {
             const num = Number(val); return !isNaN(num) && num > 0;
@@ -20,10 +20,10 @@ export const stockSchema = z.object({
             message: "Quantity must be greater than 0",
         }),
 
-    partNumber: z.string().min(1, "Part or SKU number is required").min(3, "Part or SKU number must be 3 or more characters"),
+    partNumber: z.string().min(1, "Part or SKU number is required").min(3, "Part number or SKU number must be 3 or more characters").max(10, "Part number, or SKU must be 10 or less characters" ),
     location: z.string().min(1, "Bin location is required").min(3, "Bin location must be 3 or more characters"),
     vendorId: z.string('Please select a vendor'),
-    brand: z.string().min(1, "Brand or model is required").min(3, "Brand or model name must be 3 more than characters"),
+    brand: z.string().min(1, "Brand or model is required").min(3, "Brand or model name must be 3 more than characters").max(10, "Brand name must be 10 or less characters" ),
     unitCost: z.string().min(1, "Unit cost is required")
         .refine((val) => {
             const num = Number(val);

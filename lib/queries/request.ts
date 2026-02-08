@@ -230,8 +230,7 @@ export async function getOpenRequests() {
             stockItem: {
                 select: {
                     name: true,
-                    location:true,
-
+            
 
                 }
             }

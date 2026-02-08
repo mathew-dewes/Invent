@@ -8,7 +8,6 @@ export default async function RequestWrapper({filter}:
 ){
           const [requests, queryCounts] = await Promise.all([getRequests(filter), getRequestsByStatusCount()]);
 
-          console.log(requests[0]);
           
     
     return   <RequestTable  queryCounts={queryCounts} data={requests} columns={Requestcolumns} filter={"customer"}/>

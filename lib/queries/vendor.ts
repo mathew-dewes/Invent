@@ -41,7 +41,8 @@ const vendor = await prisma.vendor.findUnique({
         address: true,
         phone: true,
         email: true,
-        contactName: true
+        contactName: true,
+        PONumber:true
     },
 });
 

@@ -119,7 +119,7 @@ export default function RequestForm({ stock }:
                                 render={({ field, fieldState }) => (
                                     <Field>
                                         <FieldLabel>Cost centre</FieldLabel>
-                                        <Input aria-invalid={fieldState.invalid} placeholder="Enter cost center code" {...field} />
+                                        <Input aria-invalid={fieldState.invalid} placeholder="Enter cost center" {...field} />
                                         {fieldState.invalid &&
                                             <FieldError errors={[fieldState.error]} />
                                         }

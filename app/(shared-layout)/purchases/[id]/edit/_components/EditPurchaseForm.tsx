@@ -36,7 +36,6 @@ export default function EditPurchaseForm({stock, values, purchaseId}:
             defaultValues: {
                 item: values.stockItem.id,
                 quantity: String(values.quantity),
-                poNumber: values.PO,
                 notes: values.notes ?? ""
     
     
@@ -105,17 +104,7 @@ console.log(values);
                                 </Field>
                             )}
                         />
-                        <Controller name="poNumber" control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field>
-                                    <FieldLabel>PO number</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter PO number" {...field} />
-                                    {fieldState.invalid &&
-                                        <FieldError errors={[fieldState.error]} />
-                                    }
-                                </Field>
-                            )}
-                        />
+        
                             </div>
 
 
