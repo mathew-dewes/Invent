@@ -9,8 +9,10 @@ import {
 export function UserAvatar({name}:
   {name: string}
 ) {
+
+  
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="items-center gap-1.5 flex">
  <Avatar>
       <AvatarImage
         src="https://github.com/shadcn.png"
@@ -19,7 +21,7 @@ export function UserAvatar({name}:
       />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
-     <p className="font-semibold text-sm">{name}</p>
+     <p className="font-semibold sm:text-sm text-xs">{name}</p>
     </div>
    
   )

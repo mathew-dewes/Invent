@@ -6,6 +6,8 @@ export default async function RecentActivity(){
     const activities = await getRecentActivity();
 
     
+
+    
     return(
                <div className="mt-5">
                      <p className="font-semibold">Recent Activity:</p>

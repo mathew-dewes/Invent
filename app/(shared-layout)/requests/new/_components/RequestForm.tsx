@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Combobox } from "@/components/ui/comboBox";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { createRequest } from "@/lib/actions/request";
 import { requestSchema } from "@/lib/schemas";
@@ -17,10 +18,13 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
+type Props = {
+    stock: { id: string, name: string, quantity: number }[],
+    costCentres: {id: string, name: string}[]
+}
 
 
-export default function RequestForm({ stock }:
-    { stock: { id: string, name: string, quantity: number }[] }
+export default function RequestForm({ stock, costCentres }: Props
 ) {
     const [isPending, startTransition] = useTransition();
     const router = useRouter()
@@ -32,7 +36,7 @@ export default function RequestForm({ stock }:
             customer: "",
             stockItem: "",
             quantity: "",
-            costCentre: "",
+            costCentreId: "",
             notes: ""
 
 
@@ -115,17 +119,35 @@ export default function RequestForm({ stock }:
                                     </Field>
                                 )}
                             />
-                            <Controller name="costCentre" control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field>
-                                        <FieldLabel>Cost centre</FieldLabel>
-                                        <Input aria-invalid={fieldState.invalid} placeholder="Enter cost center" {...field} />
-                                        {fieldState.invalid &&
-                                            <FieldError errors={[fieldState.error]} />
-                                        }
-                                    </Field>
-                                )}
-                            />
+                               <Controller name="costCentreId" control={form.control}
+                            render={({ field, fieldState }) => (
+                                <Field >
+                                    <FieldLabel>Cost Centre</FieldLabel>
+                                    <Select 
+
+
+                                        value={field.value}
+                                        onValueChange={(value) => {
+                                            field.onChange(value)
+                                        }}
+
+                                    >
+                                        <SelectTrigger className="w-45">
+                                            <SelectValue placeholder="Cost Centre" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Cost centre</SelectLabel>
+                                                {costCentres?.map((centre, key) => {
+                                                    return <SelectItem key={key} value={centre.id}>{centre.name}</SelectItem>
+                                                })}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />}
+                                </Field>
+                            )} />
                         </div>
 
 

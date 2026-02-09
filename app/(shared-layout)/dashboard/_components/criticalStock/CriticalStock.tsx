@@ -24,7 +24,7 @@ export default async function CriticalStock(){
 
     
     return (
-          <div hidden={criticalStock.length == 0} className={`border-2 p-5 rounded-xl bg-secondary`}>
+          <div hidden={criticalStock.length == 0} className={`border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1`}>
             
 
          

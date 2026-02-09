@@ -353,4 +353,20 @@ export async function getStockValue(){
 }
 
 
+export async function getStockLevels(){
+    const userId = await getUserId();
+
+    const stock = await prisma.stock.findMany({
+        where:{userId},
+    select: {
+      id: true,
+      name: true,
+      quantity: true,
+      reorderPoint: true,
+    },
+    });
+
+    return stock;
+}
+
    

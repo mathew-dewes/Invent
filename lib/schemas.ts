@@ -65,6 +65,12 @@ export const vendorSchema = z.object({
         }),
 });
 
+
+export const costCentreSchema = z.object({
+    name: z.string().min(1, 'Cost centre name is required').max(15, 'Cost centre name must be 15 characters or less'),
+    code: z.string().length(5, 'Cost center code is required and must be 5 characters long')
+})
+
 export const requestSchema = z.object({
     customer: z.string().min(1, "Customer name is required").max(20, "Customer name must be 20 characters or less"),
     stockItem: z.string().min(1, "Stock item is required"),
@@ -74,7 +80,7 @@ export const requestSchema = z.object({
         }, {
             message: "Quantity must be greater than 0",
         }),
-    costCentre: z.string().min(5, "Cost centre must be greater than 5 characters").max(10, "Cost centre must be 20 characters or less"),
+    costCentreId: z.string().min(1, "Cost centre is required"),
     notes: z.string().max(200, "Note must be 200 characters or less").optional()
 
 });

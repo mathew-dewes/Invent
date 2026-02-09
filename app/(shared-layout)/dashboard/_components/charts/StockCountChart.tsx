@@ -42,8 +42,8 @@ export function StockCountChart({data}:
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Lowest stocked items</CardTitle>
-        <CardDescription>Total items: 210</CardDescription>
+        <CardTitle>Stock Levels</CardTitle>
+        <CardDescription>Lowest stock items - of 210 units</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -52,7 +52,7 @@ export function StockCountChart({data}:
             data={data}
             layout="vertical"
             margin={{
-              right: 16,
+              right: 30,
             }}
           >
             <CartesianGrid horizontal={false} />
@@ -86,7 +86,7 @@ export function StockCountChart({data}:
           ? "#f87171"
           : entry.count < 5
           ? "#fb923c"
-          : "#38bdf8"
+          : "#4ade80"
       }
     />
               })}

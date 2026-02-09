@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { FinanceType } from "@/generated/prisma/enums";
 import { convertToMoney, daysAgo } from "@/lib/helpers";
-import { Box, ClipboardCheck, ClipboardCopy, ShoppingBag } from "lucide-react";
+import { Box, ClipboardCheck, } from "lucide-react";
 
 
 
@@ -17,7 +17,9 @@ type ActivityType = {
     reference: string,
     stockName: string,
     quantity: number,
-    costCentre: string,
+    costCentre: {
+      name: string  
+    } | null,
     totalCost: number,
     vendorName: string | null,
   }[]
@@ -29,7 +31,7 @@ export default function RecentCarousel({ activities }: ActivityType) {
 
       plugins={[
         Autoplay({
-          delay: 4000,
+          delay: 6000,
         }),
       ]}
 
@@ -37,7 +39,7 @@ export default function RecentCarousel({ activities }: ActivityType) {
         align: "start",
 
       }}
-      className="w-1/3"
+      className="w-full"
     >
       <CarouselContent>
         {activities?.map((activity, index) => {
@@ -47,7 +49,7 @@ export default function RecentCarousel({ activities }: ActivityType) {
             hour: "2-digit",
             minute: "2-digit"
           })
-          return <CarouselItem key={index} className="basis-1/1 text-sm">
+          return <CarouselItem key={index} className="xl:basis-1/3 md:basis-1/2 basis-1/1 text-sm">
             <div className="p-1">
               {activity.sourceType == "REQUEST" ? <Card>
                 <CardContent>
@@ -60,7 +62,7 @@ export default function RecentCarousel({ activities }: ActivityType) {
                       </div>
 
                       <p><span className="font-semibold">Issued:</span> {activity.quantity} x {activity.stockName}</p>
-                      <p><span className="font-semibold">Charged to:</span> {activity.costCentre} - total: {convertToMoney(activity.totalCost)} </p>
+                      <p><span className="font-semibold">Charged to:</span> {activity.costCentre?.name} - total: {convertToMoney(activity.totalCost)} </p>
                     </div>
                   </div>
 

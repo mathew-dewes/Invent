@@ -5,6 +5,7 @@ import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
 import { getStartDate } from "../helpers";
 import { TimeFrame } from "../types";
+import { getStockLevels } from "./stock";
 
 
 
@@ -19,6 +20,23 @@ export async function getFinanceData(filter?: FinanceType, timeFrame?:TimeFrame)
         where:{userId, 
             createdAt:{
                 gte: startDate
+            },
+            
+        },
+        select:{
+            id: true,
+            createdAt:true,
+            sourceType:true,
+            reference:true,
+            stockName:true,
+            vendorName:true,
+            quantity:true,
+            unitCost:true,
+            totalCost:true,
+            costCentre:{
+                select:{
+                    name:true
+                }
             }
         },
     
@@ -88,7 +106,9 @@ export async function getRecentActivity(){
             reference: true,
             stockName: true,
             vendorName: true,
-            costCentre:true,
+            costCentre:{select:{
+                name: true
+            }},
             quantity:true,
             totalCost:true
         }
@@ -101,4 +121,97 @@ export async function getRecentActivity(){
     }));
 
     return serialisedActivities;
+};
+
+
+export async function getLastMonthStockUsage(){
+    const userId = await getUserId();
+      const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+
+    const usage = await prisma.costLedger.groupBy({
+        by:["stockId", "stockName"],
+        where:{
+            userId,
+            sourceType: "REQUEST",
+            createdAt:{
+                gte: thirtyDaysAgo
+            },
+            },
+            _sum:{
+                quantity: true
+            }
+    });
+
+    return usage;
+};
+
+export async function getDaysUntilStockout(){
+    const stock = await getStockLevels();
+    const usage = await getLastMonthStockUsage();
+
+    const forcast = stock.map((item)=>{
+        const issuedLast30 = usage.find((u) => u.stockId)?._sum.quantity ?? 0;
+
+        const avgDailyUsage = issuedLast30 / 30;
+
+        const daysRemaining = avgDailyUsage === 0 ? null : item.quantity / avgDailyUsage
+            return {
+      stockId: item.id,
+      name: item.name,
+      days: daysRemaining
+        ? Math.floor(daysRemaining)
+        : null,
+    }
+
+    });
+    
+
+    return forcast.filter((i) => i.days !== null)
+  .sort((a, b) => a.days! - b.days!)
+  .slice(0, 5)
+};
+
+
+export async function getCostCentreSpend(){
+    const userId = await getUserId();
+
+  const now = new Date()
+  const month = now.getMonth() + 1
+  const year = now.getFullYear();
+
+  const spend = await prisma.costLedger.groupBy({
+    by:['costCentreId',],
+    where:{
+        userId,
+        month,
+        year,
+        sourceType:"REQUEST"
+    },
+    _sum:{
+        totalCost: true
+    },
+    orderBy:{
+        _sum:{
+            totalCost:"desc"
+        }
+    },
+    take: 5
+  });
+const costCentreIds: string[] = spend
+  .map((c) => c.costCentreId)
+  .filter((id): id is string => id !== null);
+
+  const costCentres = await prisma.costCentre.findMany({
+    where: { id: { in: costCentreIds } },
+    select: { id: true, name: true },
+  });
+
+  // 3️⃣ Map spend to include name
+  return spend.map((c) => ({
+    costCentre: costCentres.find((cc) => cc.id === c.costCentreId) ?? {
+      name: "STOCK",
+    },
+    total: Number(c._sum.totalCost ?? 0),
+  }));
 }

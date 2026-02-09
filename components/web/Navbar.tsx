@@ -21,6 +21,7 @@ const links = [
     {href: '/purchases', label: "Puchases"},
     {href: '/vendors', label: "Vendors"},
     {href: '/finance', label: "Finance"},
+    {href: '/cost-centre', label: "Cost centre"},
 ]
 
 export function Navbar() {
@@ -46,10 +47,10 @@ export function Navbar() {
         <nav className="w-full py-5 flex items-center justify-between mb-4">
             <div className="flex items-center gap-8">
                 <Link className={`${!session ? "pointer-events-none" : ""}`} href={session ? "/dashboard" : "#"}>
-                    <h1 className="text-3xl font-bold">Invent
+                    <h1 className="md:text-3xl text-xl font-bold">Invent
            
                     </h1></Link>
-                <div className="lg:flex items-center gap-4 hidden">
+                <div className="lg:flex items-center gap-3 hidden">
                     {session && links.map((link, key)=>{
                         return <Link 
                         key={key} 
@@ -67,7 +68,7 @@ export function Navbar() {
             </div>
              
 
-            <div className="flex items-center gap-5">
+            <div className="flex items-center md:gap-5 gap-4">
                 {session && userName && <UserAvatar name={userName}/> }
           
 

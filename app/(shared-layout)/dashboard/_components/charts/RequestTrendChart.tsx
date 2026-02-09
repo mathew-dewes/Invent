@@ -60,9 +60,9 @@ export function RequestTrendChart({data}:
     <Card className="mt-3">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
-          <CardTitle>Daily completed requests</CardTitle>
+          <CardTitle>Completed requests</CardTitle>
           <CardDescription>
-            Showing total completed requests for the month
+            Showing daily completed requests for the month
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
@@ -149,8 +149,8 @@ export function RequestTrendChart({data}:
             <Area
               dataKey="requests"
               type="natural"
-              fill="#38bdf8"
-              stroke="#38bdf8"
+              fill="#4ade80"
+              stroke="#4ade80"
               stackId="a"
             />
     

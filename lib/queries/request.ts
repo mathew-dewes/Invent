@@ -33,7 +33,11 @@ export async function getRequests(filter?: RequestStatus) {
             },
             quantity: true,
             status: true,
-            costCentre: true,
+            costCentre: {
+                select:{
+                    name: true
+                }
+            },
             note: true
         }
 
@@ -338,7 +342,7 @@ for (const request of requests){
 
   spendMap.set(request.customer, {
     spend: current.spend + spend,
-    costCentre: request.costCentre
+    costCentre: request.costCentre.name
   })
 }
 
