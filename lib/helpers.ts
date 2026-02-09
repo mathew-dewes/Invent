@@ -93,6 +93,25 @@ export function daysAgo(createdAt: Date): string {
 }
 
 
+export function generateAisleLocations() {
+  const locations: string[] = [];
+  const firstLetters = ["A", "B", "C"];  // First letter A–C
+  const secondLetters = ["A", "B", "C", "D", "E", "F"]; // Second letter A–F
+
+  for (const first of firstLetters) {
+    for (const second of secondLetters) {
+      for (let num = 1; num <= 4; num++) {
+        locations.push(`${first}${second}${num}`);
+      }
+    }
+  }
+
+  return locations;
+}
+
+// Usage
+export const aisleLocation = generateAisleLocations();
+
 export const demoVendors = ["Ideal Electrical", "Bunnings Warehouse", "Repco", "Mitre 10", "Hammer Hardware", "Toolshed", "Place Makers","Carters","Stihl Shop", "Supercheap Auto"]
 export const demoCostCentres = ["Kiwi Rail", "Space X", "Air NZ", "Spark", "OneNZ", "Rocket Lab", "Fisher & Paykel", "Fonterra", "Meridian", "Mainfreight"];
 export const demoCustomers =["John Smith", "Ben Fisher", "Chris Luxon", "James Green", "Jim Brown", "Edmund Hillary ", "Elon Musk", "Kate Sheppard", "Kayne West", "Morgan Freeman"]
@@ -130,4 +149,8 @@ export function weightedRequestDate() {
   if (roll < 0.6) return randomDateWithin(14)   // 60% last 2 weeks
   if (roll < 0.9) return randomDateWithin(60)   // 30% last 2 months
   return randomDateWithin(180)                  // 10% older
+};
+
+export function generatePartNumber(){
+  return Math.floor(100000 + Math.random() * 90000).toString();
 }
