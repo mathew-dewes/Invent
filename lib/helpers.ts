@@ -93,10 +93,10 @@ export function daysAgo(createdAt: Date): string {
 }
 
 
-export const vendorNames = ["Ideal Electrical", "Bunnings Warehouse", "Repco", "Mitre 10", "Hammer Hardware", "Toolshed", "Place Makers","Carters","Stihl Shop", "Supercheap Auto"]
-export const costCentreNames = ["Kiwi Rail", "Space X", "Air NZ", "Spark", "OneNZ", "Rocket Lab", "Fisher & Paykel", "Fonterra", "Meridian", "Mainfreight"];
-export const customerNames =["John Smith", "Ben Fisher", "Chris Luxon", "James Green", "Jim Brown", "Edmund Hillary ", "Elon Musk", "Kate Sheppard", "Kayne West", "Morgan Freeman"]
-export const stockNamesAndBrand = [
+export const demoVendors = ["Ideal Electrical", "Bunnings Warehouse", "Repco", "Mitre 10", "Hammer Hardware", "Toolshed", "Place Makers","Carters","Stihl Shop", "Supercheap Auto"]
+export const demoCostCentres = ["Kiwi Rail", "Space X", "Air NZ", "Spark", "OneNZ", "Rocket Lab", "Fisher & Paykel", "Fonterra", "Meridian", "Mainfreight"];
+export const demoCustomers =["John Smith", "Ben Fisher", "Chris Luxon", "James Green", "Jim Brown", "Edmund Hillary ", "Elon Musk", "Kate Sheppard", "Kayne West", "Morgan Freeman"]
+export const demoStock = [
   {name: "Hammer", brand: "Bahco"},
   {name: "3pc Skrewdriver set", brand: "Bahco"},
   {name: "Tape Measure", brand: "Milwaukee"},
@@ -122,4 +122,12 @@ export function pickRandom<T>(array: T[]):T{
 export function randomDateWithin(days: number){
   const date = new Date();
   date.setDate(date.getDate() - randomInt(0, days))
+}
+
+export function weightedRequestDate() {
+  const roll = Math.random()
+
+  if (roll < 0.6) return randomDateWithin(14)   // 60% last 2 weeks
+  if (roll < 0.9) return randomDateWithin(60)   // 30% last 2 months
+  return randomDateWithin(180)                  // 10% older
 }
