@@ -138,12 +138,12 @@ export const Financecolumns: ColumnDef<Finance>[] = [
       return <div className="font-medium">{formatted}</div>
     },
   },
-     {
-    accessorKey: "costCentre",
+      {
+      cell: ({ row }) => {
+    const costCentre = row.original.costCentre;
+    return <span>{costCentre?.name ?? "STOCK"}</span>;
+  },
     header: "Cost Centre",
-    cell:({row})=>{
-      return <p className="uppercase">{row.getValue('costCentre')}</p>
-    }
   },
 
 

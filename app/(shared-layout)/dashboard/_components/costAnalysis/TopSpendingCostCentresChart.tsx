@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 
 import {
   Card,
@@ -18,30 +18,28 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 
-export const description = "A bar chart with a custom label"
-
 
 const chartConfig = {
-  requests: {
-    label: "Units",
-    color: "var(--chart-2)",
+  desktop: {
+    label: "Desktop",
+    color: "var(--chart-1)",
   },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
-  label: {
-    color: "var(--background)",
-  },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function MostRequestedItemsChart({data}:
-  {data: {stock: string, requests: number}[]}
+type Props = {
+  costCentre: {
+    name: string
+  },
+  total: number
+}[]
+
+export function TopSpendingCostCentresChart({data}:
+  {data: Props}
 ) {
   return (
-    <Card>
+    <Card className="mt-3">
       <CardHeader>
-        <CardTitle>Bar Chart - Custom Label</CardTitle>
+        <CardTitle>Top Spending Cost Centres (This Month)</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
@@ -49,45 +47,43 @@ export function MostRequestedItemsChart({data}:
           <BarChart
             accessibilityLayer
             data={data}
-            layout="vertical"
             margin={{
-              right: 20,
+              top: 20,
             }}
           >
-            <CartesianGrid horizontal={false} />
-            <YAxis
-              dataKey="stock"
-              type="category"
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="costCentre.name"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-              hide
+          
             />
-            <XAxis dataKey="requests" type="number" hide />
             <ChartTooltip
+             formatter={(value) => "Spend " +
+    new Intl.NumberFormat("en-NZ", {
+      style: "currency",
+      currency: "NZD",
+    }).format(Number(value))
+  }
               cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
+              content={<ChartTooltipContent hideLabel />}
             />
-            <Bar
-              dataKey="requests"
-              layout="vertical"
-              fill="#4ade80"
-              radius={4}
-            >
+            <Bar dataKey="total" fill="#4ade80" radius={8}>
               <LabelList
-                dataKey="stock"
-                position="insideLeft"
-                offset={8}
-                className="fill-(--color-label)"
-                fontSize={12}
-              />
-              <LabelList
-                dataKey="requests"
-                position="right"
-                offset={8}
+                position="top"
+                offset={12}
                 className="fill-foreground"
                 fontSize={12}
+                formatter={(value: number) =>
+    new Intl.NumberFormat("en-NZ", {
+      style: "currency",
+      currency: "NZD",
+      maximumFractionDigits: 0,
+    }).format(value)
+  }
+                
+                
               />
             </Bar>
           </BarChart>

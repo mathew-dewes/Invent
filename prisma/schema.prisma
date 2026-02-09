@@ -117,12 +117,15 @@ model Request {
   requestNumber Int           @unique
   quantity      Int
   status        RequestStatus
-  costCentre   String
   note          String?
   stockItem     Stock         @relation(fields: [stockId], references: [id])
   user          User          @relation(fields: [userId], references: [id])
   stockId       String
   userId        String
+
+  costCentreId String
+
+  costCentre CostCentre @relation(fields: [costCentreId], references: [id])
 }
 
 model Purchase {
@@ -158,9 +161,11 @@ model CostLedger {
   vendorId String?
   vendorName String?
 
+  costCentreId String?
+  costCentre CostCentre? @relation(fields: [costCentreId], references: [id])
+
   userId String
-  
-  costCentre String 
+
 
   quantity Int
   unitCost Decimal    @db.Decimal(10, 2)
@@ -175,6 +180,18 @@ model CostLedger {
 
   @@unique([sourceType, sourceId])
 
+}
+
+
+model CostCentre {
+  id String @id @default(cuid())
+  code String @unique
+  name String
+  userId String
+  createdAt DateTime @default(now())
+
+  requests Request[]
+  ledger CostLedger[]
 }
 
 

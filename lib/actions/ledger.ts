@@ -48,7 +48,7 @@ export async function createRequestLedger(requestId: string){
                 quantity: request.quantity,
                 totalCost: Number(request.stockItem.unitCost) * request.quantity,
                 unitCost: request.stockItem.unitCost,
-                costCentre:request.costCentre,
+                costCentreId:request.costCentre.id,
                 userId,
                 sourceId: requestId,
                 reference,
@@ -106,7 +106,6 @@ export async function createPurchaseLedger(purchaseId: string){
                 totalCost: Number(purchase.stockItem.unitCost) * purchase.quantity,
                 unitCost: purchase.stockItem.unitCost,
                 userId,
-                costCentre: "STOCK",
                 sourceId: purchaseId,
                 reference,
                 vendorName:purchase.vendor.name

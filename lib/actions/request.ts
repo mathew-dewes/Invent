@@ -17,6 +17,7 @@ export async function createRequest(values: z.infer<typeof requestSchema>) {
 
     try {
         const parsed = requestSchema.safeParse(values);
+        
 
         if (!parsed.success) {
             console.error('Validation errors:', parsed.error);
@@ -25,14 +26,14 @@ export async function createRequest(values: z.infer<typeof requestSchema>) {
 
         const requestNumber = await generateRequestNumber();
 
-        const { customer, costCentre, quantity, stockItem: stockId, notes } = parsed.data;
+        const { customer, costCentreId, quantity, stockItem: stockId, notes } = parsed.data;
 
         await prisma.request.create({
             data: {
                 customer,
                 stockId,
                 quantity: Number(quantity),
-                costCentre,
+                costCentreId,
                 status: "OPEN",
                 requestNumber,
                 userId,
@@ -67,14 +68,14 @@ export async function updateRequest(values: z.infer<typeof requestSchema>, reque
 
 
 
-        const { customer, costCentre, quantity, stockItem: stockId, notes } = parsed.data;
+        const { customer, costCentreId, quantity, stockItem: stockId, notes } = parsed.data;
 
         await prisma.request.update({
             data: {
                 customer,
                 stockId,
                 quantity: Number(quantity),
-                costCentre,
+                costCentreId,
                 userId,
                 note: notes
             },
@@ -388,9 +389,14 @@ export async function clearData(){
     await prisma.costLedger.deleteMany({
         where:{userId}});
 
+    await prisma.costCentre.deleteMany({
+        where:{userId}
+    })
+
         revalidatePath('/requests')
         revalidatePath('/purchases')
         revalidatePath('/finance');
+        revalidatePath('/cost-centres');
 
         return {
             success: true, message: "Tables cleared"

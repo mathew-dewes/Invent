@@ -4,19 +4,19 @@ export type StockStatus = "In Stock" | "Low Stock" | "Out of Stock";
 
 
 export type Stock = {
-   unitCost: string;
-    id: string;
+  unitCost: string;
+  id: string;
+  name: string;
+  quantity: number;
+  location: string;
+  brand: string;
+  reorderPoint: number;
+  vendor: {
     name: string;
-    quantity: number;
-    location: string;
-    brand: string;
-    reorderPoint: number;
-    vendor: {
-        name: string;
-    },
-    purchases?:{
-      status: PurchaseStatus
-    }[]
+  },
+  purchases?: {
+    status: PurchaseStatus
+  }[]
 }
 
 export type SingleStockItem = {
@@ -45,6 +45,13 @@ export type Vendor = {
   PONumber: number
 }
 
+export type CostCentre = {
+  name: string;
+  id: string;
+  code: string;
+  createdAt: Date;
+}
+
 
 export type Request = {
   id: string,
@@ -59,65 +66,70 @@ export type Request = {
     reorderPoint: number
   }
   quantity: number
-  costCentre: string
+  costCentre: {
+    name: string
+  },
   note?: string | null
 }
 
 export type SingleRequest = {
-   stockItem: {
-        quantity: number;
-        name: string;
-        id: string;
-    };
-    notes?: string | null;
+  stockItem: {
     quantity: number;
+    name: string;
     id: string;
-    status: RequestStatus;
-    createdAt: Date;
-    purchaseNumber?: number;
-    PO?: string;
-    totalCost?: number;
-    customer?:string
-    costCentre: string
-  
-  
+  };
+  notes?: string | null;
+  quantity: number;
+  id: string;
+  status: RequestStatus;
+  createdAt: Date;
+  purchaseNumber?: number;
+  PO?: string;
+  totalCost?: number;
+  customer?: string
+  costCentre: string
+
+
 }
 
 
 export type Purchase = {
-    id: string;
-    status: PurchaseStatus;
-    createdAt: Date;
+  id: string;
+  status: PurchaseStatus;
+  createdAt: Date;
+  quantity: number;
+  purchaseNumber: number;
+  totalCost: string;
+  notes?: string | null
+  stockItem: {
+    id: string
+    name: string;
     quantity: number;
-    purchaseNumber: number;
-    totalCost: string;
-    notes?: string | null
-    stockItem: {
-        id: string
-        name: string;
-        quantity: number;
-        vendor:{
-          name: string
-          PONumber: number
-        }
-    };
+    vendor: {
+      name: string
+      PONumber: number
+    }
+  };
 }
 
 export type Finance = {
-   totalCost: string;
-    id: string;
-    createdAt: Date;
-    sourceType: FinanceType;
-    stockId: string;
-    vendorId: string | null;
-    userId: string;
-    plantNumber?: string | null;
-    stockName: string;
-    vendorName: string | null;
-    quantity: number;
-    unitCost: string;
-    month: number;
-    year: number;
+  totalCost: string;
+  id: string;
+  createdAt: Date;
+  sourceType: FinanceType;
+  stockId?: string;
+  vendorId?: string | null;
+  userId?: string;
+  plantNumber?: string | null;
+  stockName: string;
+  vendorName: string | null;
+  quantity: number;
+  unitCost?: string;
+  month?: number;
+  year?: number;
+  costCentre: {
+    name: string
+  } | null
 
 }
 

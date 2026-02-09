@@ -1,12 +1,10 @@
 import { convertToMoney } from "@/lib/helpers";
-import { UserAvatar } from "./UserAvatar";
+
 import { getStockCount, getStockValue } from "@/lib/queries/stock";
-import { getUserName } from "@/lib/actions/auth";
 
+export default async function StockInfo(){
 
-export default async function UserInfo(){
-
-    const [stockCount, stockValue, userName] = await Promise.all([getStockCount(), getStockValue(), getUserName()]);
+    const [stockCount, stockValue] = await Promise.all([getStockCount(), getStockValue()]);
 
     
 
@@ -14,9 +12,9 @@ export default async function UserInfo(){
 
     
     return (
-          <div className="flex items-center gap-10">
+          <div className="flex items-center gap-10 mt-5">
                    
-                        {userName && <UserAvatar name={userName}/>}
+              
                 
                         <div className="flex gap-4 text-sm">
                        

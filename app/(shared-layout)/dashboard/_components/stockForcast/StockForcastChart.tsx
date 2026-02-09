@@ -21,42 +21,46 @@ import {
 export const description = "A bar chart with a custom label"
 
 
-const chartConfig = {
-  requests: {
-    label: "Units",
-    color: "var(--chart-2)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
-  label: {
-    color: "var(--background)",
-  },
-} satisfies ChartConfig
 
-export function MostRequestedItemsChart({data}:
-  {data: {stock: string, requests: number}[]}
+const chartConfig = {
+  days: {
+    label: "Days",
+    color: "var(--chart-2)",
+  },
+
+} satisfies ChartConfig;
+
+type Props = {
+    stock:{
+        stockId: string,
+        name: string,
+        days: number | null,
+        
+    }[]
+}
+
+export function StockForcastChart({stock}: Props
+    
 ) {
   return (
-    <Card>
+    <Card className="mt-3">
       <CardHeader>
-        <CardTitle>Bar Chart - Custom Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Days until stockout</CardTitle>
+        <CardDescription>Predicted days until unit stockout</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={data}
+            data={stock}
             layout="vertical"
             margin={{
-              right: 20,
+              right: 30,
             }}
           >
             <CartesianGrid horizontal={false} />
             <YAxis
-              dataKey="stock"
+              dataKey="name"
               type="category"
               tickLine={false}
               tickMargin={10}
@@ -64,26 +68,27 @@ export function MostRequestedItemsChart({data}:
               tickFormatter={(value) => value.slice(0, 3)}
               hide
             />
-            <XAxis dataKey="requests" type="number" hide />
+            <XAxis dataKey="days" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
             <Bar
-              dataKey="requests"
+              dataKey="days"
               layout="vertical"
               fill="#4ade80"
               radius={4}
             >
               <LabelList
-                dataKey="stock"
+                dataKey="name"
                 position="insideLeft"
                 offset={8}
                 className="fill-(--color-label)"
                 fontSize={12}
+           
               />
               <LabelList
-                dataKey="requests"
+                dataKey="days"
                 position="right"
                 offset={8}
                 className="fill-foreground"

@@ -6,7 +6,7 @@ export default function StockHealthBar({percentage}:
     {percentage: number}
 ){
     return (
-        <Field className="w-100 ml-1.5 mb-5">
+        <Field className="w-3/4 ml-1.5 mb-5">
       <FieldLabel htmlFor="progress-upload">
         <span>Stock Health</span>
         <span className="ml-auto">{percentage}%</span>

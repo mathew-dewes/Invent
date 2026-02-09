@@ -7,7 +7,7 @@ export default async function OpenRequests(){
     const openRequests = await getOpenRequests();
       const noConcern = openRequests.length == 0;
     return (
-        <div hidden={noConcern} className={`border-2 p-5 rounded-xl bg-secondary`}>
+        <div hidden={noConcern} className={`border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1`}>
        
         
 

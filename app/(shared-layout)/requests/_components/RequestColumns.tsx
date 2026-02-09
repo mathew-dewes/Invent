@@ -139,7 +139,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
 
   {
-    accessorKey: "costCentre",
+    accessorKey: "costCentre.name",
     header: "Cost centre",
   },
   {
