@@ -37,7 +37,7 @@ export default function CostCentreForm(){
 
                     if (res.success){
                         toast.success(res.message);
-                        router.push('/cost-centres')
+                        router.push('/cost-centre')
                     } else {
                         toast.error(res.message)
                     }

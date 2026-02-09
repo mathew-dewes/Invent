@@ -91,3 +91,35 @@ export function daysAgo(createdAt: Date): string {
   if (days === 1) return "1 day ago";
   return `${days} days ago`;
 }
+
+
+export const vendorNames = ["Ideal Electrical", "Bunnings Warehouse", "Repco", "Mitre 10", "Hammer Hardware", "Toolshed", "Place Makers","Carters","Stihl Shop", "Supercheap Auto"]
+export const costCentreNames = ["Kiwi Rail", "Space X", "Air NZ", "Spark", "OneNZ", "Rocket Lab", "Fisher & Paykel", "Fonterra", "Meridian", "Mainfreight"];
+export const customerNames =["John Smith", "Ben Fisher", "Chris Luxon", "James Green", "Jim Brown", "Edmund Hillary ", "Elon Musk", "Kate Sheppard", "Kayne West", "Morgan Freeman"]
+export const stockNamesAndBrand = [
+  {name: "Hammer", brand: "Bahco"},
+  {name: "3pc Skrewdriver set", brand: "Bahco"},
+  {name: "Tape Measure", brand: "Milwaukee"},
+  {name: "Power Drill", brand: "Milwaukee"},
+  {name: "Socket Set", brand: "Makita"},
+  {name: "Crimpers", brand: "Dewalt"},
+  {name: "Flush Cutters", brand: "Bacho"},
+  {name: "Crowbar", brand: "Bacho"},
+  {name: "Multi Tool", brand: "Makita"},
+  {name: "Spirit Level", brand: "Bacho"}
+];
+
+
+export function randomInt(min: number, max: number){
+  return Math.floor(Math.random() * (max - min + 1)) + min
+};
+
+export function pickRandom<T>(array: T[]):T{
+  return array[Math.floor(Math.random() * array.length)]
+};
+
+
+export function randomDateWithin(days: number){
+  const date = new Date();
+  date.setDate(date.getDate() - randomInt(0, days))
+}
