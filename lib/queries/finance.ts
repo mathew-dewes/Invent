@@ -181,7 +181,7 @@ export async function getCostCentreSpend(){
   const year = now.getFullYear();
 
   const spend = await prisma.costLedger.groupBy({
-    by:['costCentreId',],
+    by:['costCentreName',],
     where:{
         userId,
         month,
@@ -198,20 +198,13 @@ export async function getCostCentreSpend(){
     },
     take: 5
   });
-const costCentreIds: string[] = spend
-  .map((c) => c.costCentreId)
-  .filter((id): id is string => id !== null);
 
-  const costCentres = await prisma.costCentre.findMany({
-    where: { id: { in: costCentreIds } },
-    select: { id: true, name: true },
-  });
+      const serialised = spend.map((item) => ({
+        ...item,
+        _sum: item._sum.totalCost?.toNumber() ?? 0,
+  
+    }));
 
-  // 3️⃣ Map spend to include name
-  return spend.map((c) => ({
-    costCentre: costCentres.find((cc) => cc.id === c.costCentreId) ?? {
-      name: "STOCK",
-    },
-    total: Number(c._sum.totalCost ?? 0),
-  }));
+  return serialised;
+
 }

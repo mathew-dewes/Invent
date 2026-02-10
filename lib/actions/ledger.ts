@@ -15,7 +15,12 @@ export async function createRequestLedger(requestId: string){
                 requestNumber:true,
                 customer:true,
                 quantity:true,
-                costCentre:true,
+                costCentre:{
+                    select:{
+                        name:true,
+                        id:true
+                    }
+                },
                 stockItem:{
                     select:{
                         unitCost:true,
@@ -49,6 +54,7 @@ export async function createRequestLedger(requestId: string){
                 totalCost: Number(request.stockItem.unitCost) * request.quantity,
                 unitCost: request.stockItem.unitCost,
                 costCentreId:request.costCentre.id,
+                costCentreName: request.costCentre.name,
                 userId,
                 sourceId: requestId,
                 reference,
@@ -108,7 +114,8 @@ export async function createPurchaseLedger(purchaseId: string){
                 userId,
                 sourceId: purchaseId,
                 reference,
-                vendorName:purchase.vendor.name
+                vendorName:purchase.vendor.name,
+                costCentreName: "STOCK"
             }
         })
 }

@@ -82,7 +82,7 @@ model Vendor {
   email       String
   contactName String
   userId      String
-  PONumber Int
+  PONumber Int @unique
   stock       Stock[]
   purchase    Purchase[]
   user        User       @relation(fields: [userId], references: [id])
@@ -162,6 +162,8 @@ model CostLedger {
   vendorName String?
 
   costCentreId String?
+
+  costCentreName String?
   costCentre CostCentre? @relation(fields: [costCentreId], references: [id])
 
   userId String

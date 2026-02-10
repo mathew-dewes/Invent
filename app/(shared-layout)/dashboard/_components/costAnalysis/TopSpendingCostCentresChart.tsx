@@ -27,10 +27,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 type Props = {
-  costCentre: {
-    name: string
-  },
-  total: number
+  costCentreName: string | null,
+  _sum: number
 }[]
 
 export function TopSpendingCostCentresChart({data}:
@@ -48,19 +46,19 @@ export function TopSpendingCostCentresChart({data}:
             accessibilityLayer
             data={data}
             margin={{
-              top: 20,
+              top: 30,
             }}
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="costCentre.name"
+              dataKey="costCentreName"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
           
             />
             <ChartTooltip
-             formatter={(value) => "Spend " +
+             formatter={(value) => "_sum " +
     new Intl.NumberFormat("en-NZ", {
       style: "currency",
       currency: "NZD",
@@ -69,7 +67,7 @@ export function TopSpendingCostCentresChart({data}:
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="total" fill="#4ade80" radius={8}>
+            <Bar dataKey="_sum" fill="#4ade80" radius={8}>
               <LabelList
                 position="top"
                 offset={12}

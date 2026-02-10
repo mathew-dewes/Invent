@@ -5,11 +5,12 @@ import OpenRequests from "./_components/openRequests/OpenRequests";
 import CompletedRequests from "./_components/completedRequests/CompletedRequests";
 import IncomingPurchases from "./_components/incomingPurchases/IncomingPurchases";
 import Inventory from "./_components/inventory/Inventory";
-import MostRequested from "./_components/mostRequested/MostRequested";
 import TotalSpend from "./_components/totalSpend/TotalSpend";
 import ActionBar from "./_components/action/ActionBar";
 import CostAnalysis from "./_components/costAnalysis/CostAnalysis";
 import StockForcast from "./_components/stockForcast/StockForcast";
+import WalkThrough from "./_components/walkthrough/WalkThrough";
+import StockPerformance from "./_components/StockPerformance/StockPerformance";
 
 
 export default function page() {
@@ -19,6 +20,7 @@ export default function page() {
 
             <Suspense fallback={'Loading Stock health data...'}>
                 <div className="grid  grid-cols-2 gap-6">
+                    <WalkThrough/>
                     <ActionBar />
                     <ReadyRequests />
                     <OpenRequests />
@@ -28,7 +30,7 @@ export default function page() {
                     <CompletedRequests />
                     <CostAnalysis />
                     <TotalSpend />
-                    <MostRequested />
+                    <StockPerformance />
                     <StockForcast />
 
 

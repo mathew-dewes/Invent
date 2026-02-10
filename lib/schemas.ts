@@ -57,7 +57,7 @@ export const vendorSchema = z.object({
     phone: z.string().max(15, "Please enter a valid phone number").optional(),
     email: z.string().min(1, 'Email address is required'),
     contactName: z.string().min(1, 'Contact name is required'),
-    PONumber: z.string().min(1, "PO number is required")
+    PONumber: z.string().length(6, "PO number must be 6 characters")
         .refine((val) => {
             const num = Number(val); return !isNaN(num) && num > 0;
         }, {
