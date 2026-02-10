@@ -9,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { UserAvatar } from "@/app/(shared-layout)/dashboard/_components/action/UserAvatar";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 
 const { useSession } = authClient;
@@ -35,6 +36,11 @@ export function Navbar() {
      const pathname = usePathname();
      const userName = session?.user.name;
 
+
+     const activeLink = (link: string) =>{
+        return pathname.startsWith(link)
+     } 
+
        const closeMenu = () =>{
           setOpenMenu((prev) => !prev)
       }
@@ -51,7 +57,7 @@ export function Navbar() {
 
     
     return (
-        <nav className="w-full py-5 flex items-center justify-between mb-4">
+        <nav className="w-full py-5 flex items-center justify-between mb-4 relative">
             <div className="flex items-center gap-8">
                 <Link className={`${!session ? "pointer-events-none" : ""}`} href={session ? "/dashboard" : "#"}>
                     <h1 className="md:text-3xl text-xl font-bold">Invent
@@ -114,7 +120,7 @@ export function Navbar() {
                     aria-controls="primary-navigation"
                     aria-expanded="false"
                     onClick={closeMenu}
-                    className={`z-9999 md:hidden 
+                    className={`z-9999 md:hidden absolute right-3 
             ${openMenu ? "hidden" : ""}`}><span className="sr-only">Menu</span>
                     <Menu size={35} color="white" /></button>
                 <button
@@ -122,15 +128,21 @@ export function Navbar() {
                     aria-controls="primary-navigation"
                     aria-expanded="false"
                     onClick={() => setOpenMenu((prev) => !prev)}
-                    className={`top-6 z-9999 md:hidden 
+                    className={`top-4 z-9999 md:hidden mr-4 fixed right-3 
             ${openMenu ? "" : "hidden"}`}><span className="sr-only">Menu</span>
-                    <X size={35} color="white" /></button>
+                    <X size={35} color="black" /></button>
 
-                   <ul style={{display: session ? "" : "none"}} className={`gap-10 flex md:hidden fixed bg-violet-500/95 inset-0 ml-[40%] flex-col items-start px-20 py-30 transform z-20 transition ease-out duration-500
+                   <ul style={{display: session ? "" : "none"}} className={`gap-5 flex md:hidden fixed bg-primary text-black inset-0 ml-[50%] flex-col items-center px-15 py-30 transform z-20 transition ease-out duration-500
                 ${openMenu ? "translate-x-0" : "translate-x-full"}`}>
-                    <Link onClick={closeMenu} className={`${pathname === "/" ? "font-semibold  scale-105" : "font-light"}`} href={'/'}>Home</Link>
-                    <Link onClick={closeMenu} className={`${pathname.startsWith("/assets") ? "font-semibold  scale-105" : "font-light"}`} href={'/assets'}>Assets</Link>
-                    <Link onClick={closeMenu} className={`${pathname.startsWith("/profile") ? "font-semibold  scale-105" : "font-light"}`} href={'/profile'}>Profile</Link>
+
+                    {links.map((link, key)=>{
+                        return <Link key={key} href={link.href}>
+                    <Button className={cn(`${activeLink(link.href) ? "bg-green-400" : ""}`)} variant={"secondary"} onClick={closeMenu}>{link.label}</Button>
+                    </Link>
+                    })}
+                   
+                   
+       
                     <button className="cursor-pointer font-light flex">Logout</button>
 
                 </ul>

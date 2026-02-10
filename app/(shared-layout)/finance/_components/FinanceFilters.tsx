@@ -70,7 +70,7 @@ export default function FinanceFilters({
 
 
   return (
-    <div className="flex gap-4">
+    <div className="md:flex hidden gap-4">
 
       <Button size="sm" variant={searchParams.get("type") ? "outline" : "default"}
         onClick={() => clearQuery()}>View All</Button>
