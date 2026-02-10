@@ -4,9 +4,8 @@ import { getUserId } from "../actions/auth";
 import prisma from "../prisma";
 
 
-export async function getAllStock(level?: string) {
-    const userId = await getUserId();
-
+export async function getAllStock(userId: string ,level?: string) {
+  
 
     const stock = await prisma.stock.findMany({
         where: {
@@ -369,4 +368,18 @@ export async function getStockLevels(){
     return stock;
 }
 
+
+export async function getStockNames(){
+    const userId = await getUserId();
+
+    const stockNames = await prisma.stock.findMany({
+        where:{userId},
+        select:{
+            name: true,
+            id: true
+        }
+    });
+
+    return stockNames
+}
    

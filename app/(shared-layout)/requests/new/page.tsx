@@ -8,7 +8,6 @@ export default async function Page(){
     const stock = await getStockNamesAndQuantity();
     const costCentres = await getCostCentres();
 
-    console.log(costCentres);
     
     return (
         <div>

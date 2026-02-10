@@ -153,35 +153,7 @@ export async function getRequestsByStatusCount() {
     return queryCounts
 }
 
-export async function getRequestById(id: string) {
-    const userId = await getUserId();
-    const requests = await prisma.request.findUnique({
-        where: {
-            userId, id
-        },
 
-        select: {
-            id: true,
-            requestNumber: true,
-            createdAt: true,
-            customer: true,
-            stockItem: {
-                select: {
-                    id: true,
-                    name: true,
-                    quantity: true
-                }
-            },
-            quantity: true,
-            status: true,
-            costCentre: true,
-            note: true
-        }
-
-    });
-
-    return requests;
-}
 
 export async function getCompletedRequests() {
     const userId = await getUserId();
@@ -415,3 +387,20 @@ export async function getRequestCount(){
     })
 }
 
+
+export async function getRequestFormData(requestId: string){
+    const userId = await getUserId();
+
+    const request = await prisma.request.findUnique({
+        where:{userId, id: requestId},
+        select:{
+            customer: true,
+            stockId:true,
+            quantity:true,
+            costCentreId:true,
+            note: true
+        }
+    });
+
+    return request;
+}

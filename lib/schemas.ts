@@ -81,7 +81,8 @@ export const requestSchema = z.object({
             message: "Quantity must be greater than 0",
         }),
     costCentreId: z.string().min(1, "Cost centre is required"),
-    notes: z.string().max(200, "Note must be 200 characters or less").optional()
+    notes: z.string().max(200, "Note must be 200 characters or less").optional(),
+  stockId: z.string('Please select a vendor'),
 
 });
 

@@ -5,14 +5,10 @@ import StockWrapper from "./_components/StockWrapper";
 import { Suspense } from "react";
 import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
-
 export default async function page({searchParams}:
   {searchParams: Promise<{level: string}>}
 ) {
 
-    const filters = ((await searchParams).level);
-      
-      
 
   return (
     <div>
@@ -20,7 +16,7 @@ export default async function page({searchParams}:
       <Link href={'/stock/new'}><Button>Create Stock</Button></Link>
       </div>
       <Suspense fallback={<TableSkeleton/>}>
-      <StockWrapper filter={filters}/>
+      <StockWrapper searchParams={searchParams}/>
       </Suspense>
 
         </div>

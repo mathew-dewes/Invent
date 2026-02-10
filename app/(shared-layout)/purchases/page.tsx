@@ -9,7 +9,7 @@ import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 
 
-export default  async function RequestsPage({searchParams}:
+export default  async function PurchasePage({searchParams}:
   {searchParams: Promise<{status: PurchaseStatus, search: string}>}
 ){
 

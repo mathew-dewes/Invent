@@ -110,7 +110,10 @@ export async function getPurchaseById(id: string) {
         }
     });
 
-    return purchase
+
+
+
+return {...purchase, totalCost: purchase?.totalCost.toString()}
 }
 
 

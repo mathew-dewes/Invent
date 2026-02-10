@@ -73,43 +73,44 @@ export type Request = {
 }
 
 export type SingleRequest = {
-  stockItem: {
-    quantity: number;
-    name: string;
     id: string;
-  };
-  notes?: string | null;
-  quantity: number;
-  id: string;
-  status: RequestStatus;
-  createdAt: Date;
-  purchaseNumber?: number;
-  PO?: string;
-  totalCost?: number;
-  customer?: string
-  costCentre: string
+    createdAt: Date;
+    quantity: number;
+    requestNumber: number;
+    customer: string;
+    status: RequestStatus;
+    note: string | null;
+    stockItem: {
+        id: string;
+        name: string;
+        quantity: number;
+    };
+    costCentre: {
+        id: string;
+        createdAt: Date;
+        name: string;
+        userId: string;
+        code: string;
+    };
 
 
 }
 
 
 export type Purchase = {
-  id: string;
-  status: PurchaseStatus;
-  createdAt: Date;
-  quantity: number;
-  purchaseNumber: number;
-  totalCost: string;
-  notes?: string | null
-  stockItem: {
-    id: string
-    name: string;
-    quantity: number;
-    vendor: {
-      name: string
-      PONumber: number
-    }
-  };
+ totalCost: string | undefined;
+    id?: string | undefined;
+    createdAt?: Date | undefined;
+    purchaseNumber?: number | undefined;
+    status?: PurchaseStatus | undefined;
+    notes?: string | null | undefined;
+    quantity?: number | undefined;
+    stockItem?: {
+        id: string;
+        quantity: number;
+        name: string;
+    } | undefined;
+    
 }
 
 export type Finance = {

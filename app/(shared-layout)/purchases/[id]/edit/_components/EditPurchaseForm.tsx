@@ -34,7 +34,7 @@ export default function EditPurchaseForm({stock, values, purchaseId}:
         const form = useForm({
             resolver: zodResolver(purchaseSchema),
             defaultValues: {
-                item: values.stockItem.id,
+                item: values.stockItem?.id,
                 quantity: String(values.quantity),
                 notes: values.notes ?? ""
     

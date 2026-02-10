@@ -12,13 +12,31 @@ import {
 import { Button } from "@/components/ui/button"
 import { MoreHorizontal, ArrowUpDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Purchase } from "@/lib/types"
 import { startTransition } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 import PurchaseStatusBadge from "@/components/web/badges/PurchaseStatusBadge"
 import { markReceived } from "@/lib/actions/purchase"
+import { PurchaseStatus } from "@/generated/prisma/enums"
+
+type PurchaseColumns = {
+  totalCost: string;
+    id: string;
+    createdAt: Date;
+    purchaseNumber: number;
+    status: PurchaseStatus;
+    quantity: number;
+    stockItem: {
+        id: string;
+        quantity: number;
+        vendor: {
+            name: string;
+            PONumber: number;
+        };
+        name: string;
+    };
+}
 
 
 const HideCheckboxes = () => {
@@ -34,7 +52,7 @@ const HideCheckboxes = () => {
 }
 
 
-export const Purchasecolumns: ColumnDef<Purchase>[] = [
+export const Purchasecolumns: ColumnDef<PurchaseColumns>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -82,7 +100,12 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
   },
   {
     accessorKey: "status",
-    cell: ({ row }) => <PurchaseStatusBadge status={row.original.status} createdAt={row.original.createdAt} />,
+    cell: ({ row }) => {
+    
+      const status = row.original.status!;
+      const createdAt = row.original.createdAt!
+    
+      return <PurchaseStatusBadge status={status} createdAt={createdAt} />},
     header: "Status",
   },
   {
@@ -116,7 +139,10 @@ export const Purchasecolumns: ColumnDef<Purchase>[] = [
     cell: ({ row }) => {
 
 
-      const vendor = row.original.stockItem.vendor.name
+      
+
+
+      const vendor = row.original?.stockItem?.vendor.name ?? "dd"
       return vendor
     }
 

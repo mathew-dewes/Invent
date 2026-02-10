@@ -1,6 +1,8 @@
 import { getStockNamesAndQuantity } from "@/lib/queries/stock";
 import EditRequestForm from "./_components/EditRequestForm";
-import { getRequestById } from "@/lib/queries/request";
+import { getCostCentres } from "@/lib/queries/costCentre";
+import { getRequestFormData } from "@/lib/queries/request";
+
 
 export default async function editRequestPage({params}:
     {params: Promise<{id: string}>}
@@ -8,14 +10,20 @@ export default async function editRequestPage({params}:
 
           const {id} = await params;
 
-        const stockNames = await getStockNamesAndQuantity();
-        const stockValues = await getRequestById(id);
+        const stock = await getStockNamesAndQuantity();
+        const costCentres = await getCostCentres();
+        const formData = await getRequestFormData(id);
 
-        if (!stockValues) return;
+        console.log(formData);
+        
+
+        
+
+        if (!costCentres || !formData) return;
         
     return (
         <div>
-            <EditRequestForm stock={stockNames} values={stockValues} requestId={id}/>
+            <EditRequestForm formData={formData} stock={stock} costCentres={costCentres} requestId={id} />
         </div>
     )
 }
