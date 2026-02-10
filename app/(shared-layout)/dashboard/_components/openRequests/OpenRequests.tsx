@@ -6,8 +6,10 @@ export default async function OpenRequests(){
 
     const openRequests = await getOpenRequests();
       const noConcern = openRequests.length == 0;
+
+      if (noConcern) return
     return (
-        <div hidden={noConcern} className={`border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1`}>
+        <div  className={`border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1`}>
        
         
 

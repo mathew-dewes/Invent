@@ -7,6 +7,8 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 import { UserAvatar } from "@/app/(shared-layout)/dashboard/_components/action/UserAvatar";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 
 
 const { useSession } = authClient;
@@ -28,9 +30,14 @@ export function Navbar() {
         const router = useRouter();
             const {data: session, isPending, refetch 
     } = useSession();
+         const [openMenu, setOpenMenu] = useState(false)
 
      const pathname = usePathname();
      const userName = session?.user.name;
+
+       const closeMenu = () =>{
+          setOpenMenu((prev) => !prev)
+      }
 
 
      const generateStyling = (link: string) =>{
@@ -62,13 +69,15 @@ export function Navbar() {
              
         
                 </div>
+         
                  
 
 
             </div>
+
              
 
-            <div className="flex items-center md:gap-5 gap-4">
+            <div className="lg:flex items-center md:gap-5 gap-4 hidden">
                 {session && userName && <UserAvatar name={userName}/> }
           
 
@@ -94,10 +103,37 @@ export function Navbar() {
                     </>}
                     <ThemeToggle />
                   </div>
+
+         
         
       
 
             </div>
+                  <button
+                style={{display: session ? "" : "none"}}
+                    aria-controls="primary-navigation"
+                    aria-expanded="false"
+                    onClick={closeMenu}
+                    className={`z-9999 md:hidden 
+            ${openMenu ? "hidden" : ""}`}><span className="sr-only">Menu</span>
+                    <Menu size={35} color="white" /></button>
+                <button
+                style={{display: session ? "" : "none"}}
+                    aria-controls="primary-navigation"
+                    aria-expanded="false"
+                    onClick={() => setOpenMenu((prev) => !prev)}
+                    className={`top-6 z-9999 md:hidden 
+            ${openMenu ? "" : "hidden"}`}><span className="sr-only">Menu</span>
+                    <X size={35} color="white" /></button>
+
+                   <ul style={{display: session ? "" : "none"}} className={`gap-10 flex md:hidden fixed bg-violet-500/95 inset-0 ml-[40%] flex-col items-start px-20 py-30 transform z-20 transition ease-out duration-500
+                ${openMenu ? "translate-x-0" : "translate-x-full"}`}>
+                    <Link onClick={closeMenu} className={`${pathname === "/" ? "font-semibold  scale-105" : "font-light"}`} href={'/'}>Home</Link>
+                    <Link onClick={closeMenu} className={`${pathname.startsWith("/assets") ? "font-semibold  scale-105" : "font-light"}`} href={'/assets'}>Assets</Link>
+                    <Link onClick={closeMenu} className={`${pathname.startsWith("/profile") ? "font-semibold  scale-105" : "font-light"}`} href={'/profile'}>Profile</Link>
+                    <button className="cursor-pointer font-light flex">Logout</button>
+
+                </ul>
 
         </nav>
     )

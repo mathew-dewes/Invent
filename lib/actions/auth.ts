@@ -23,4 +23,10 @@ export async function getUserName(){
     
     const user = session?.user;
     return user?.name;
+};
+
+export async function getSession(){
+        return await auth.api.getSession({
+        headers: await headers()
+    });
 }

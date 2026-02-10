@@ -6,11 +6,11 @@ export default async function CostAnalysis(){
     const spend = await getCostCentreSpend();    
 
 
-    
+    if (spend.length == 0) return
 
     
     return (
-        <div hidden={spend.length == 0} className="border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1">
+        <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1">
           <div>
                <h1 className="font-semibold text-xl py-3 ml-1">Cost Analysis</h1>
                 <div className="ml-1 text-sm flex gap-2">
