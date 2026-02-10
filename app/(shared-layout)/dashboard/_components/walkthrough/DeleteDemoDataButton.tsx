@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { clearDemoData } from "@/lib/actions/populate";
 import { useRouter } from "next/navigation";
-import { startTransition } from "react";
+import { useTransition } from "react";
+
 import { toast } from "sonner";
 
 export default function DeleteDemoDataButton(){
+    const [isPending, startTransition] = useTransition()
 
     const router = useRouter();
     return <Button  className="cursor-pointer hover:bg-primary" onClick={()=>{
@@ -19,5 +21,5 @@ export default function DeleteDemoDataButton(){
                 toast.error(res.message)
             }
         })
-    }} >Delete Data</Button>
+    }} >{isPending ? "Deleting" : "Delete Data"}</Button>
 }

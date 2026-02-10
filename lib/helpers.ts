@@ -138,9 +138,11 @@ export function pickRandom<T>(array: T[]):T{
 };
 
 
-export function randomDateWithin(days: number){
-  const date = new Date();
-  date.setDate(date.getDate() - randomInt(0, days))
+export function randomDateWithin(daysBack: number) {
+  const date = new Date()
+  date.setDate(date.getDate() - randomInt(0, daysBack))
+  date.setHours(randomInt(7, 18), randomInt(0, 59))
+  return date
 }
 
 export function weightedRequestDate() {
@@ -150,6 +152,13 @@ export function weightedRequestDate() {
   if (roll < 0.9) return randomDateWithin(60)   // 30% last 2 months
   return randomDateWithin(180)                  // 10% older
 };
+
+export function weightedStatus() {
+  const roll = Math.random()
+  if (roll < 0.15) return "OPEN"
+  if (roll < 0.30) return "READY"
+  return "COMPLETE"
+}
 
 export function generatePartNumber(){
   return Math.floor(100000 + Math.random() * 90000).toString();

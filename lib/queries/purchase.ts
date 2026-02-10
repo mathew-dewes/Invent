@@ -274,7 +274,8 @@ export async function getIncomingPurchases(){
                     name:true
                 }
             }
-        }
+        },
+        take: 10
     });
 
     return purchases

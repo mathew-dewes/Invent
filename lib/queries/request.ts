@@ -238,7 +238,11 @@ export async function getOpenRequests() {
 
                 }
             }
-        }
+        },
+        orderBy:{
+            createdAt: "desc"
+        },
+        take: 10
     });
 
     return requests;
@@ -260,7 +264,11 @@ export async function getReadyRequests() {
             },
             quantity: true
 
-        }
+        },
+        orderBy:{
+            createdAt: "desc"
+        },
+        take: 10
     });
 
     return requests;
@@ -398,4 +406,12 @@ export async function getMostRequestedChartData(){
 
 }
 
+
+export async function getRequestCount(){
+    const userId = await getUserId();
+
+    return await prisma.request.count({
+        where:{userId}
+    })
+}
 
