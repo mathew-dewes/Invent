@@ -26,7 +26,8 @@ import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import StockFilters from "./StockFilters"
-import { MobileStockFilter } from "./MobileStockFilter"
+import { MobileStockFilters } from "./MobileStockFilters"
+
 
 
 interface DataTableProps<TData, TValue> {
@@ -80,7 +81,7 @@ export function StockTable<TData extends ParsedDataTypes, TValue>({
    
       <div className="py-4 mt-2">
 
-        <div className="flex gap-3">
+        <div className="md:flex gap-3 w-3/4">
      <div className="gap-3 flex">
           <Input
             placeholder={`Filter ${filter}...`}
@@ -97,8 +98,8 @@ export function StockTable<TData extends ParsedDataTypes, TValue>({
 
 
         </div>
-         <div className="sm:hidden" onClick={() => table.setRowSelection({})}>
-           <MobileStockFilter queryCounts={queryCounts}/>
+         <div className="sm:hidden mt-5" onClick={() => table.setRowSelection({})}>
+           <MobileStockFilters queryCounts={queryCounts}/>
 
           </div> 
         </div>

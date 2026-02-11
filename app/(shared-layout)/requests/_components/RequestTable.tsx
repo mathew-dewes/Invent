@@ -32,18 +32,19 @@ import { RequestStatus } from "@/generated/prisma/enums"
 import { MarkAllReadyButton } from "./MarkAllReadyButton"
 import { MarkAllCompleteButton } from "./MarkAllCompleteButton"
 import { ClearDataButton } from "./ClearRequests"
+import { MobileRequestFilters } from "./MobileRequestFilters"
 
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
   filter: string,
-  queryCounts?: Record<string, number> 
-  
+  queryCounts?: Record<string, number>
+
 }
-interface ParsedDataTypes { 
-  id: string, 
-  stockItem: { id: string, quantity: number }, 
+interface ParsedDataTypes {
+  id: string,
+  stockItem: { id: string, quantity: number },
   quantity: number,
 
 
@@ -60,140 +61,149 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
 }: DataTableProps<TData, TValue>) {
 
 
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [rowSelection, setRowSelection] = useState({});
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-    
-    const params = useSearchParams();
-    const query = params.get('status') as RequestStatus;
-    
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-      // eslint-disable-next-line react-hooks/incompatible-library
-      const table = useReactTable({
-        getRowId: (row) => row.id,
-        data,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        onSortingChange: setSorting,
-        getSortedRowModel: getSortedRowModel(),
-        onColumnFiltersChange: setColumnFilters,
-        getFilteredRowModel: getFilteredRowModel(),
-        onRowSelectionChange: setRowSelection,
-        onColumnVisibilityChange: setColumnVisibility,
-        state: {
-          sorting,
-          columnFilters,
-          rowSelection,
-          columnVisibility
-        },
-      });
+  const params = useSearchParams();
+  const query = params.get('status') as RequestStatus;
 
-       const selectedRequestIds = table
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const table = useReactTable({
+    getRowId: (row) => row.id,
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility,
+    state: {
+      sorting,
+      columnFilters,
+      rowSelection,
+      columnVisibility
+    },
+  });
+
+  const selectedRequestIds = table
     .getSelectedRowModel()
     .rows
     .map((row) => row.original.id);
 
-    const selectedStockIds = table.getSelectedRowModel().rows.map((row) => row.original.stockItem.id)
-    const isSelected = selectedRequestIds.length > 0;
-    
+  const selectedStockIds = table.getSelectedRowModel().rows.map((row) => row.original.stockItem.id)
+  const isSelected = selectedRequestIds.length > 0;
+
 
 
   return (
-     <div>
- <div>
-      <div className="flex items-center py-4 mt-2">
-        <div className="flex gap-3">
-          <Input
-            placeholder={`Filter ${filter}...`}
-            value={(table.getColumn(filter)?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn(filter)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm text-sm"
-          />
-          <div onClick={() => table.setRowSelection({})}>
-           <RequestFilters queryCounts={queryCounts}/>
+    <div>
+      <div>
+        <div className="py-4 mt-2">
 
+          <div className="md:flex gap-3 w-3/4">
+            <div className="gap-3 flex">
+              <Input
+                placeholder={`Filter ${filter}...`}
+                value={(table.getColumn(filter)?.getFilterValue() as string) ?? ""}
+                onChange={(event) =>
+                  table.getColumn(filter)?.setFilterValue(event.target.value)
+                }
+                className="max-w-sm text-sm"
+              />
+              <div onClick={() => table.setRowSelection({})}>
+                <RequestFilters queryCounts={queryCounts} />
+
+              </div>
+
+
+            </div>
+            <div className="sm:hidden mt-5" onClick={() => table.setRowSelection({})}>
+              <MobileRequestFilters queryCounts={queryCounts} />
+
+            </div>
           </div>
 
 
-        </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto hidden sm:flex">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter(
+                  (column) => column.getCanHide()
                 )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => {
-              return <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                    </TableHead>
+                  )
+                })}
               </TableRow>
-})
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-     <div className="flex items-center justify-end space-x-2 py-4">
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => {
+                return <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -215,34 +225,34 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
           Next
         </Button>
       </div>
-      
-      <ClearDataButton hidden={data.length == 0 || isSelected}/>
-       
-        <div className={`${!isSelected ? "hidden" : ""}`}>
-          <p>Update (All) selected:</p>
-          <div onClick={async () => {
-            await delay(500)
-            table.setRowSelection({})
-          }} className="mt-2 flex gap-5">
-        {query == "OPEN" && <MarkAllReadyButton requestIds={selectedRequestIds}/>}
-        {query == "READY" && <MarkAllCompleteButton selectedStockIds={selectedStockIds}/>}
-  
 
-          </div>
-         
-            <div className={`mt-5`}>
-              <p className="font-semibold">Attention:</p>
-              <ul className="mt-1 list-disc space-y-1 text-sm text-muted-foreground">
-                <li>Canceling completed requests will replenish inventory*</li>
-                <li>Completed requests statuses are fixed and wont be included in the mass update*</li>
-              </ul>
+      <ClearDataButton hidden={data.length == 0 || isSelected} />
 
-            </div>
-
+      <div className={`${!isSelected ? "hidden" : ""}`}>
+        <p>Update (All) selected:</p>
+        <div onClick={async () => {
+          await delay(500)
+          table.setRowSelection({})
+        }} className="mt-2 flex gap-5">
+          {query == "OPEN" && <MarkAllReadyButton requestIds={selectedRequestIds} />}
+          {query == "READY" && <MarkAllCompleteButton selectedStockIds={selectedStockIds} />}
 
 
         </div>
-     </div>
-   
+
+        <div className={`mt-5`}>
+          <p className="font-semibold">Attention:</p>
+          <ul className="mt-1 list-disc space-y-1 text-sm text-muted-foreground">
+            <li>Canceling completed requests will replenish inventory*</li>
+            <li>Completed requests statuses are fixed and wont be included in the mass update*</li>
+          </ul>
+
+        </div>
+
+
+
+      </div>
+    </div>
+
   )
 }

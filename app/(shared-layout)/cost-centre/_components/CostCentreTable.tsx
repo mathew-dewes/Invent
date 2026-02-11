@@ -92,7 +92,7 @@ export function CostCentreTable<TData extends ParsedDataTypes, TValue>({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-auto hidden sm:flex">
               Columns
             </Button>
           </DropdownMenuTrigger>
@@ -162,6 +162,24 @@ export function CostCentreTable<TData extends ParsedDataTypes, TValue>({
         </TableBody>
       </Table>
     </div>
+    <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
      </div>
    
   )

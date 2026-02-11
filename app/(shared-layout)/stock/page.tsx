@@ -16,7 +16,7 @@ export default async function page({ searchParams }:
 
 
 
-      <div className="flex justify-start sm:justify-end">
+      <div className="flex justify-end">
 
 
 

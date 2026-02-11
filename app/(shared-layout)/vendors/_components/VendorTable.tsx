@@ -92,7 +92,7 @@ export function VendorTable<TData extends ParsedDataTypes, TValue>({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-auto hidden sm:flex">
               Columns
             </Button>
           </DropdownMenuTrigger>

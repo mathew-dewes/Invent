@@ -14,7 +14,7 @@ export default  async function PurchasePage({searchParams}:
 ){
 
       const filters = ((await searchParams).status);
-      const search = ((await searchParams).search) ?? "";
+
 
       
 
@@ -25,7 +25,7 @@ export default  async function PurchasePage({searchParams}:
        
       </div>
       <Suspense fallback={<TableSkeleton/>}>
-     <PurchaseWrapper filter={filters} search={search}/>  
+     <PurchaseWrapper filter={filters} />  
       </Suspense>
 
       

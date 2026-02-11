@@ -7,23 +7,14 @@ import { getNZDateKey } from "../helpers";
 
 
 
-export async function getPurchases(filter?: PurchaseStatus, search?: string) {
+export async function getPurchases(filter?: PurchaseStatus) {
     const userId = await getUserId();
 
 
     
 
-
-    const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
-
     const purchases = await prisma.purchase.findMany({
-        where: { userId,
-      ...(search && !isNaN(Number(search)) && {
-  purchaseNumber: {
-    equals: Number(search),
-  },
-}),
-         },
+        where: { userId},
        
         orderBy:
             { createdAt: "desc" },
@@ -31,7 +22,6 @@ export async function getPurchases(filter?: PurchaseStatus, search?: string) {
             id: true,
             createdAt: true,
             purchaseNumber: true,
-
             quantity: true,
             totalCost: true,
             status: true,
@@ -61,13 +51,9 @@ export async function getPurchases(filter?: PurchaseStatus, search?: string) {
 
 
     const placedPurchases = serialisedPurchases.filter(
-        item => item.status === "PLACED" &&   item.createdAt.getTime() > threeDaysAgo.getTime()
+        item => item.status === "PLACED"
     );
-    const delayedPurchases = serialisedPurchases.filter(
-        item =>
-            item.status !== "RECEIVED" &&
-            item.createdAt.getTime() < threeDaysAgo.getTime()
-    );
+
     const receivedPurchases = serialisedPurchases.filter(
         item => item.status === "RECEIVED"
     );
@@ -77,9 +63,7 @@ export async function getPurchases(filter?: PurchaseStatus, search?: string) {
         return placedPurchases;
     } else if (filter === "RECEIVED") {
         return receivedPurchases;
-    } else if (filter == "DELAYED") {
-
-        return delayedPurchases;
+  
     } else {
         return serialisedPurchases;
     }
