@@ -103,8 +103,8 @@ export async function createBaseTables() {
 
 export async function createRequests() {
     const userId = await getUserId();
-    const stockItems = await prisma.stock.findMany({ where: { userId } });
-    const costCentres = await prisma.costCentre.findMany({ where: { userId } });
+    const stockItems = await prisma.stock.findMany({ where: { userId }, select:{id:true} });
+    const costCentres = await prisma.costCentre.findMany({ where: { userId }, select:{id: true} });
 
     const requestData = [];
 
@@ -113,7 +113,7 @@ export async function createRequests() {
     for (let i = 0; i < 100; i++) {
 
         const stock = pickRandom(stockItems);
-        const costCentre = pickRandom(costCentres)
+        const costCentre = pickRandom(costCentres);
    
         
         requestData.push({
@@ -134,7 +134,16 @@ export async function createRequests() {
         });
 
         const requestsArray = await prisma.request.findMany({
-        where: { userId, requestNumber: { gte: 5000, lte: 5100 }, },
+        where: { userId, requestNumber: { gte: 5000, lte: 5100 }},
+        select:{
+            id:true,
+            quantity:true,
+            stockId:true,
+            status:true,
+            costCentreId:true,
+            requestNumber:true,
+            createdAt:true
+        }
         });
 
         for (const request of requestsArray) {
@@ -161,10 +170,22 @@ export async function createRequests() {
             }
 
             const stock = await prisma.stock.findUnique({
-                where: { id: request.stockId }
+                where: { id: request.stockId },
+                select:{
+                    name:true,
+                    unitCost:true,
+                    vendor:{
+                        select:{
+                            name:true
+                        }
+                    }
+                }
             });
             const costCentre = await prisma.costCentre.findUnique({
                 where: { id: request.costCentreId },
+                select:{
+                    name:true
+                }
             });
                     await prisma.costLedger.create({
                 data: {
@@ -181,7 +202,8 @@ export async function createRequests() {
                     month: request.createdAt.getMonth() + 1,
                     year: request.createdAt.getFullYear(),
                     createdAt: request.createdAt,
-                    userId
+                    userId,
+                    vendorName: stock?.vendor.name
 
                 }
             });
@@ -212,10 +234,12 @@ export async function createPurchases() {
     const userId = await getUserId();
          const vendors = await prisma.vendor.findMany({
                 where: { userId },
+                select:{id:true}
             });
 
             const stockItems = await prisma.stock.findMany({
                 where: { userId },
+                select:{unitCost:true, id: true}
             });
 
             const purchaseData = [];
@@ -246,7 +270,9 @@ export async function createPurchases() {
                 });
 
                 const purchaseArray = await prisma.purchase.findMany({
-                    where:{userId}
+                    where:{userId}, select:{status:true, stockId: true, quantity:true,
+                        vendorId: true, purchaseNumber:true, id:true, createdAt:true
+                    }
                 });
 
                 for (const purchase of purchaseArray){
@@ -259,10 +285,12 @@ export async function createPurchases() {
 
             const stock = await prisma.stock.findUnique({
                 where: { id: purchase.stockId },
+                select:{name:true, unitCost: true}
     });
 
                 const vendor = await prisma.vendor.findUnique({
                 where: { id: purchase.vendorId },
+                select:{name:true}
     });
 
                

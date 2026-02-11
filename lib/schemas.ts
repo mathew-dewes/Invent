@@ -68,7 +68,7 @@ export const vendorSchema = z.object({
 
 export const costCentreSchema = z.object({
     name: z.string().min(1, 'Cost centre name is required').max(15, 'Cost centre name must be 15 characters or less'),
-    code: z.string().length(5, 'Cost center code is required and must be 5 characters long')
+    code: z.string().length(5, 'Cost center code must be 5 characters long')
 })
 
 export const requestSchema = z.object({

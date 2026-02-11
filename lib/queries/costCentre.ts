@@ -44,4 +44,20 @@ export async function getCostCentres() {
     }));
 
     return serialisedFinances
+};
+
+export async function getCostCentreFormData(costCentreId: string){
+    const userId = await getUserId();
+
+    const details = await prisma.costCentre.findUnique({
+        where:{userId, id: costCentreId},
+        select:{
+            id: true,
+            createdAt:true,
+            code:true,
+            name:true
+        }
+    });
+
+    return details;
 }

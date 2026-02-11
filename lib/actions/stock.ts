@@ -77,20 +77,19 @@ export async function updateStock(values: z.infer<typeof stockSchema>, stockId: 
                 brand,
                 location,
                 quantity: Number(quantity),
-                userId,
                 unitCost: Number(unitCost),
                 partNumber,
                 reorderPoint: Number(reorderPoint),
                 vendorId,
             },
-            where: { id: stockId }
+            where: { id: stockId, userId }
         });
 
         revalidatePath('/stock');
 
 
     } catch (error) {
-        console.error('Create vendor error:', error);
+        console.error('Update stock error:', error);
         throw error;
 
     }

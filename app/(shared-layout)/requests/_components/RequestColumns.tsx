@@ -229,7 +229,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <Link className={`${requestStatus =="COMPLETE" ? "hidden" : ""}`} href={`/requests/${requestId}/edit`}><DropdownMenuItem>Edit request</DropdownMenuItem></Link>
+            <Link className={`${requestStatus !== "OPEN" ? "hidden" : ""}`} href={`/requests/${requestId}/edit`}><DropdownMenuItem>Edit request</DropdownMenuItem></Link>
   
             <DropdownMenuItem>
                        <form action={
@@ -245,7 +245,7 @@ return
                 }
               }>
                 <input type="hidden" name="requestId" value={requestId} />
-                <button type="submit">Cancel request</button>
+                <button type="submit">{requestStatus == "COMPLETE" ? "Cancel and return" : "Cancel request"}</button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
