@@ -98,66 +98,6 @@ export async function updateStock(values: z.infer<typeof stockSchema>, stockId: 
 
 }
 
-export async function checkInventoryBatch(stockItems: {id: string, quantity: number }[]) {
-    const stockIds = stockItems.map((item) => item.id);
-    // id: string | undefined;
-    // quantity: number;
-
-    const stockRecords = await prisma.stock.findMany({
-        where: { id: { in: stockIds } },
-        select: {
-            id: true,
-            name: true,
-            quantity: true,
-            reorderPoint: true
-        }
-    });
-
-    const results = stockItems.map((item) => {
-        const stock = stockRecords.find((s) => s.id === item.id);
-        if (!stock) {
-            return {
-                stockId: item.id,
-                requestedQty: item.quantity,
-                availableQty: 0,
-                enoughStock: false,
-                shortage: item.quantity,
-                message: "Stock item not found",
-            };
-        }
-
-        const enoughStock = stock.quantity >= item.quantity;
-        return {
-            stockId: stock.id,
-            itemName: stock.name,
-
-            requestedQty: item.quantity,
-            availableQty: stock.quantity,
-
-            enoughStock,
-            shortage: enoughStock ? 0 : item.quantity - stock.quantity,
-
-            isLow: stock.quantity <= stock.reorderPoint,
-        };
-
-
-
-
-    });
-
-
-    const canFulfillAll = results.every((r) => r.enoughStock);
-
-    
-
-    return {
-        canFulfillAll,
-        results,
-    };
-
-
-};
-
 export async function updateStockCount(stockId: string, updateAmount: number){
     const userId = await getUserId();
 

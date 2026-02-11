@@ -110,7 +110,10 @@ export async function getPurchaseById(id: string) {
         }
     });
 
-    return purchase
+
+
+
+return {...purchase, totalCost: purchase?.totalCost.toString()}
 }
 
 
@@ -275,11 +278,21 @@ export async function getIncomingPurchases(){
                 }
             }
         },
-        take: 10
+        take: 5
     });
 
     return purchases
 };
+
+export async function getIncomingPurchasesCount(){
+    const userId = await getUserId();
+
+    const purchases = await prisma.purchase.count({
+        where:{userId, status: "PLACED"}
+    });
+
+    return purchases;
+}
 
 export async function getTotalSpend(){
     const userId = await getUserId();

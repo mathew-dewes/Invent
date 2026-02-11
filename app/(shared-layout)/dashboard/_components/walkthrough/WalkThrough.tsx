@@ -5,7 +5,9 @@ import LoadDemoDataButton from "./LoadDemoDataButton";
 
 export default async function WalkThrough(){
 
-  const requests = await getRequestCount()
+  const requests = await getRequestCount();
+
+  if (requests > 0) return
 
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary col-span-2">
@@ -16,7 +18,7 @@ export default async function WalkThrough(){
                       <p>If you want to see a demo of how the app works, Please press the load data button below to get started</p>
                       </div>
                       <div className="mt-5 flex gap-2">
-                        <div hidden={requests > 0}>
+                        <div>
                     <LoadDemoDataButton/>
                         </div>
                       

@@ -9,7 +9,7 @@ import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 
 
-export default  async function RequestsPage({searchParams}:
+export default  async function PurchasePage({searchParams}:
   {searchParams: Promise<{status: PurchaseStatus, search: string}>}
 ){
 
@@ -21,7 +21,7 @@ export default  async function RequestsPage({searchParams}:
     return (
         <div>
   <div className="flex justify-end">
-      <Link href={'/purchases/new'}><Button>Create Purchase</Button></Link>
+      <Link href={'/purchases/new'}><Button size={"sm"}>Create Purchase</Button></Link>
        
       </div>
       <Suspense fallback={<TableSkeleton/>}>

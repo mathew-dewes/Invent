@@ -1,17 +1,20 @@
-import { getOpenRequests } from "@/lib/queries/request";
+
+import { getLatestOpenRequests, getOpenRequestCount } from "@/lib/queries/request";
 import OpenRequestsCard from "./OpenRequestsCard";
 
 
 export default async function OpenRequests(){
 
-    const openRequests = await getOpenRequests();
+    const [openRequests, requestCount] = await Promise.all([getLatestOpenRequests(), getOpenRequestCount()])
       const noConcern = openRequests.length == 0;
+
+      if (noConcern) return
     return (
-        <div hidden={noConcern} className={`border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1`}>
+        <div  className={`border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1`}>
        
         
 
-            {openRequests.length > 0 && <OpenRequestsCard tableData={openRequests} title="Open Requests" description="Items at or below reorder point"/>}
+            <OpenRequestsCard tableData={openRequests} requestCount={requestCount} />
          
         
         

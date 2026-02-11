@@ -1,7 +1,6 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
 
 import {
   Card,
@@ -17,14 +16,16 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { TriangleAlert } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
 
 export const description = "A bar chart with a custom label"
 
 
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  count: {
+    label: "Quantity",
     color: "var(--chart-2)",
   },
   mobile: {
@@ -36,23 +37,37 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function StockCountChart({data}:
-  {data: {name: string, count: number}[]}
+export function StockCountChart({data, forcast}:
+  {data: {name: string, count: number}[], forcast:{stockId: string, name: string, days: number | null}[]}
 ) {
+
+  
+  const alerts = forcast.filter((item) =>{ 
+
+    if (!item.days) return
+    
+    return item.days < 30})
+  ;
+
+  
+
+
+
+  
   return (
     <Card>
       <CardHeader>
         <CardTitle>Stock Levels</CardTitle>
-        <CardDescription>Lowest stock items - of 210 units</CardDescription>
+        <CardDescription>Total assets: 120</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="h-90 w-full">
           <BarChart
             accessibilityLayer
             data={data}
             layout="vertical"
             margin={{
-              right: 30,
+              right: 25,
             }}
           >
             <CartesianGrid horizontal={false} />
@@ -68,37 +83,29 @@ export function StockCountChart({data}:
             <XAxis dataKey="count" type="number" hide />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent indicator="dot" />}
+              content={<ChartTooltipContent indicator="line" />}
             />
             <Bar
               dataKey="count"
               layout="vertical"
-              fill="var(--color-desktop)"
+              fill="#4ade80"
               radius={4}
-            
+              barSize={45}
+              
+              
               
             >
-              {data.map((entry, key)=>{
-                return     <Cell
-      key={`cell-${key}`}
-      fill={
-        entry.count == 0
-          ? "#f87171"
-          : entry.count < 5
-          ? "#fb923c"
-          : "#4ade80"
-      }
-    />
-              })}
+   
         
               <LabelList
                 dataKey="name"
                 position="insideLeft"
-                offset={8}
-                className="fill-(--color-label)"
+                offset={6}
+                className="fill-secondary font-medium text-xs md:text-sm w-200"
                 fontSize={12}
               />
               <LabelList
+              max={1}
                 dataKey="count"
                 position="right"
                 offset={8}
@@ -111,12 +118,30 @@ export function StockCountChart({data}:
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+
+        {alerts.length == 0 ? (<div className="flex gap-1 items-center mt-">
+          <TriangleAlert size={18} color="yellow" />
+          <p className="text-muted-foreground leading-none">{forcast[0].name} are predicted to be depleted within {forcast[0].days} days</p>
+         </div>) : (    <div>
+       <Separator/>
+        <h2 className="font-semibold">Alert:</h2>
+  
+
+        <div className="flex flex-col gap-2">
+          {alerts.map((stock)=>{
+            return  <div key={stock.stockId} className="flex gap-1 items-center mt-">
+          <TriangleAlert size={18} color="yellow" />
+          <p className="text-muted-foreground leading-none">{stock.name} are predicted to be depleted within {stock.days} days</p>
+         </div>
+          })}
+
+    
         </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
+        </div>)}
+    
+ 
+    
+       
       </CardFooter>
     </Card>
   )

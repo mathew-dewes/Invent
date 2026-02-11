@@ -83,7 +83,7 @@ export function VendorTable<TData extends ParsedDataTypes, TValue>({
             onChange={(event) =>
               table.getColumn(filter)?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="max-w-sm text-sm"
           />
     
 

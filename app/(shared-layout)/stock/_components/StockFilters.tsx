@@ -57,7 +57,7 @@ export default function StockFilters({
   return (
     <div className="flex gap-4">
 
-      <Button  size="sm"
+      <Button size="sm"
 
         variant={searchParams.get("level") ? "outline" : "default"}
         onClick={() => clearQuery()}>View All</Button>

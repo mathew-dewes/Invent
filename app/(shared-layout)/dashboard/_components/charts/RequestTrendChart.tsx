@@ -38,7 +38,7 @@ const chartConfig = {
 export function RequestTrendChart({data}:
   {data:{date:string, requests: number}[]}
 ) {
-  const [timeRange, setTimeRange] = React.useState("7d");
+  const [timeRange, setTimeRange] = React.useState("30d");
 
   const today = getNZDateKey(new Date());
 

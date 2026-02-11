@@ -15,6 +15,6 @@ export default function ExportCSVButton({ timeFrame }: { timeFrame: TimeFrame })
 
     }
     return (
-        <Button onClick={() => exportData()}>Export Data</Button>
+        <Button size={"sm"} onClick={() => exportData()}>Export Data</Button>
     )
 }

@@ -8,8 +8,7 @@ import { OpenRequestsDropDown } from "./OpenRequestsDropDown";
 
 type Props = {
 
-    title: string,
-    description: string,
+requestCount: number,
     tableData: {
         id: string,
         createdAt: Date,
@@ -27,19 +26,20 @@ type Props = {
 
 const headings = ['Placed', 'Item', 'QTY', 'Customer']
 
-export default function OpenRequestsCard({ title, description, tableData }: Props) {
+export default function OpenRequestsCard({ tableData, requestCount }: Props) {
     return (
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>
                   <div className="flex items-center gap-1.5">
             <CircleAlert className="text-yellow-400"/>
-            <h1 className="text-lg">{title}</h1>
+         <h1 className="text-lg">Open Requests</h1>
      
           </div>
                   </CardTitle>
                 <CardDescription>
-                    {description}
+                    <p>Items at or below reorder point</p>
+                      <p className="mt-1">Viewing {requestCount >= 5 ? "5" : requestCount} of {requestCount}  most recent open requests</p>
                 </CardDescription>
             </CardHeader>
             <CardContent>

@@ -6,23 +6,26 @@ import { Suspense } from "react";
 import TableSkeleton from "@/components/web/skeletons/TableSkeleton";
 
 
-export default async function page({searchParams}:
-  {searchParams: Promise<{level: string}>}
+export default async function page({ searchParams }:
+  { searchParams: Promise<{ level: string }> }
 ) {
 
-    const filters = ((await searchParams).level);
-      
-      
 
   return (
     <div>
-       <div className="flex justify-end">
-      <Link href={'/stock/new'}><Button>Create Stock</Button></Link>
+
+
+
+      <div className="flex justify-start sm:justify-end">
+
+
+
+        <Link href={'/stock/new'}><Button size={"sm"}>Create Stock</Button></Link>
       </div>
-      <Suspense fallback={<TableSkeleton/>}>
-      <StockWrapper filter={filters}/>
+      <Suspense fallback={<TableSkeleton />}>
+        <StockWrapper searchParams={searchParams} />
       </Suspense>
 
-        </div>
+    </div>
   )
 };

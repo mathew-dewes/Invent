@@ -45,7 +45,7 @@ const chartConfig = {
 export function TotalSpendChart({data}:
   {data:{date: string, spend: number}[]}
 ) {
-  const [timeRange, setTimeRange] = React.useState("7d");
+  const [timeRange, setTimeRange] = React.useState("30d");
 
     const today = getNZDateKey(new Date());
 
@@ -95,7 +95,7 @@ export function TotalSpendChart({data}:
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-62.5 w-full"
+          className="aspect-auto h-60 md:h-90 w-full"
         >
           <AreaChart data={filteredData}>
             <defs>

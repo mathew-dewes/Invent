@@ -21,7 +21,7 @@ export function UserAvatar({name}:
       />
       <AvatarFallback>CN</AvatarFallback>
     </Avatar>
-     <p className="font-semibold sm:text-sm text-xs">{name}</p>
+     <p className="font-semibold">{name}</p>
     </div>
    
   )

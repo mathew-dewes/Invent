@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
     Reference: row.reference,
     Stock: row.stockName,
     Quantity: row.quantity,
-    costCentre: row.costCentre,
+    costCentre: row.costCentreName,
     Vendor: row.vendorName,
     UnitCost: Number(row.unitCost).toFixed(2),
     TotalCost: Number(row.totalCost).toFixed(2),
