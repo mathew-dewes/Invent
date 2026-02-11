@@ -11,6 +11,7 @@ import CostAnalysis from "./_components/costAnalysis/CostAnalysis";
 import StockForcast from "./_components/stockForcast/StockForcast";
 import WalkThrough from "./_components/walkthrough/WalkThrough";
 import StockPerformance from "./_components/StockPerformance/StockPerformance";
+import { DashboardSkeleton } from "@/components/web/skeletons/DashboardSkeleton";
 
 
 export default function page() {
@@ -18,8 +19,8 @@ export default function page() {
     return (
         <div>
 
-            <Suspense fallback={'Loading Stock health data...'}>
-                <div className="grid  grid-cols-2 gap-6">
+            <Suspense fallback={<DashboardSkeleton/>}>
+                <div className="grid grid-cols-2 gap-6">
                     <WalkThrough />
                     <ActionBar />
                     <Inventory />
