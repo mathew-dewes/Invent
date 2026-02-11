@@ -49,7 +49,7 @@ export function StockForcastChart({stock}: Props
         <CardDescription>Predicted days until unit stockout</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="h-60 md:h-90 w-full">
           <BarChart
             accessibilityLayer
             data={stock}

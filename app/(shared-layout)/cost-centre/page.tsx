@@ -8,7 +8,7 @@ export default async function page(){
     return (
         <div>
             <div className="flex justify-end">
-                 <Link href={'/cost-centre/new'}><Button>Add Cost centre</Button></Link>
+                 <Link href={'/cost-centre/new'}><Button size={"sm"}>Add Cost centre</Button></Link>
             </div>
             <Suspense fallback={<TableSkeleton/>}>
      

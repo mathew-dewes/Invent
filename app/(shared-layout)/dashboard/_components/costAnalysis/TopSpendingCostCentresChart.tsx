@@ -1,6 +1,5 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts"
 
 import {
@@ -17,6 +16,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { convertToMoney } from "@/lib/helpers"
 
 
 const chartConfig = {
@@ -27,21 +27,32 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 type Props = {
+  data:{
   costCentreName: string | null,
-  _sum: number
-}[]
+  _sum: number,
+  }[],
 
-export function TopSpendingCostCentresChart({data}:
-  {data: Props}
+  totalSpend: number
+}
+
+export function TopSpendingCostCentresChart({data, totalSpend}:Props
 ) {
+
+  
   return (
     <Card className="mt-3">
       <CardHeader>
-        <CardTitle>Top Spending Cost Centres (This Month)</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Top Spending Cost Centres</CardTitle>
+        <CardDescription>
+          <div>
+            <p>Total cost centre spend for {new Date().toLocaleString("en-NZ",{
+          month: "long"
+        })} </p>
+          </div>
+         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="h-60 md:h-90 w-full">
           <BarChart
             accessibilityLayer
             data={data}
@@ -58,7 +69,7 @@ export function TopSpendingCostCentresChart({data}:
           
             />
             <ChartTooltip
-             formatter={(value) => "_sum " +
+             formatter={(value) => "Spend " +
     new Intl.NumberFormat("en-NZ", {
       style: "currency",
       currency: "NZD",
@@ -89,11 +100,9 @@ export function TopSpendingCostCentresChart({data}:
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Total monthly spend: {convertToMoney(totalSpend)}
         </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
+     
       </CardFooter>
     </Card>
   )

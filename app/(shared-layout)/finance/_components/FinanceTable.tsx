@@ -86,7 +86,7 @@ export function FinanceTable<TData extends ParsedDataTypes, TValue>({
             onChange={(event) =>
               table.getColumn(filter.source)?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="max-w-sm text-sm"
           />
           <div onClick={() => table.setRowSelection({})}>
            <FinanceFilters queryCounts={queryCounts}/>

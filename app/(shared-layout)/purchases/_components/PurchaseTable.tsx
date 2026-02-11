@@ -105,7 +105,7 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
               onChange={(event) =>
                 table.getColumn(filter.query)?.setFilterValue(event.target.value)
               }
-              className="max-w-sm"
+              className="max-w-sm text-sm"
             />
             <div onClick={() => table.setRowSelection({})}>
               <PurchaseFilters queryCounts={queryCounts} />

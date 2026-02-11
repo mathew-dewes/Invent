@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import StockFilters from "./StockFilters"
+import { MobileStockFilter } from "./MobileStockFilter"
 
 
 interface DataTableProps<TData, TValue> {
@@ -74,29 +75,39 @@ export function StockTable<TData extends ParsedDataTypes, TValue>({
       });
 
   return (
-     <div>
+    
  <div>
-      <div className="flex items-center py-4 mt-2">
+   
+      <div className="py-4 mt-2">
+
         <div className="flex gap-3">
+     <div className="gap-3 flex">
           <Input
             placeholder={`Filter ${filter}...`}
             value={(table.getColumn(filter)?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn(filter)?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="max-w-sm text-sm"
           />
-          <div onClick={() => table.setRowSelection({})}>
+          <div className="hidden sm:flex" onClick={() => table.setRowSelection({})}>
            <StockFilters queryCounts={queryCounts}/>
 
-          </div>
+          </div> 
 
 
         </div>
+         <div className="sm:hidden" onClick={() => table.setRowSelection({})}>
+           <MobileStockFilter queryCounts={queryCounts}/>
+
+          </div> 
+        </div>
+      
+   
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-auto hidden sm:flex">
               Columns
             </Button>
           </DropdownMenuTrigger>
@@ -165,7 +176,7 @@ export function StockTable<TData extends ParsedDataTypes, TValue>({
           )}
         </TableBody>
       </Table>
-    </div>
+  
      </div>
    
   )

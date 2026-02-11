@@ -7,37 +7,34 @@ import { ReadyRequestDropDown } from "./ReadyRequestDropDown";
 
 type Props = {
 
-    title: string,
-    description: string,
-    headings: string[],
     tableData: {
         id: string,
         createdAt: Date,
         quantity: number,
         customer: string,
-        stockItem: {
-            name: string,
-       
-        }
+        stockItem: {name: string},
+      
 
 
-    }[]
+    }[],
+      requestCount: number
 
 }
 
-export default function ReadyRequestCard({ title, description, headings, tableData }: Props) {
+export default function ReadyRequestCard({ tableData, requestCount }: Props) {
     return (
         <Card className="h-full">
             <CardHeader>
                 <CardTitle>
                   <div className="flex items-center gap-1.5">
             <CircleCheckBig className="text-blue-300"/>
-            <h1 className="text-lg">{title}</h1>
+            <h1 className="text-lg">Ready To Collect</h1>
      
           </div>
                   </CardTitle>
                 <CardDescription>
-                    {description}
+                   <p>Items picked and ready to collect</p>
+                   <p className="mt-1">Viewing {requestCount >= 5 ? "5" : requestCount} of {requestCount}  most recent ready requests</p>
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -45,7 +42,7 @@ export default function ReadyRequestCard({ title, description, headings, tableDa
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            {headings.map((head, key) => {
+                            {['Customer', 'Item', 'QTY'].map((head, key) => {
                                 return <TableHead className={head === "Location" ? "text-right" : ""} key={key}>{head}</TableHead>
                             })}
 
@@ -56,7 +53,7 @@ export default function ReadyRequestCard({ title, description, headings, tableDa
                     <TableBody>
                         {tableData.map((item) => {
          
-                                               return (<TableRow key={item.id}>
+                                               return (<TableRow  key={item.id}>
 
                                 <TableCell>
                                    <p>{item.customer}</p>
@@ -83,6 +80,7 @@ export default function ReadyRequestCard({ title, description, headings, tableDa
             <CardFooter>
             
                          <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/requests?status=READY'}>View Requests</Link>
+                       
                 
        
            

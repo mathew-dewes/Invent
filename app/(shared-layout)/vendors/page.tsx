@@ -10,7 +10,7 @@ export default  function VendorPage(){
     return(
         <div>
   <div className="flex justify-end">
-      <Link href={'/vendors/new'}><Button>Create Vendor</Button></Link>
+      <Link href={'/vendors/new'}><Button size={"sm"}>Create Vendor</Button></Link>
         
       </div>
       <Suspense fallback={<TableSkeleton/>}>

@@ -282,7 +282,8 @@ export async function getLowStock(){
         },
         orderBy:{
             quantity: 'asc'
-        }
+        },
+        take: 5
     });
 
     const lowStock = stock.filter(item => item.quantity <= item.reorderPoint)

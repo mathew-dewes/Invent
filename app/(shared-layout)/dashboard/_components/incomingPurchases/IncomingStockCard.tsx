@@ -8,10 +8,8 @@ import Link from "next/link";
 import { IncomingPurchasesDropDown } from "./IncomingPurchasesDropDown";
 
 type Props = {
+    purchaseCount: number,
 
-    title: string,
-    description: string,
-    headings: string[],
     tableData: {
         id: string,
         createdAt: Date,
@@ -30,18 +28,20 @@ type Props = {
 
 }
 
-export default function IncomingStockCard({ title, description, headings, tableData }: Props) {
+export default function IncomingStockCard({ tableData, purchaseCount }: Props) {
     return (
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>
                     <div className="flex items-center gap-1.5">
                         <ClipboardClock className="text-blue-300"/>
-                    <h1 className="text-lg">{title}</h1>
+                    <h1 className="text-lg">Incoming Purchases</h1>
                     </div>
                   </CardTitle>
                 <CardDescription>
-                    {description}
+           <p>Items at or below reorder point</p>
+                      <p className="mt-1">Viewing {purchaseCount >= 5 ? "5" : purchaseCount} of {purchaseCount} recently placed purchases</p>
+       
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -49,7 +49,7 @@ export default function IncomingStockCard({ title, description, headings, tableD
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            {headings.map((head, key) => {
+                            {['Placed', 'Item', 'QTY', 'Vendor'].map((head, key) => {
                                 return <TableHead key={key}>{head}</TableHead>
                             })}
 
@@ -63,9 +63,10 @@ export default function IncomingStockCard({ title, description, headings, tableD
 
                                 <TableCell>{daysAgo(item.createdAt)}</TableCell>
                                 <TableCell>
-                                    <p className="font-medium">{item.stockItem.name}</p></TableCell>
+                                    <p className="truncate w-20">{item.stockItem.name}</p></TableCell>
                                 <TableCell>{item.quantity}</TableCell>
-                                <TableCell>{item.vendor.name}</TableCell>
+                                <TableCell >
+                                    <p className="truncate w-20">{item.vendor.name}</p></TableCell>
                                 <TableCell><IncomingPurchasesDropDown purchaseId={item.id}/></TableCell>
                        
                             </TableRow>)

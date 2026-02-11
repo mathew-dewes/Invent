@@ -21,7 +21,7 @@ export default  async function PurchasePage({searchParams}:
     return (
         <div>
   <div className="flex justify-end">
-      <Link href={'/purchases/new'}><Button>Create Purchase</Button></Link>
+      <Link href={'/purchases/new'}><Button size={"sm"}>Create Purchase</Button></Link>
        
       </div>
       <Suspense fallback={<TableSkeleton/>}>

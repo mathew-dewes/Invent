@@ -20,16 +20,19 @@ export default function page() {
 
             <Suspense fallback={'Loading Stock health data...'}>
                 <div className="grid  grid-cols-2 gap-6">
-                    <WalkThrough/>
+                    <WalkThrough />
                     <ActionBar />
+                    <Inventory />
+                    <CriticalStock />
                     <ReadyRequests />
                     <OpenRequests />
                     <IncomingPurchases />
-                    <CriticalStock />
-                    <Inventory />
-                    <CompletedRequests />
-                    <CostAnalysis />
                     <TotalSpend />
+                    <CostAnalysis />
+
+                    <CompletedRequests />
+
+
                     <StockPerformance />
                     <StockForcast />
 

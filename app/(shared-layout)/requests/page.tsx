@@ -14,7 +14,7 @@ export default async function RequestsPage({searchParams}:
     return (
         <div>
     <div className="flex justify-end">
-      <Link href={'/requests/new'}><Button>Create Request</Button></Link>
+      <Link href={'/requests/new'}><Button size={"sm"}>Create Request</Button></Link>
         
       </div>
 

@@ -1,6 +1,5 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
 
 import {
@@ -35,17 +34,19 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function MostRequestedItemsChart({data}:
-  {data: {stock: string, requests: number}[]}
+export function MostRequestedItemsChart({data, requests}:
+  {data: {stock: string, requests: number}[], requests: number}
 ) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Custom Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Most requested items</CardTitle>
+        <CardDescription>Showing completed requests for {new Date().toLocaleString("en-NZ",
+          {month: "long"}
+        )}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="h-90 w-full">
           <BarChart
             accessibilityLayer
             data={data}
@@ -74,12 +75,13 @@ export function MostRequestedItemsChart({data}:
               layout="vertical"
               fill="#4ade80"
               radius={4}
+              barSize={45}
             >
               <LabelList
                 dataKey="stock"
                 position="insideLeft"
-                offset={8}
-                className="fill-(--color-label)"
+                offset={6}
+                   className="fill-secondary font-medium text-xs md:text-sm w-200"
                 fontSize={12}
               />
               <LabelList
@@ -95,11 +97,10 @@ export function MostRequestedItemsChart({data}:
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          <p className="text-muted-foreground">Total stock items issued this month: {requests}</p>
+         
         </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
+      
       </CardFooter>
     </Card>
   )

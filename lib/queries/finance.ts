@@ -147,8 +147,9 @@ export async function getLastMonthStockUsage(){
 };
 
 export async function getDaysUntilStockout(){
-    const stock = await getStockLevels();
-    const usage = await getLastMonthStockUsage();
+
+    const [stock, usage] = await Promise.all([getStockLevels(), getLastMonthStockUsage()])
+   
 
     const forcast = stock.map((item)=>{
         const issuedLast30 = usage.find((u) => u.stockId)?._sum.quantity ?? 0;
@@ -167,7 +168,7 @@ export async function getDaysUntilStockout(){
     });
     
 
-    return forcast.filter((i) => i.days !== null)
+    return forcast.filter((i) => i.days !== null && i.days)
   .sort((a, b) => a.days! - b.days!)
   .slice(0, 5)
 };

@@ -193,7 +193,7 @@ export async function getCompletedRequests() {
 }
 
 
-export async function getOpenRequests() {
+export async function getLatestOpenRequests() {
     const userId = await getUserId();
 
     const requests = await prisma.request.findMany({
@@ -214,13 +214,26 @@ export async function getOpenRequests() {
         orderBy:{
             createdAt: "desc"
         },
-        take: 10
+        take: 5
     });
 
     return requests;
+};
+
+export async function getOpenRequestCount(){
+    const userId = await getUserId();
+    
+    const count = await prisma.request.count({
+        where:{
+            userId,
+            status:"OPEN"
+        }
+    });
+
+    return count;
 }
 
-export async function getReadyRequests() {
+export async function getLatestReadyRequests() {
     const userId = await getUserId();
 
     const requests = await prisma.request.findMany({
@@ -240,11 +253,22 @@ export async function getReadyRequests() {
         orderBy:{
             createdAt: "desc"
         },
-        take: 10
+        take: 5
     });
 
     return requests;
 };
+
+
+export async function getReadyRequestCount(){
+    const userId = await getUserId();
+
+    const count = await prisma.request.count({
+        where:{userId, status: "READY"}
+    });
+
+    return count;
+}
 
 
 

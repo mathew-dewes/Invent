@@ -5,11 +5,6 @@ export default async function RecentActivity(){
 
     const activities = await getRecentActivity();
 
-
-    
-
-    
-
     
     return(
                <div className="mt-5">

@@ -55,7 +55,7 @@ export default function StockFilters({
 
 
   return (
-    <div className="md:flex gap-4 hidden">
+    <div className="flex gap-4">
 
       <Button size="sm"
 

@@ -1,37 +1,27 @@
 
-import { Button } from "@/components/ui/button";
-import UserInfo from "./StockInfo";
-import { Suspense } from "react";
-import Link from "next/link";
+
 import RecentActivity from "./RecentActivity";
-import { UserAvatar } from "./UserAvatar";
+import ActionButtons from "./ActionButtons";
+import UserWithStockInfo from "./UserWithStockInfo";
 
 export default function ActionBar(){
 
    
     return (
         <div className="col-span-2 border-2 p-5 rounded-xl bg-secondary">
-        <div className="col-span-2 flex justify-between lg:items-center lg:flex-row flex-col">
-            <div className="grid grid-cols-2 sm:flex gap-5 sm:justify-start">
-                <Link href={'/requests/new'}><Button size={"sm"}>Create Request</Button></Link>
-                <Link href={'/purchases/new'}><Button size={"sm"}>Create Purchase</Button></Link>
-                <Link href={'/finance'}><Button size={"sm"}>View Finances</Button></Link>
-                <div className="sm:flex hidden">
-                      <UserAvatar name={'Mathew Dewes'}/>
-                </div>
-              
-                
- 
-            
-     
+            <div className="mb-3 flex lg:hidden">
+            <UserWithStockInfo/>
             </div>
-
-            <Suspense fallback="Loading...">
- <UserInfo/>
-            </Suspense>
-       
-          
+        <div className="col-span-2 flex gap-30">
+            <div>
+    <h2 className="font-semibold">Quick actions:</h2>
+   <ActionButtons/>
+            </div>
+            <div className="hidden lg:flex">
+      <UserWithStockInfo/>
+            </div>
          
+
 
         </div>
    <RecentActivity/>
