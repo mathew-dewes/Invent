@@ -82,7 +82,7 @@ export default function IncomingStockCard({ tableData, purchaseCount }: Props) {
 
             </CardContent>
             <CardFooter>
-                <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/purchases?status=PLACED'}>
+                <Link className={buttonVariants({variant:"default", size:"sm"})} href={'/purchases?status=PLACED'}>
                 View Purchases</Link>
 
             </CardFooter>

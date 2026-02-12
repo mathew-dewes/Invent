@@ -113,9 +113,10 @@ export async function createRequests() {
     for (let i = 0; i < 100; i++) {
 
         const stock = pickRandom(stockItems);
-        const costCentre = pickRandom(costCentres)
-   
-        
+        const costCentre = pickRandom(costCentres);
+
+
+
         requestData.push({
             customer: pickRandom(demoCustomers),
             requestNumber: 5000 + i,
@@ -127,21 +128,26 @@ export async function createRequests() {
             createdAt: randomDateWithin(90),
         });
 
-          };
+    };
 
-        await prisma.request.createMany({
-            data: requestData
-        });
+    await prisma.request.createMany({
+        data: requestData
+    });
 
-        const requestsArray = await prisma.request.findMany({
+    const requestsArray = await prisma.request.findMany({
         where: { userId, requestNumber: { gte: 5000, lte: 5100 }, },
-        });
+    });
 
-        for (const request of requestsArray) {
+    for (const request of requestsArray) {
 
-            if (request.status !== "COMPLETE") continue;
+        const created = request.createdAt.getTime();
+        const now = Date.now();
+        const randomFutureDate = new Date(randomInt(created, now));
+        let finalStatus = request.status;
 
-            const currentStock = await prisma.stock.updateMany({
+        if (finalStatus !== "OPEN") {
+
+            const stockUpdate = await prisma.stock.updateMany({
                 where: {
                     id: request.stockId,
                     quantity: { gte: request.quantity },
@@ -152,150 +158,154 @@ export async function createRequests() {
                 }
             });
 
-            if (currentStock.count === 0) {
-                await prisma.request.update({
-                    where: { id: request.id },
-                    data: { status: "READY" }
-                });
-                continue;
+            if (stockUpdate.count === 0) {
+                finalStatus = "OPEN"
             }
 
-            const stock = await prisma.stock.findUnique({
-                where: { id: request.stockId }
-            });
-            const costCentre = await prisma.costCentre.findUnique({
-                where: { id: request.costCentreId },
-            });
-                    await prisma.costLedger.create({
-                data: {
-                    sourceType: "REQUEST",
-                    sourceId: request.id,
-                    reference: `REQ-${request.requestNumber}`,
-                    stockId: request.stockId,
-                    stockName: stock?.name ?? "Unknown",
-                    costCentreId: request.costCentreId,
-                    costCentreName: costCentre?.name ?? "Unknown",
-                    quantity: request.quantity,
-                    unitCost: stock?.unitCost ?? 0,
-                    totalCost: request.quantity * Number(stock?.unitCost ?? 0),
-                    month: request.createdAt.getMonth() + 1,
-                    year: request.createdAt.getFullYear(),
-                    createdAt: request.createdAt,
-                    userId
+        };
 
-                }
-            });
+        const completedAt = finalStatus === "COMPLETE" ? randomFutureDate : null;
 
+        await prisma.request.update({ where: { userId, id: request.id }, data: { completedAt, status: finalStatus } });
 
-        }
-        
-              return { success: true, message: "Requests added" };
+        const ledgerDate = finalStatus === "COMPLETE" ? randomFutureDate : request.createdAt;
 
+        const stock = await prisma.stock.findUnique({
+            where: { id: request.stockId }
+        });
+        const costCentre = await prisma.costCentre.findUnique({
+            where: { id: request.costCentreId },
+        });
+        await prisma.costLedger.create({
+            data: {
+                sourceType: "REQUEST",
+                sourceId: request.id,
+                reference: `REQ-${request.requestNumber}`,
+                stockId: request.stockId,
+                stockName: stock?.name ?? "Unknown",
+                costCentreId: request.costCentreId,
+                costCentreName: costCentre?.name ?? "Unknown",
+                quantity: request.quantity,
+                unitCost: stock?.unitCost ?? 0,
+                totalCost: request.quantity * Number(stock?.unitCost ?? 0),
+                month: ledgerDate.getMonth() + 1,
+                year: ledgerDate.getFullYear(),
+                createdAt: ledgerDate,
+                userId
 
-
-    
-      
+            }
+        });
 
 
+    }
 
-
-
+    return { success: true, message: "Requests added" };
 
 
 
-    };
+
+
+
+
+
+
+
+
+
+
+};
 
 
 
 
 export async function createPurchases() {
     const userId = await getUserId();
-         const vendors = await prisma.vendor.findMany({
-                where: { userId },
-            });
+    const vendors = await prisma.vendor.findMany({
+        where: { userId },
+    });
 
-            const stockItems = await prisma.stock.findMany({
-                where: { userId },
-            });
+    const stockItems = await prisma.stock.findMany({
+        where: { userId },
+    });
 
-            const purchaseData = [];
+    const purchaseData = [];
 
     try {
-  
-            for (let i = 0; i < 50; i++) {
-                const stock = pickRandom(stockItems);
-                const vendor = pickRandom(vendors);
-                const qty = randomInt(5, 25)
-                const purchaseDate = randomDateWithin(180);
 
-                purchaseData.push({
-                        purchaseNumber: 1000 + i,
-                        status: pickRandom(["PLACED", "RECEIVED"]) as PurchaseStatus,
-                        quantity: qty,
-                        totalCost: qty * Number(stock.unitCost),
-                        stockId: stock.id,
-                        vendorId: vendor.id,
-                        userId,
-                        createdAt: purchaseDate
-                });
+        for (let i = 0; i < 20; i++) {
+            const stock = pickRandom(stockItems);
+            const vendor = pickRandom(vendors);
+            const qty = randomInt(5, 25)
+            const purchaseDate = randomDateWithin(180);
 
-                };
+            purchaseData.push({
+                purchaseNumber: 1000 + i,
+                status: pickRandom(["PLACED", "RECEIVED"]) as PurchaseStatus,
+                quantity: qty,
+                totalCost: qty * Number(stock.unitCost),
+                stockId: stock.id,
+                vendorId: vendor.id,
+                userId,
+                createdAt: purchaseDate
+            });
 
-                await prisma.purchase.createMany({
-                    data: purchaseData
-                });
+        };
 
-                const purchaseArray = await prisma.purchase.findMany({
-                    where:{userId}
-                });
+        await prisma.purchase.createMany({
+            data: purchaseData
+        });
 
-                for (const purchase of purchaseArray){
+        const purchaseArray = await prisma.purchase.findMany({
+            where: { userId }
+        });
 
-                    if (purchase.status !== "RECEIVED") continue;
-                    await prisma.stock.update({
-                        where: { id: purchase.stockId, userId },
-                        data: { quantity: { increment: purchase.quantity } }
-                    });
+        for (const purchase of purchaseArray) {
+
+            if (purchase.status !== "RECEIVED") continue;
+            await prisma.stock.update({
+                where: { id: purchase.stockId, userId },
+                data: { quantity: { increment: purchase.quantity } }
+            });
 
             const stock = await prisma.stock.findUnique({
                 where: { id: purchase.stockId },
-    });
+            });
 
-                const vendor = await prisma.vendor.findUnique({
+            const vendor = await prisma.vendor.findUnique({
                 where: { id: purchase.vendorId },
-    });
+            });
 
-               
 
-                           await prisma.costLedger.create({
-                        data: {
-                            sourceType: "PURCHASE",
-                            sourceId: purchase.id,
-                            reference: `PUR-${purchase.purchaseNumber}`,
-                            stockId: purchase.stockId,
-                            stockName: stock?.name ?? "Unknown",
-                            vendorId: purchase.vendorId,
-                            vendorName: vendor?.name ?? "Unknown",
-                            quantity: purchase.quantity,
-                            unitCost: stock?.unitCost ?? 0,
-                            totalCost: purchase.quantity * Number(stock?.unitCost ?? 0),
-                            month: purchase.createdAt.getMonth() + 1,
-                            year: purchase.createdAt.getFullYear(),
-                            createdAt: purchase.createdAt,
-                            userId
-                        }
-                    })
-                  
+
+            await prisma.costLedger.create({
+                data: {
+                    sourceType: "PURCHASE",
+                    sourceId: purchase.id,
+                    reference: `PUR-${purchase.purchaseNumber}`,
+                    stockId: purchase.stockId,
+                    stockName: stock?.name ?? "Unknown",
+                    vendorId: purchase.vendorId,
+                    vendorName: vendor?.name ?? "Unknown",
+                    quantity: purchase.quantity,
+                    unitCost: stock?.unitCost ?? 0,
+                    totalCost: purchase.quantity * Number(stock?.unitCost ?? 0),
+                    month: purchase.createdAt.getMonth() + 1,
+                    year: purchase.createdAt.getFullYear(),
+                    createdAt: purchase.createdAt,
+                    userId
                 }
+            })
 
-       
+        }
 
 
-            
+
+
+
 
 
     } catch (error) {
-console.log(error);
+        console.log(error);
 
     }
 }

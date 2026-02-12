@@ -128,6 +128,30 @@ export const demoStock = [
   {name: "Spirit Level", brand: "Bacho"}
 ];
 
+export const stockFilters = [
+    { filter: "out", label: "Out Of Stock" },
+    { filter: "low", label: "Low Stock" },
+    { filter: "good", label: "In Stock" },
+];
+
+export const requestFilters = [
+  { filter: "OPEN", label: "Open" },
+  { filter: "PENDING", label: "Pending" },
+  { filter: "READY", label: "Ready" },
+  { filter: "COMPLETE", label: "Complete" },
+];
+
+export const purchaseFilters = [
+    { filter: "PLACED", label: "Placed" },
+    { filter: "RECEIVED", label: "Received" },
+];
+
+export const financeFilters = [
+    { filter: "REQUEST", label: "Request" },
+    { filter: "PURCHASE", label: "Purchase" },
+];
+
+
 
 export function randomInt(min: number, max: number){
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -155,9 +179,9 @@ export function weightedRequestDate() {
 
 export function weightedStatus() {
   const roll = Math.random()
-  if (roll < 0.15) return "OPEN"
-  if (roll < 0.30) return "READY"
-  return "COMPLETE"
+  if (roll < 0.2) return "COMPLETE"
+  if (roll < 0.6) return "READY"
+  return "OPEN"
 }
 
 export function generatePartNumber(){

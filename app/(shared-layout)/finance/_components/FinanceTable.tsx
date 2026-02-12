@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import FinanceFilters from "./FinanceFilters"
+import { MobileFinanceFilters } from "./MobileFinanceFilters"
 
 
 
@@ -33,9 +34,9 @@ import FinanceFilters from "./FinanceFilters"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
-  filter: {label: string, source: string},
-  queryCounts?: Record<string, number> 
-  
+  filter: { label: string, source: string },
+  queryCounts?: Record<string, number>
+
 }
 interface ParsedDataTypes { id: string }
 
@@ -49,126 +50,136 @@ export function FinanceTable<TData extends ParsedDataTypes, TValue>({
 }: DataTableProps<TData, TValue>) {
 
 
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-    const [rowSelection, setRowSelection] = useState({});
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-      // eslint-disable-next-line react-hooks/incompatible-library
-      const table = useReactTable({
-        getRowId: (row) => row.id,
-        data,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        onSortingChange: setSorting,
-        getSortedRowModel: getSortedRowModel(),
-        onColumnFiltersChange: setColumnFilters,
-        getFilteredRowModel: getFilteredRowModel(),
-        onRowSelectionChange: setRowSelection,
-        onColumnVisibilityChange: setColumnVisibility,
-        state: {
-          sorting,
-          columnFilters,
-          rowSelection,
-          columnVisibility
-        },
-      });
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const table = useReactTable({
+    getRowId: (row) => row.id,
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
+    onColumnVisibilityChange: setColumnVisibility,
+    state: {
+      sorting,
+      columnFilters,
+      rowSelection,
+      columnVisibility
+    },
+  });
 
   return (
-     <div>
- <div>
-      <div className="flex items-center py-4 mt-2">
-        <div className="flex gap-3">
-          <Input
-            placeholder={`Filter ${filter.label}...`}
-            value={(table.getColumn(filter.source)?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn(filter.source)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm text-sm"
-          />
-          <div onClick={() => table.setRowSelection({})}>
-           <FinanceFilters queryCounts={queryCounts}/>
+    <div>
+      <div>
+
+        <div className="py-4 mt-2">
+
+          <div className="md:flex gap-3 w-3/4">
+            <div className="flex gap-3">
+              <Input
+                placeholder={`Filter ${filter.label}...`}
+                value={(table.getColumn(filter.source)?.getFilterValue() as string) ?? ""}
+                onChange={(event) =>
+                  table.getColumn(filter.source)?.setFilterValue(event.target.value)
+                }
+                className="max-w-sm text-sm"
+              />
+              <div onClick={() => table.setRowSelection({})}>
+                <FinanceFilters queryCounts={queryCounts} />
+
+              </div>
+
+
+            </div>
+            <div className="sm:hidden mt-5" onClick={() => table.setRowSelection({})}>
+              <MobileFinanceFilters queryCounts={queryCounts} />
+
+            </div>
 
           </div>
 
 
-        </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto hidden sm:flex">
+                Columns
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter(
+                  (column) => column.getCanHide()
                 )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                    </TableHead>
+                  )
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-         <div className="flex items-center justify-end space-x-2 py-4">
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -190,7 +201,7 @@ export function FinanceTable<TData extends ParsedDataTypes, TValue>({
           Next
         </Button>
       </div>
-     </div>
-   
+    </div>
+
   )
 }

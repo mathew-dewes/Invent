@@ -16,8 +16,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-import { TriangleAlert } from "lucide-react"
-import { Separator } from "@/components/ui/separator"
+
 
 export const description = "A bar chart with a custom label"
 
@@ -37,17 +36,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function StockCountChart({data, forcast}:
-  {data: {name: string, count: number}[], forcast:{stockId: string, name: string, days: number | null}[]}
+export function StockCountChart({data}:
+  {data: {name: string, count: number}[]}
 ) {
 
   
-  const alerts = forcast.filter((item) =>{ 
 
-    if (!item.days) return
-    
-    return item.days < 30})
-  ;
 
   
 
@@ -119,25 +113,7 @@ export function StockCountChart({data, forcast}:
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
 
-        {alerts.length == 0 ? (<div className="flex gap-1 items-center mt-">
-          <TriangleAlert size={18} color="yellow" />
-          <p className="text-muted-foreground leading-none">{forcast[0].name} are predicted to be depleted within {forcast[0].days} days</p>
-         </div>) : (    <div>
-       <Separator/>
-        <h2 className="font-semibold">Alert:</h2>
-  
-
-        <div className="flex flex-col gap-2">
-          {alerts.map((stock)=>{
-            return  <div key={stock.stockId} className="flex gap-1 items-center mt-">
-          <TriangleAlert size={18} color="yellow" />
-          <p className="text-muted-foreground leading-none">{stock.name} are predicted to be depleted within {stock.days} days</p>
-         </div>
-          })}
-
-    
-        </div>
-        </div>)}
+        <p className="font-semibold">Lorem ipsum dolor sit amet</p>
     
  
     

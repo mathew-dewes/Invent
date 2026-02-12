@@ -272,6 +272,15 @@ export async function getLowStock(){
             id:true,
             name:true,
             quantity:true,
+            purchases:{
+                select:{
+                    id:true
+                    
+                },
+                where:{
+                    status:"PLACED"
+                }
+            },
             vendor:{
                 select:{
                     name:true

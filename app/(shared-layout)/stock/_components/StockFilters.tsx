@@ -67,7 +67,7 @@ export default function StockFilters({
         const query = filter.filter;
         return <Button size="sm"
           onClick={() => {
-            setQueryFilter(query, "level"!)
+            setQueryFilter(query, "level");
           }}
 
 

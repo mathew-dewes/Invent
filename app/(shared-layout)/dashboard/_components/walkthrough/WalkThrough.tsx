@@ -7,7 +7,9 @@ export default async function WalkThrough(){
 
   const requests = await getRequestCount();
 
-  if (requests > 0) return
+  // if (requests > 0) return;
+
+
 
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary col-span-2">

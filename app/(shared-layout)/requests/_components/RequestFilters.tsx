@@ -2,13 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-
-const requestFilters = [
-  { filter: "OPEN", label: "Open" },
-  { filter: "PENDING", label: "Pending" },
-  { filter: "READY", label: "Ready" },
-  { filter: "COMPLETE", label: "Complete" },
-]
+import { requestFilters } from "@/lib/helpers";
 
 
 

@@ -37,7 +37,8 @@ export default function RequestForm({ stock, costCentres }: Props
             stockItem: "",
             quantity: "",
             costCentreId: "",
-            notes: ""
+            notes: "",
+       
 
 
         }
@@ -45,7 +46,7 @@ export default function RequestForm({ stock, costCentres }: Props
 
     function onSubmit(values: z.infer<typeof requestSchema>) {
 
-
+     
         startTransition(async () => {
             try {
                 await createRequest(values);
@@ -138,8 +139,8 @@ export default function RequestForm({ stock, costCentres }: Props
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Cost centre</SelectLabel>
-                                                {costCentres?.map((centre, key) => {
-                                                    return <SelectItem key={key} value={centre.id}>{centre.name}</SelectItem>
+                                                {costCentres?.map((centre) => {
+                                                    return <SelectItem key={centre.id} value={centre.id}>{centre.name}</SelectItem>
                                                 })}
                                             </SelectGroup>
                                         </SelectContent>
@@ -183,6 +184,8 @@ export default function RequestForm({ stock, costCentres }: Props
                     </FieldGroup>
 
                 </form>
+
+
             </CardContent>
 
         </Card>

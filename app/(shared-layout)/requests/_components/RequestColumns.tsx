@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Request } from "@/lib/types"
 
@@ -73,7 +73,17 @@ export const Requestcolumns: ColumnDef<Request>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Date",
+       header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ getValue }) => {
      
       const date = new Date(getValue() as string);
@@ -84,11 +94,39 @@ export const Requestcolumns: ColumnDef<Request>[] = [
       });
     },
   },
+ 
 
     {
     accessorKey: "status",
     cell: ({ row }) => <RequestStatusBadge status={row.original.status} />,
     header: "Status",
+  },
+   {
+    accessorKey: "completedAt",
+          header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Completed
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+cell: ({ getValue }) => {
+  const value = getValue();
+
+  if (!value) return "TBC"; // or "Pending"
+
+  const date = new Date(value as string);
+
+  return date.toLocaleDateString("en-NZ", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  });
+},
   },
   {
     accessorKey: "customer",
@@ -229,7 +267,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <Link className={`${requestStatus =="COMPLETE" ? "hidden" : ""}`} href={`/requests/${requestId}/edit`}><DropdownMenuItem>Edit request</DropdownMenuItem></Link>
+            <Link className={`${requestStatus !== "OPEN" ? "hidden" : ""}`} href={`/requests/${requestId}/edit`}><DropdownMenuItem>Edit request</DropdownMenuItem></Link>
   
             <DropdownMenuItem>
                        <form action={
@@ -245,7 +283,7 @@ return
                 }
               }>
                 <input type="hidden" name="requestId" value={requestId} />
-                <button type="submit">Cancel request</button>
+                <button type="submit">{requestStatus == "COMPLETE" ? "Cancel and return" : "Cancel request"}</button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>

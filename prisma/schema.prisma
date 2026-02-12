@@ -113,6 +113,7 @@ model Stock {
 model Request {
   id            String        @id @default(cuid())
   createdAt     DateTime      @default(now())
+  completedAt DateTime?
   customer      String
   requestNumber Int           @unique
   quantity      Int
@@ -131,6 +132,7 @@ model Request {
 model Purchase {
   id             String   @id @default(cuid())
   createdAt      DateTime @default(now())
+  completedAt DateTime?
   purchaseNumber Int @unique
   status PurchaseStatus
   notes String?

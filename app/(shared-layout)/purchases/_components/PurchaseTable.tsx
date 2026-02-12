@@ -30,6 +30,7 @@ import { useSearchParams } from "next/navigation"
 import { PurchaseStatus } from "@/generated/prisma/enums"
 import { MarkAllReceivedButton } from "./MarkAllReceivedButton"
 import { delay } from "@/lib/helpers"
+import { MobilePurchaseFilters } from "./MobilePurchaseFilters"
 
 
 interface DataTableProps<TData, TValue> {
@@ -97,8 +98,9 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
   return (
     <div>
       <div>
-        <div className="flex items-center py-4 mt-2">
-          <div className="flex gap-3">
+        <div className="py-4 mt-2">
+          <div className="md:flex gap-3 w-3/4">
+      <div className="flex gap-3">
             <Input
               placeholder={`Filter ${filter.label}...`}
               value={(table.getColumn(filter.query)?.getFilterValue() as string)}
@@ -114,10 +116,16 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
 
 
           </div>
+            <div className="sm:hidden mt-5" onClick={() => table.setRowSelection({})}>
+                        <MobilePurchaseFilters queryCounts={queryCounts} />
+          
+                      </div>
+          </div>
+    
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
+              <Button variant="outline" className="ml-auto hidden sm:flex">
                 Columns
               </Button>
             </DropdownMenuTrigger>

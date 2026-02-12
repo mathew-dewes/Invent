@@ -79,7 +79,7 @@ export default function ReadyRequestCard({ tableData, requestCount }: Props) {
             </CardContent>
             <CardFooter>
             
-                         <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/requests?status=READY'}>View Requests</Link>
+                         <Link className={buttonVariants({variant:"default", size:"sm"})} href={'/requests?status=READY'}>View Requests</Link>
                        
                 
        

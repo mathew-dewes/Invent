@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
@@ -52,6 +51,8 @@ export const CostCentreColumns: ColumnDef<CostCentre>[] = [
     accessorKey: "totalCost",
       header: () => <div>Total Spend</div>,
     cell: ({ row }) => {
+
+      
       const amount = parseFloat(row.getValue("totalCost"))
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -65,8 +66,8 @@ export const CostCentreColumns: ColumnDef<CostCentre>[] = [
 
   {
     id: "actions",
-    cell: () => {
- 
+    cell: ({row}) => {
+       const costCentreId = row.original.id;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -77,13 +78,12 @@ export const CostCentreColumns: ColumnDef<CostCentre>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`#`}>
+            <Link href={`/cost-centre/${costCentreId}/edit`}>
             <DropdownMenuItem>
-              Edit vendor
+              Edit details
             </DropdownMenuItem></Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+
+
           </DropdownMenuContent>
         </DropdownMenu>
       )

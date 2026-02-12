@@ -263,7 +263,8 @@ export async function MarkComplete(requestId: string){
         await prisma.request.update({
             where:{userId, id: requestId},
             data:{
-                status:"COMPLETE"
+                status:"COMPLETE",
+                completedAt: new Date()
             }
         });
 
@@ -307,7 +308,8 @@ export async function markAllComplete(stockIds: string[]) {
         await prisma.request.updateMany({
             where: { userId, stockId: { in: stockIds } },
             data: {
-                status: "COMPLETE"
+                status: "COMPLETE",
+                completedAt: new Date()
             },
 
 

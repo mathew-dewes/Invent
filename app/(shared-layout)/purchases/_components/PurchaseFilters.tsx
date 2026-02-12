@@ -2,13 +2,10 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { purchaseFilters } from "@/lib/helpers";
 
 
-const purchaseFilters = [
-    { filter: "PLACED", label: "Placed" },
-    { filter: "RECEIVED", label: "Received" },
-    { filter: "DELAYED", label: "Delayed" },
-];
+
 
 
 
@@ -40,7 +37,6 @@ export default function PurchaseFilters({
 
     if (term) {
       params.set(filter, term);
-      params.delete("search");
     } else {
       params.delete(filter);
     }

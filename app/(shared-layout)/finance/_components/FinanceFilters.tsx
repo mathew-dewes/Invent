@@ -3,15 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-
-export const financeFilters = [
-    { filter: "REQUEST", label: "Request" },
-    { filter: "PURCHASE", label: "Purchase" },
-];
-
-
-
+import { financeFilters } from "@/lib/helpers";
 
 
 

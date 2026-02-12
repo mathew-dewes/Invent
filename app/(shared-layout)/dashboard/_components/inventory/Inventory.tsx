@@ -3,13 +3,13 @@
 import { getInventoryChartData, getStockHealthPercentages } from "@/lib/queries/stock";
 import StockHealthBar from "./StockHealthBar";
 import { StockCountChart } from "../charts/StockCountChart";
-import { getDaysUntilStockout } from "@/lib/queries/finance";
+
 
 export default async function Inventory(){
 
     const [percentage, chartData] = await Promise.all([getStockHealthPercentages(), getInventoryChartData()]);
 
-      const forcast = await getDaysUntilStockout();
+   
 
       
 
@@ -21,7 +21,7 @@ export default async function Inventory(){
                                     <div>
                                           <h1 className="font-semibold text-xl py-3 ml-1 text-center md:text-left">Inventory</h1>
                                             <StockHealthBar percentage={percentage}/>
-                                            <StockCountChart data={chartData} forcast={forcast}  />
+                                            <StockCountChart data={chartData}  />
                                     </div>
                
            

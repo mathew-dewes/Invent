@@ -15,6 +15,9 @@ export default async function CriticalStock(){
         
     });
 
+    
+
+
   
 
      const incomingPurchases = purchases.filter((purchase) => stockIds.includes(purchase.stockItem.id)).map((i)=>{
