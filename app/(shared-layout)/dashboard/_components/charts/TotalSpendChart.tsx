@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -165,6 +166,11 @@ export function TotalSpendChart({data}:
           </AreaChart>
         </ChartContainer>
       </CardContent>
+              <CardFooter >
+       <div className="leading-none font-medium text-sm">
+            Total monthly spend:
+          </div>
+      </CardFooter>
     </Card>
   )
 }

@@ -184,9 +184,9 @@ export default function EditRequestForm({ stock, costCentres, formData, requestI
                             {isPending ? (
                                 <>
                                     <Loader2 className="size-4 animate-spin" />
-                                    <span>Loading...</span>
+                                    <span>Updating</span>
                                 </>
-                            ) : (<span>Create request</span>)}
+                            ) : (<span>Update</span>)}
                         </Button>
 
 

@@ -8,7 +8,7 @@ import Inventory from "./_components/inventory/Inventory";
 import TotalSpend from "./_components/totalSpend/TotalSpend";
 import ActionBar from "./_components/action/ActionBar";
 import CostAnalysis from "./_components/costAnalysis/CostAnalysis";
-import StockForcast from "./_components/stockForcast/StockForcast";
+
 import WalkThrough from "./_components/walkthrough/WalkThrough";
 import StockPerformance from "./_components/StockPerformance/StockPerformance";
 import { DashboardSkeleton } from "@/components/web/skeletons/DashboardSkeleton";
@@ -36,7 +36,7 @@ export default function page() {
 
 
                     <StockPerformance />
-                    <StockForcast />
+             
 
 
 

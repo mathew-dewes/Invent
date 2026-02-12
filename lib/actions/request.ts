@@ -7,7 +7,8 @@ import prisma from "../prisma";
 import { revalidatePath } from "next/cache";
 import { generateRequestNumber } from "./helper";
 import { createRequestLedger } from "./ledger";
-import { RequestStatus } from "@/generated/prisma/enums";
+import { redirect } from "next/navigation";
+
 
 
 
@@ -104,7 +105,8 @@ export async function markReady(requestId: string) {
             select: {
                 quantity: true,
                 stockId: true,
-                id: true
+                id: true,
+                requestNumber:true
             }
         });
 
@@ -118,14 +120,15 @@ export async function markReady(requestId: string) {
 
         const stock = await prisma.stock.findUnique({
             where: { userId, id: request.stockId },
-            select: { quantity: true }
+            select: { quantity: true, name:true }
         });
 
         if (!stock) {
             return {
-                success: false, message: "Request not found"
+                success: false, message: "Stock not found"
             }
         }
+        
         if (stock.quantity < request.quantity) {
             return {
                 success: false, message: "Insufficient stock available"
@@ -154,18 +157,32 @@ export async function markReady(requestId: string) {
                 }
             })
 
-        ])
+        ]);
+
+        const oldCount = stock.quantity;
+        const requestCount = request.quantity;
+        const updatedCount = oldCount - requestCount;
+        
+        
 
 
 
 
         revalidatePath('/requests');
 
-        return { success: true, message: "Request was updated" };
+        return { 
+            success: true,
+             message: `Request #${request.requestNumber} is now ready`, 
+             updatedStock:{name: stock.name, requestCount, oldCount, updatedCount},
+           };
+           
 
     } catch (error) {
         console.log(error);
-
+      return { 
+            success: true,
+             message: `Update failed`, 
+   };
 
 
     }
@@ -260,19 +277,36 @@ export async function markAllReady(requestIds: string[]) {
 export async function MarkComplete(requestId: string) {
     const userId = await getUserId();
     try {
-        await prisma.request.update({
+        const request = await prisma.request.update({
             where: { userId, id: requestId },
             data: {
                 status: "COMPLETE",
                 completedAt: new Date()
+            },
+            select:{
+                requestNumber:true,
+                customer:true,
+                quantity:true,
+                stockItem:{
+                    select:{
+                        name: true
+                    }
+                }
             }
         });
 
-        await createRequestLedger(requestId);
+        const ledger = await createRequestLedger(requestId);
+        
         revalidatePath('/requests')
 
         return {
-            success: true, message: "Request updated"
+            success: true, 
+            message: `Request #${request.requestNumber} is complete`,
+            customer:request.customer, 
+            issued: request.quantity, 
+            costCentre: ledger?.costCentreName, 
+            chargeAmount: Number(ledger?.totalCost),
+            stockItem: request.stockItem.name
         }
 
 

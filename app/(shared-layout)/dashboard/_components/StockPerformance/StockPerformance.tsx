@@ -8,7 +8,10 @@ export default async function StockPerformance(){
 
   const totalRequests = requests.reduce((acc, item)=>{
     return acc + item.requests
-  }, 0)
+  }, 0);
+
+  console.log(requests);
+  
   
   
 
@@ -22,7 +25,7 @@ if (requests.length == 0) return
                             <div>
                                   <h1 className="font-semibold text-xl py-3 ml-1 text-center md:text-left">Stock Performance</h1>
                       
-                                <MostRequestedItemsChart data={requests} requests={totalRequests} />
+                                <MostRequestedItemsChart data={requests} issuedStock={totalRequests} />
                             </div>
        
    

@@ -31,7 +31,9 @@ export function OpenRequestsDropDown({requestId}:
                     const res = await markReady(requestId);
 
                     if (res?.success){
-                      toast.success(res.message)
+                      toast.success(res.message);
+                      toast.success(res.updatedStock?.requestCount  + " x " + res.updatedStock?.name + " depleted");
+                      toast.info("SOH is now: " + res.updatedStock?.updatedCount)
                     } else {
                       toast.error(res?.message)
                     }
@@ -47,8 +49,8 @@ export function OpenRequestsDropDown({requestId}:
             </DropdownMenuItem>
      
 
-          <Link  href={'/purchases?status=PLACED'}><DropdownMenuItem>Update details</DropdownMenuItem></Link>
-          <Link  href={'/purchases?status=PLACED'}><DropdownMenuItem>Cancel Request</DropdownMenuItem></Link>
+          <Link  href={`/requests/${requestId}/edit`}><DropdownMenuItem>Update details</DropdownMenuItem></Link>
+          <Link  href={`/purchases?status=PLACED`}><DropdownMenuItem>Cancel Request</DropdownMenuItem></Link>
       
           
         </DropdownMenuGroup>

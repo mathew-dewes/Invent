@@ -34,16 +34,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function MostRequestedItemsChart({data, requests}:
-  {data: {stock: string, requests: number}[], requests: number}
+export function MostRequestedItemsChart({data, issuedStock}:
+  {data: {stock: string, requests: number}[], issuedStock: number}
 ) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Most requested items</CardTitle>
-        <CardDescription>Showing completed requests for {new Date().toLocaleString("en-NZ",
-          {month: "long"}
-        )}</CardDescription>
+        <CardTitle>Monthly issued stock</CardTitle>
+        <CardDescription>Showing issued stock items for the past 30 days</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-90 w-full">
@@ -95,13 +93,11 @@ export function MostRequestedItemsChart({data, requests}:
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
-          <p className="text-muted-foreground">Total stock items issued this month: {requests}</p>
-         
-        </div>
-      
-      </CardFooter>
+            <CardFooter >
+           <div className="leading-none font-medium text-sm">
+                Total monthly issued stock: {issuedStock}
+              </div>
+          </CardFooter>
     </Card>
   )
 }

@@ -1,15 +1,15 @@
 
 
-import { getInventoryChartData, getStockHealthPercentages } from "@/lib/queries/stock";
+import { getInventoryChartData, getStockHealthPercentages, getStockValue } from "@/lib/queries/stock";
 import StockHealthBar from "./StockHealthBar";
 import { StockCountChart } from "../charts/StockCountChart";
 
 
 export default async function Inventory(){
 
-    const [percentage, chartData] = await Promise.all([getStockHealthPercentages(), getInventoryChartData()]);
+    const [percentage, chartData, stockValue] = await Promise.all([getStockHealthPercentages(), getInventoryChartData(), getStockValue()]);
 
-   
+    const stockCount = chartData.reduce((acc, cur) => acc + cur.count, 0)
 
       
 
@@ -21,7 +21,7 @@ export default async function Inventory(){
                                     <div>
                                           <h1 className="font-semibold text-xl py-3 ml-1 text-center md:text-left">Inventory</h1>
                                             <StockHealthBar percentage={percentage}/>
-                                            <StockCountChart data={chartData}  />
+                                            <StockCountChart data={chartData} stockCount={stockCount} stockValue={stockValue}  />
                                     </div>
                
            

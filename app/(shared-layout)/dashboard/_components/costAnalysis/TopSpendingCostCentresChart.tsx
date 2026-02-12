@@ -98,8 +98,8 @@ export function TopSpendingCostCentresChart({data, totalSpend}:Props
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
+      <CardFooter>
+        <div className="leading-none font-medium text-sm">
           Total monthly spend: {convertToMoney(totalSpend)}
         </div>
      

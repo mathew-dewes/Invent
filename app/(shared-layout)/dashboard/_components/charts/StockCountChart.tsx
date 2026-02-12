@@ -16,6 +16,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { convertToMoney } from "@/lib/helpers"
 
 
 export const description = "A bar chart with a custom label"
@@ -27,24 +28,12 @@ const chartConfig = {
     label: "Quantity",
     color: "var(--chart-2)",
   },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
-  label: {
-    color: "var(--background)",
-  },
+
 } satisfies ChartConfig
 
-export function StockCountChart({data}:
-  {data: {name: string, count: number}[]}
+export function StockCountChart({data, stockCount, stockValue}:
+  {data: {name: string, count: number}[], stockCount: number, stockValue: number}
 ) {
-
-  
-
-
-  
-
 
 
   
@@ -52,7 +41,7 @@ export function StockCountChart({data}:
     <Card>
       <CardHeader>
         <CardTitle>Stock Levels</CardTitle>
-        <CardDescription>Total assets: 120</CardDescription>
+        <CardDescription>Total units: {stockCount}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-90 w-full">
@@ -109,16 +98,16 @@ export function StockCountChart({data}:
               />
             </Bar>
           </BarChart>
+        
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-
-        <p className="font-semibold">Lorem ipsum dolor sit amet</p>
-    
- 
-    
-       
+      <CardFooter >
+       <div className="leading-none font-medium text-sm">
+            Stock value: {convertToMoney(stockValue)}
+          </div>
       </CardFooter>
+      
+      
     </Card>
   )
 }
