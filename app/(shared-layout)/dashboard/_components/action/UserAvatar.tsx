@@ -15,8 +15,8 @@ export function UserAvatar({name}:
     <div className="items-center gap-1.5 flex">
  <Avatar>
       <AvatarImage
-        src="https://github.com/shadcn.png"
-        alt="@shadcn"
+        src="/user.png"
+        alt="User avatar image"
         
       />
       <AvatarFallback>CN</AvatarFallback>

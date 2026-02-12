@@ -21,6 +21,7 @@ export async function getRequests(filter?: RequestStatus) {
             id: true,
             requestNumber: true,
             createdAt: true,
+            completedAt:true,
             customer: true,
             stockItem: {
                 select: {
@@ -84,12 +85,12 @@ export async function getRequestChartData() {
     const requests = await prisma.request.findMany({
         where: {
             userId,
-            createdAt: {
+            completedAt: {
                 gte: start, lte: end
             }
         },
         select: {
-            createdAt: true,
+            completedAt: true,
             status: true
         }
     });
@@ -97,7 +98,7 @@ export async function getRequestChartData() {
     const map = new Map<string, { date: string; requests: number }>();
 
     for (const request of requests) {
-        const dateKey = getNZDateKey(request.createdAt);
+        const dateKey = getNZDateKey(request.completedAt!);
         const existing = map.get(dateKey) ?? {
             date: dateKey,
       

@@ -6,6 +6,12 @@ export default async function CompletedRequests(){
 
     const data = await getRequestChartData();
 
+    const totalRequests = data.reduce((acc, cur) => acc + cur.requests, 0);
+
+
+    
+    
+
         const results = data.filter((i) => i.requests > 0)
 
         if (!results) return

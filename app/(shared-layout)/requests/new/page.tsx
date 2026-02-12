@@ -5,9 +5,8 @@ import { getCostCentres } from "@/lib/queries/costCentre";
 
 export default async function Page(){
 
-    const stock = await getStockNamesAndQuantity();
-    const costCentres = await getCostCentres();
 
+    const [stock, costCentres] = await Promise.all([getStockNamesAndQuantity(), getCostCentres() ])
     
     return (
         <div>

@@ -23,11 +23,12 @@ export default function page() {
                 <div className="grid grid-cols-2 gap-6">
                     <WalkThrough />
                     <ActionBar />
-                    <Inventory />
+                  
                     <CriticalStock />
                     <ReadyRequests />
                     <OpenRequests />
                     <IncomingPurchases />
+                      <Inventory />
                     <TotalSpend />
                     <CostAnalysis />
 

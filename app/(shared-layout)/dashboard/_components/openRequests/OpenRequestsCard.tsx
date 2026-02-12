@@ -84,7 +84,7 @@ export default function OpenRequestsCard({ tableData, requestCount }: Props) {
             <CardFooter>
                 
             
-                         <Link className={buttonVariants({variant:"outline", size:"sm"})} href={'/requests?status=OPEN'}>View Requests</Link>
+                         <Link className={buttonVariants({variant:"default", size:"sm"})} href={'/requests?status=OPEN'}>View Requests</Link>
                 
        
            

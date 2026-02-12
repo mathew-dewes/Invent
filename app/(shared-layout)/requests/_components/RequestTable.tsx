@@ -83,6 +83,8 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
     onColumnVisibilityChange: setColumnVisibility,
+    
+    
     state: {
       sorting,
       columnFilters,

@@ -179,9 +179,9 @@ export function weightedRequestDate() {
 
 export function weightedStatus() {
   const roll = Math.random()
-  if (roll < 0.15) return "OPEN"
-  if (roll < 0.30) return "READY"
-  return "COMPLETE"
+  if (roll < 0.2) return "COMPLETE"
+  if (roll < 0.6) return "READY"
+  return "OPEN"
 }
 
 export function generatePartNumber(){

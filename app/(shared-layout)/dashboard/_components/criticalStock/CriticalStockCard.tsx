@@ -1,20 +1,24 @@
-import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CircleAlert, ClipboardClock } from "lucide-react";
-import Link from "next/link";
+import { CircleAlert } from "lucide-react";
+
 import { CriticalStockDropDown } from "./CriticalStockDropDown";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 
 type Props = {
   title: string,
   description: string,
-  purchases:string[],
+  purchases: string[],
   noStockItems: boolean,
-  lowStockItems: boolean
-
+  lowStockItems: boolean,
   tableData: {
     name: string,
     quantity: number,
+    purchases?:{
+      id: string
+    }[],
     vendor: {
       name: string
     },
@@ -27,9 +31,9 @@ type Props = {
 
 
 
-export default function CriticalStockCard({ title, description, tableData, purchases, noStockItems, lowStockItems }: Props) {
+export default function CriticalStockCard({ title, description, tableData, purchases }: Props) {
 
-  
+
   return (
     <Card className="h-full">
       <CardHeader>
@@ -59,25 +63,28 @@ export default function CriticalStockCard({ title, description, tableData, purch
           </TableHeader>
           <TableBody>
             {tableData.map((item) => {
-          const noStock = purchases.some((i:string) => i == item.id)
+              const noStock = purchases.some((i: string) => i == item.id);
+
           
+        
+
               return (<TableRow key={item.id}>
 
                 <TableCell>
                   <div className="flex items-center gap-1.5">
-             
-                
+
+
                     <div className={`${item.quantity == 0 ? "bg-red-400" : "bg-orange-400"} rounded-full size-3`} />
                     <p className="font-medium">{item.name} </p>
-                  {noStock && <ClipboardClock size={20}/> }
                   </div>
                 </TableCell>
                 <TableCell>{item.quantity}</TableCell>
                 <TableCell>{item.reorderPoint}</TableCell>
                 <TableCell>{item.vendor.name}</TableCell>
                 <TableCell className="flex justify-center">
-                  <CriticalStockDropDown stockId={item.id} incomingStock={noStock}/>
-   
+
+                  <CriticalStockDropDown incomingStock={noStock} stockId={item.id} />
+
 
                 </TableCell>
 
@@ -94,15 +101,20 @@ export default function CriticalStockCard({ title, description, tableData, purch
 
       </CardContent>
       <CardFooter>
-      
+        <div>
+          <p className="text-muted-foreground text-sm">View stock items of type:</p>
+          <ButtonGroup className="mt-3 flex gap-0.5">
 
-        <div className="flex gap-2 items-center">
-          <Link hidden={!noStockItems} className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock/?level=out'}>View Stock - Out</Link>
-          <Link hidden={!lowStockItems} className={buttonVariants({ variant: "outline", size: "sm" })} href={'/stock/?level=low'}>View Stock - low</Link>
+            <Link className={buttonVariants({ variant: "default", size: "sm", className: "font-semibold" })} href={'/requests/new'}>Out Stock</Link>
+            <Link className={buttonVariants({ variant: "default", size: "sm", className: "font-semibold" })} href={'/purchases/new'}>Low Stock</Link>
+
+
+          </ButtonGroup>
         </div>
 
 
       </CardFooter>
+
     </Card>
   )
 }

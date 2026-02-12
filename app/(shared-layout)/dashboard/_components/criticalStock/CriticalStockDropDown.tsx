@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -7,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+
 
 export function CriticalStockDropDown({stockId, incomingStock}:
     {stockId: string, incomingStock: boolean}
@@ -18,10 +20,13 @@ export function CriticalStockDropDown({stockId, incomingStock}:
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-            <Link hidden={incomingStock} href={'/purchases/new?reorder=' + stockId}><DropdownMenuItem>Purchase Stock</DropdownMenuItem></Link>
+
+                    <Link hidden={!incomingStock} href={'/purchases?status=PLACED'}><DropdownMenuItem>View recent purchase</DropdownMenuItem></Link>
+            <Link  href={'/purchases/new?reorder=' + stockId}><DropdownMenuItem>Create Purchase</DropdownMenuItem></Link>
+   
     
   
-          <Link hidden={!incomingStock} href={'/purchases?status=PLACED'}><DropdownMenuItem>View purchase</DropdownMenuItem></Link>
+
       
           
         </DropdownMenuGroup>
