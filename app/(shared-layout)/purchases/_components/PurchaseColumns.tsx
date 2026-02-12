@@ -103,9 +103,9 @@ export const Purchasecolumns: ColumnDef<PurchaseColumns>[] = [
     cell: ({ row }) => {
     
       const status = row.original.status!;
-      const createdAt = row.original.createdAt!
+ 
     
-      return <PurchaseStatusBadge status={status} createdAt={createdAt} />},
+      return <PurchaseStatusBadge status={status} />},
     header: "Status",
   },
   {

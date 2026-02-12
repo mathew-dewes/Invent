@@ -232,7 +232,7 @@ export async function createPurchases() {
 
     try {
 
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 20; i++) {
             const stock = pickRandom(stockItems);
             const vendor = pickRandom(vendors);
             const qty = randomInt(5, 25)

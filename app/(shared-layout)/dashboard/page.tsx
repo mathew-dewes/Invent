@@ -21,14 +21,14 @@ export default function page() {
 
             <Suspense fallback={<DashboardSkeleton/>}>
                 <div className="grid grid-cols-2 gap-6">
-                    <WalkThrough />
+                    {/* <WalkThrough /> */}
                     <ActionBar />
                   
                     <CriticalStock />
                     <ReadyRequests />
                     <OpenRequests />
                     <IncomingPurchases />
-                      <Inventory />
+                    <Inventory />
                     <TotalSpend />
                     <CostAnalysis />
 

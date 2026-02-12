@@ -12,9 +12,9 @@ export default async function CompletedRequests(){
     
     
 
-        const results = data.filter((i) => i.requests > 0)
 
-        if (!results) return
+
+        if (totalRequests == 0) return
     
     return (
               <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1">
