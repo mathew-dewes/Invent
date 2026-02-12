@@ -47,7 +47,7 @@ export function OpenRequestsDropDown({requestId}:
             </DropdownMenuItem>
      
 
-          <Link  href={'/purchases?status=PLACED'}><DropdownMenuItem>Update Request</DropdownMenuItem></Link>
+          <Link  href={'/purchases?status=PLACED'}><DropdownMenuItem>Update details</DropdownMenuItem></Link>
           <Link  href={'/purchases?status=PLACED'}><DropdownMenuItem>Cancel Request</DropdownMenuItem></Link>
       
           

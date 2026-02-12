@@ -17,7 +17,8 @@ type Props = {
         status: PurchaseStatus,
         purchaseNumber: number,
         vendor: {
-            name: string
+            name: string,
+            email: string
         },
         stockItem: {
             name: string
@@ -67,7 +68,7 @@ export default function IncomingStockCard({ tableData, purchaseCount }: Props) {
                                 <TableCell>{item.quantity}</TableCell>
                                 <TableCell >
                                     <p className="truncate w-20">{item.vendor.name}</p></TableCell>
-                                <TableCell><IncomingPurchasesDropDown purchaseId={item.id}/></TableCell>
+                                <TableCell><IncomingPurchasesDropDown vendorEmail={item.vendor.email} purchaseId={item.id}/></TableCell>
                        
                             </TableRow>)
                         })}

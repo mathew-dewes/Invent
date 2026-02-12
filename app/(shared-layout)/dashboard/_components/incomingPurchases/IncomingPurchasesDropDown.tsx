@@ -13,8 +13,8 @@ import { startTransition } from "react"
 import { toast } from "sonner"
 
 
-export function IncomingPurchasesDropDown({purchaseId}:
-    {purchaseId: string}
+export function IncomingPurchasesDropDown({purchaseId, vendorEmail}:
+    {purchaseId: string, vendorEmail: string}
 ) {
   return (
     <DropdownMenu>
@@ -61,7 +61,11 @@ export function IncomingPurchasesDropDown({purchaseId}:
           
           
                       </DropdownMenuItem>
-          <DropdownMenuItem>Copy vendor email</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => {
+            navigator.clipboard.writeText(vendorEmail);
+            toast.success('Vendor email copied')
+          }}
+    >Copy vendor email</DropdownMenuItem>
 
 
       

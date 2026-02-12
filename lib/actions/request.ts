@@ -17,7 +17,7 @@ export async function createRequest(values: z.infer<typeof requestSchema>) {
 
     try {
         const parsed = requestSchema.safeParse(values);
-        
+
 
         if (!parsed.success) {
             console.error('Validation errors:', parsed.error);
@@ -182,88 +182,88 @@ export async function markAllReady(requestIds: string[]) {
 
     try {
         const updatedRequests: string[] = [];
-        await prisma.$transaction(async (tx)=>{
-        for (const requestId of requestIds){
-            const request = await tx.request.findUnique({
-                where:{id:requestId, userId},
-                select:{
-                    id: true,
-                    quantity:true,
-                    stockId: true,
-                    stockItem:{
-                        select:{
-                            name:true
+        await prisma.$transaction(async (tx) => {
+            for (const requestId of requestIds) {
+                const request = await tx.request.findUnique({
+                    where: { id: requestId, userId },
+                    select: {
+                        id: true,
+                        quantity: true,
+                        stockId: true,
+                        stockItem: {
+                            select: {
+                                name: true
+                            }
+                        }
+
+                    }
+                });
+
+                if (!request) {
+                    throw new Error("Request not found");
+                }
+
+                const stockUpdate = await tx.stock.updateMany({
+                    where: {
+                        id: request.stockId, userId,
+                        quantity: {
+                            gte: request.quantity
+                        }
+                    },
+                    data: {
+                        quantity: {
+                            decrement: request.quantity
                         }
                     }
-                
-                }
-            });
+                });
 
-           if (!request) {
-          throw new Error("Request not found");
-        }
+                if (stockUpdate.count === 0) {
+                    throw new Error("Insufficient stock");
+                }
 
-        const stockUpdate = await tx.stock.updateMany({
-            where:{
-                id: request.stockId, userId,
-                quantity:{
-                    gte: request.quantity
-                }
-            }, 
-            data:{
-                quantity: {
-                    decrement: request.quantity
-                }
-            }
+                await tx.request.update({
+                    where: { id: requestId, userId },
+                    data: { status: "READY" }
+                });
+
+                updatedRequests.push(request.stockItem.name + " stock updated");
+
+            };
+
+
         });
 
-      if (stockUpdate.count === 0) {
-          throw new Error("Insufficient stock");
-        }
+        revalidatePath('/requests')
 
-        await tx.request.update({
-            where:{id: requestId, userId},
-            data:{status:"READY"}
-        });
-
-        updatedRequests.push(request.stockItem.name + " stock updated");
-
+        return {
+            success: true,
+            message: "Update successful",
+            updatedRequests
         };
 
- 
-    });
-
-    revalidatePath('/requests')
-    
-    return {
-      success: true,
-      message: "Update successful",
-      updatedRequests
-    };
-
     } catch (error) {
-  console.log(error);
-     return {
-      success: false,
-      message: error instanceof Error ? error.message : "Something went wrong",
-    };
-  
+        console.log(error);
+        return {
+            success: false,
+            message: error instanceof Error ? error.message : "Something went wrong",
+        };
+
     }
 
-   
-   
+
+
 
 
 };
 
 
-export async function MarkComplete(requestId: string){
+export async function MarkComplete(requestId: string) {
     const userId = await getUserId();
     try {
         await prisma.request.update({
-            where:{userId, id: requestId},
-            data:{
-                status:"COMPLETE",
+            where: { userId, id: requestId },
+            data: {
+                status: "COMPLETE",
                 completedAt: new Date()
             }
         });
@@ -275,14 +275,14 @@ export async function MarkComplete(requestId: string){
             success: true, message: "Request updated"
         }
 
-     
+
     } catch (error) {
         console.log(error);
         return {
             success: false, message: "There was an error"
         }
-        
-        
+
+
     }
 }
 
@@ -335,65 +335,96 @@ export async function markAllComplete(stockIds: string[]) {
 };
 
 
-export async function cancelRequest(requestId: string, requestStatus: RequestStatus){
+export async function cancelRequest(requestId: string) {
     const userId = await getUserId();
 
-    if (requestStatus !== "OPEN"){
-        const request = await prisma.request.findFirst({
-            where:{userId, id: requestId },
-            select:{
-                quantity:true,
-                stockId: true
-        }});
 
-        await prisma.stock.update({
-            where:{userId, id: request?.stockId},
-            data:{
-                quantity:{
-                    increment:request?.quantity
-                }
-            }
-        })
 
-    };
-
-    if (requestStatus == "COMPLETE"){
-
-        await prisma.costLedger.deleteMany({
-            where:{userId, sourceId: requestId}
-        });
-    }
-
-    await prisma.request.delete({
-        where:{userId, id: requestId}
+    const request = await prisma.request.delete({
+        where: { userId, id: requestId }, select: { requestNumber: true }
     });
 
     revalidatePath('/requests');
 
     return {
-        success: true, message: 'Request was deleted'
+        success: true, message: `Request #${request.requestNumber} was removed`
     }
 
 }
 
 
-export async function clearData(){
+export async function cancelAndReturnRequest(requestId: string) {
+    const userId = await getUserId();
+    try {
+        const request = await prisma.request.findFirst({
+            where: { userId, id: requestId },
+            select: {
+                quantity: true,
+                stockId: true,
+                requestNumber: true,
+                status: true,
+            }
+        });
+
+        const stock = await prisma.stock.update({
+            where: { userId, id: request?.stockId },
+            data: {
+                quantity: {
+                    increment: request?.quantity
+                }
+            },
+            select: {
+                name: true
+            }
+        });
+
+        if (request?.status == "COMPLETE") {
+
+            await prisma.costLedger.deleteMany({
+                where: { userId, sourceId: requestId }
+            });
+        }
+
+        await prisma.request.delete({
+            where: { id: requestId, userId }
+        })
+
+        revalidatePath('/requests')
+
+        return { success: true, message: `${request?.quantity} x ${stock.name} was returned`, requestNumber: request?.requestNumber }
+    } catch (error) {
+        console.log(error);
+        return { success: false, message: `There was an error` }
+
+
+
+    }
+
+
+
+}
+
+
+export async function clearData() {
     const userId = await getUserId();
 
     try {
-        
-    await prisma.request.deleteMany({
-        where:{userId}})
 
-    await prisma.purchase.deleteMany({
-        where:{userId}})
+        await prisma.request.deleteMany({
+            where: { userId }
+        })
 
-    await prisma.costLedger.deleteMany({
-        where:{userId}});
+        await prisma.purchase.deleteMany({
+            where: { userId }
+        })
 
-    await prisma.costCentre.deleteMany({
-        where:{userId}
-    })
+        await prisma.costLedger.deleteMany({
+            where: { userId }
+        });
+
+        await prisma.costCentre.deleteMany({
+            where: { userId }
+        })
 
         revalidatePath('/requests')
         revalidatePath('/purchases')
@@ -405,8 +436,8 @@ export async function clearData(){
         }
     } catch (error) {
         console.log(error);
-        
-           return {
+
+        return {
             success: false, message: "The was an error clearing data"
         }
     }
