@@ -10,8 +10,8 @@ export default function ActionButtons(){
    
     <ButtonGroup  className="mt-2 flex gap-0.5">
 
-       <Link className={buttonVariants({variant:"default", className: "font-semibold", size:"sm" })} href={'/requests/new'}>Create Request</Link>
-       <Link className={buttonVariants({variant:"default", className: "font-semibold", size:"sm" })} href={'/purchases/new'}>Create Purchase</Link>
+       <Link className={buttonVariants({variant:"default", size:"sm" })} href={'/requests/new'}>Create Request</Link>
+       <Link className={buttonVariants({variant:"default", size:"sm" })} href={'/purchases/new'}>Create Purchase</Link>
     
 
       </ButtonGroup>

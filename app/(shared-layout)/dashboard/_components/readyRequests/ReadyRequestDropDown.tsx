@@ -43,8 +43,7 @@ export function ReadyRequestDropDown({requestId}:
                 <button type="submit">Mark as Complete</button>
               </form>
           </DropdownMenuItem>
-          <Link href={`/requests/${requestId}/edit`}><DropdownMenuItem>Update request</DropdownMenuItem></Link>
-          <Link  href={'/purchases?status=PLACED'}><DropdownMenuItem>Cancel request</DropdownMenuItem></Link>
+          <Link  href={'/purchases?status=PLACED'}><DropdownMenuItem>Cancel and return</DropdownMenuItem></Link>
       
           
         </DropdownMenuGroup>

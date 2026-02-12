@@ -252,7 +252,8 @@ export async function getIncomingPurchases(){
             purchaseNumber:true,
             vendor:{
                 select:{
-                    name:true
+                    name:true,
+                    email:true
                 }
             },
             stockItem:{

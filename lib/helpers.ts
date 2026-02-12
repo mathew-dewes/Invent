@@ -117,7 +117,7 @@ export const demoCostCentres = ["Kiwi Rail", "Space X", "Air NZ", "Spark", "OneN
 export const demoCustomers =["John Smith", "Ben Fisher", "Chris Luxon", "James Green", "Jim Brown", "Edmund Hillary ", "Elon Musk", "Kate Sheppard", "Kayne West", "Morgan Freeman"]
 export const demoStock = [
   {name: "Hammer", brand: "Bahco"},
-  {name: "3pc Skrewdriver set", brand: "Bahco"},
+  {name: "Skrewdriver", brand: "Bahco"},
   {name: "Tape Measure", brand: "Milwaukee"},
   {name: "Power Drill", brand: "Milwaukee"},
   {name: "Socket Set", brand: "Makita"},

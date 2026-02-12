@@ -51,7 +51,7 @@ export default function RequestForm({ stock, costCentres }: Props
             try {
                 await createRequest(values);
                 toast.success(`Request was placed successfully`);
-                router.push('/requests')
+                router.push('/requests?status=OPEN')
 
             } catch (error) {
                 console.log(error);

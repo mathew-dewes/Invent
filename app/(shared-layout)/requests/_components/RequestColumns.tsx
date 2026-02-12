@@ -20,20 +20,20 @@ import { toast } from "sonner"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import RequestStatusBadge from "@/components/web/badges/RequestStatusBadge"
-import { cancelRequest, MarkComplete, markReady } from "@/lib/actions/request"
+import { cancelAndReturnRequest, cancelRequest, MarkComplete, markReady } from "@/lib/actions/request"
 
 
 
-const HideFields = () =>{
+const HideFields = () => {
   const searchParams = useSearchParams().get('status');
 
 
-  
-  
 
-  if (searchParams == "COMPLETE" || !searchParams){
+
+
+  if (searchParams == "COMPLETE" || !searchParams) {
     return true
-  } else{
+  } else {
 
     return false
   }
@@ -56,7 +56,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
       />
     ),
     cell: ({ row }) => {
-    return <Checkbox
+      return <Checkbox
         hidden={HideFields()}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -73,7 +73,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
   },
   {
     accessorKey: "createdAt",
-       header: ({ column }) => {
+    header: ({ column }) => {
       return (
         <Button
           variant="ghost"
@@ -85,7 +85,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
       )
     },
     cell: ({ getValue }) => {
-     
+
       const date = new Date(getValue() as string);
       return date.toLocaleString("en-NZ", {
         year: "numeric",
@@ -94,16 +94,16 @@ export const Requestcolumns: ColumnDef<Request>[] = [
       });
     },
   },
- 
 
-    {
+
+  {
     accessorKey: "status",
     cell: ({ row }) => <RequestStatusBadge status={row.original.status} />,
     header: "Status",
   },
-   {
+  {
     accessorKey: "completedAt",
-          header: ({ column }) => {
+    header: ({ column }) => {
       return (
         <Button
           variant="ghost"
@@ -114,19 +114,19 @@ export const Requestcolumns: ColumnDef<Request>[] = [
         </Button>
       )
     },
-cell: ({ getValue }) => {
-  const value = getValue();
+    cell: ({ getValue }) => {
+      const value = getValue();
 
-  if (!value) return "TBC"; // or "Pending"
+      if (!value) return "TBC"; // or "Pending"
 
-  const date = new Date(value as string);
+      const date = new Date(value as string);
 
-  return date.toLocaleDateString("en-NZ", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  });
-},
+      return date.toLocaleDateString("en-NZ", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+    },
   },
   {
     accessorKey: "customer",
@@ -143,19 +143,19 @@ cell: ({ getValue }) => {
     header: () => <div>Requested</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("quantity"));
-    const stockQuantity = row.original.stockItem?.quantity ?? 0;
-          const requestQuantity = row.original.quantity;
-          const status = row.original.status;
+      const stockQuantity = row.original.stockItem?.quantity ?? 0;
+      const requestQuantity = row.original.quantity;
+      const status = row.original.status;
 
-          const style = () =>{
-            if (status == "OPEN" && requestQuantity > stockQuantity){
-              return 'text-red-400'
-            } else if (status !== "OPEN") {
-              return 'text-white'
-            } else {
-              return 'text-green-400'
-            }
-          }
+      const style = () => {
+        if (status == "OPEN" && requestQuantity > stockQuantity) {
+          return 'text-red-400'
+        } else if (status !== "OPEN") {
+          return 'text-white'
+        } else {
+          return 'text-green-400'
+        }
+      }
 
       return <div className={style()}>{amount}</div>
     },
@@ -165,12 +165,12 @@ cell: ({ getValue }) => {
   {
     accessorKey: "stockItem.quantity",
     header: () => <div>SOH</div>,
-    enableHiding:true,
-    
+    enableHiding: true,
+
     cell: ({ row }) => {
-          const stockQuantity = row.original.stockItem?.quantity ?? 0;
-        
-  
+      const stockQuantity = row.original.stockItem?.quantity ?? 0;
+
+
       return <div>{stockQuantity}</div>
     },
   },
@@ -198,8 +198,8 @@ cell: ({ getValue }) => {
       const requestStatus = row.original.status;
       // const stockQuantity = row.original.stockItem?.quantity ?? 0;
 
-      
-    
+
+
 
 
 
@@ -213,9 +213,9 @@ cell: ({ getValue }) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-      
+
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-      
+
 
             <DropdownMenuItem hidden={requestStatus == "COMPLETE" || requestStatus == "READY"} asChild>
 
@@ -226,24 +226,24 @@ cell: ({ getValue }) => {
 
                     const res = await markReady(requestId);
 
-                    if (res?.success){
+                    if (res?.success) {
                       toast.success(res.message)
                     } else {
                       toast.error(res?.message)
                     }
 
-              
+
                   })
 
                 }
               }>
-          
+
                 <button type="submit">Mark Ready</button>
               </form>
 
 
             </DropdownMenuItem>
-            
+
             <DropdownMenuItem hidden={requestStatus == "COMPLETE" || requestStatus == "OPEN"} asChild>
               <form action={
                 () => {
@@ -251,7 +251,7 @@ cell: ({ getValue }) => {
 
                     const res = await MarkComplete(requestId);
 
-                    if (res.success){
+                    if (res.success) {
                       toast.success(res.message);
                     } else {
                       toast.error(res.message)
@@ -268,22 +268,32 @@ cell: ({ getValue }) => {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <Link className={`${requestStatus !== "OPEN" ? "hidden" : ""}`} href={`/requests/${requestId}/edit`}><DropdownMenuItem>Edit request</DropdownMenuItem></Link>
-  
+
             <DropdownMenuItem>
-                       <form action={
+              <form action={
                 () => {
                   startTransition(async () => {
-                    const res = await cancelRequest(requestId, requestStatus);
-                    if (res.success){
-                      toast.success(res.message)
+
+                    if (requestStatus !== "OPEN") {
+
+                      const res = await cancelAndReturnRequest(requestId);
+                      if (res.success) {
+                        toast.success(res.message);
+                        toast.success("Request #" + res.requestNumber + " was removed")
+                      }
+                    } else {
+                      const res = await cancelRequest(requestId);
+                      if (res.success) {
+                        toast.success(res.message)
+                      }
+
                     }
-return
                   })
 
                 }
               }>
                 <input type="hidden" name="requestId" value={requestId} />
-                <button type="submit">{requestStatus == "COMPLETE" ? "Cancel and return" : "Cancel request"}</button>
+                <button type="submit">{requestStatus !== "OPEN" ? "Cancel and return" : "Cancel request"}</button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
