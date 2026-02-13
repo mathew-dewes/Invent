@@ -10,7 +10,7 @@ export default async function StockPerformance(){
     return acc + item.requests
   }, 0);
 
-  console.log(requests);
+
   
   
   

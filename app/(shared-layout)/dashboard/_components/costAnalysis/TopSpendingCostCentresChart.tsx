@@ -100,7 +100,7 @@ export function TopSpendingCostCentresChart({data, totalSpend}:Props
       </CardContent>
       <CardFooter>
         <div className="leading-none font-medium text-sm">
-          Total monthly spend: {convertToMoney(totalSpend)}
+          Total monthly revenue: {convertToMoney(totalSpend)}
         </div>
      
       </CardFooter>

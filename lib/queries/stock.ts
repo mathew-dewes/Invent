@@ -313,6 +313,10 @@ export async function getInventoryChartData(){
       name: true,
       quantity: true,
     },
+    orderBy:{
+        quantity: "asc"
+    },
+    take: 5
     });
 
     const stockMap = new Map<string, number>();
@@ -325,7 +329,7 @@ export async function getInventoryChartData(){
    const data = Array.from(stockMap.entries()).map(([name, count]) => ({
     name,
     count,
-  })).sort((a, b) => a.count - b.count);
+  }))
 
   return data;
 
