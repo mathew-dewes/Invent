@@ -9,10 +9,6 @@ export default async function CompletedRequests(){
     const totalRequests = data.reduce((acc, cur) => acc + cur.requests, 0);
 
 
-    
-    
-
-
 
         if (totalRequests == 0) return
     

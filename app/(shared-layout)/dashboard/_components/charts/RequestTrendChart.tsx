@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -158,6 +159,11 @@ export function RequestTrendChart({data}:
           </AreaChart>
         </ChartContainer>
       </CardContent>
+           <CardFooter >
+       <div className="leading-none font-medium text-sm">
+            Total monthly requests: 22
+          </div>
+      </CardFooter>
     </Card>
   )
 }

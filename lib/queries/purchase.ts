@@ -279,7 +279,7 @@ export async function getIncomingPurchasesCount(){
     return purchases;
 }
 
-export async function getTotalSpend(){
+export async function getPurchaseChartData(){
     const userId = await getUserId();
     const start = new Date();
     start.setDate(start.getDate() - 90);
@@ -293,6 +293,7 @@ export async function getTotalSpend(){
             createdAt:{
                 gte: start,
                 lte: end
+               
             }
         }
     });

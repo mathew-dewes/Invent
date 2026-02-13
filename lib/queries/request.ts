@@ -364,9 +364,12 @@ for (const request of requests){
 export async function getMostRequestedChartData(){
 
     const userId = await getUserId();
+    const start = new Date();
+    start.setDate(start.getDate() - 30);
+    start.setHours(0, 0, 0, 0);
 
     const requests = await prisma.request.findMany(
-        {where:{userId},
+        {where:{userId, createdAt:{gte: start}},
     select:{
         stockItem:{
             select:{

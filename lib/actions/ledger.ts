@@ -8,7 +8,7 @@ export async function createRequestLedger(requestId: string){
 
     try {
 
-        const request = await prisma.request.findUnique({
+        const request = await prisma.request.findFirst({
             where:{userId, id: requestId},
             select:{
                 id:true,
@@ -38,12 +38,15 @@ export async function createRequestLedger(requestId: string){
             }
         });
 
+        console.log(request);
+        
+
         if (!request) return;
 
         const reference = `REQ-${request.requestNumber}`;
 
 
-        await prisma.costLedger.create({
+        const costCentre = await prisma.costLedger.create({
             data:{
                 sourceType: "REQUEST",
                 month: new Date().getMonth() + 1,
@@ -59,10 +62,20 @@ export async function createRequestLedger(requestId: string){
                 sourceId: requestId,
                 reference,
                 vendorName: request.stockItem.vendor.name
+},
+select:{totalCost:true, costCentreName:true}
+        });
+
+        const costCentreName = costCentre.costCentreName;
+        const totalCost = costCentre.totalCost;
+
+        return {
+            costCentreName,
+            totalCost
+        }
 
 
-            }
-        })
+
     } catch (error) {
 
         console.log(error);

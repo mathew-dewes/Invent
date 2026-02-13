@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -25,27 +26,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { getNZDateKey } from "@/lib/helpers"
+import { convertToMoney, getNZDateKey } from "@/lib/helpers"
 
 
 const chartConfig = {
   spend: {
     label: "Spend",
   },
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "var(--chart-2)",
-  },
+
 } satisfies ChartConfig
 
 export function TotalSpendChart({data}:
   {data:{date: string, spend: number}[]}
 ) {
   const [timeRange, setTimeRange] = React.useState("30d");
+
 
     const today = getNZDateKey(new Date());
 
@@ -61,15 +56,30 @@ export function TotalSpendChart({data}:
     const startDate = new Date(referenceDate)
     startDate.setDate(startDate.getDate() - daysToSubtract)
     return date >= startDate
-  })
+  });
+
+  const totalSpend = filteredData.reduce((acc, i) => acc + i.spend, 0)
+
+  function timeFrameLabel(){
+    if (timeRange == "30d"){
+      return "30 days"
+    } else if (timeRange == "90d") {
+      return "3 months"
+    } else {
+      return "7 days"
+    }
+  }
+  
+
+
 
   return (
     <Card className="mt-3">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
-          <CardTitle>Daily Spend</CardTitle>
+          <CardTitle>Total Daily Spend</CardTitle>
           <CardDescription>
-            Showing total daily for the last 3 months
+            Within the last {timeFrameLabel()}
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
@@ -165,6 +175,12 @@ export function TotalSpendChart({data}:
           </AreaChart>
         </ChartContainer>
       </CardContent>
+              <CardFooter >
+       <div className="leading-none  text-sm">
+        <p className="font-medium"> Total spend: {convertToMoney(totalSpend) }</p>
+        <p className="mt-2 text-muted-foreground">Within the last {timeFrameLabel()}</p>
+          </div>
+      </CardFooter>
     </Card>
   )
 }

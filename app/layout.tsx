@@ -38,7 +38,7 @@ export default function RootLayout({
         {children}
           </main>
  <Toaster 
- duration={4000}
+ duration={6000}
  closeButton
  expand
 
