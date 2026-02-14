@@ -135,7 +135,6 @@ export const stockFilters = [
 ];
 
 export const requestFilters = [
-  { filter: "OPEN", label: "Open" },
   { filter: "PENDING", label: "Pending" },
   { filter: "READY", label: "Ready" },
   { filter: "COMPLETE", label: "Complete" },
@@ -177,11 +176,17 @@ export function weightedRequestDate() {
   return randomDateWithin(180)                  // 10% older
 };
 
-export function weightedStatus() {
+export function weightedRequestStatus() {
   const roll = Math.random()
-  if (roll < 0.2) return "COMPLETE"
+  if (roll < 2.2) return "COMPLETE"
   if (roll < 0.6) return "READY"
-  return "OPEN"
+  return "PENDING"
+}
+export function weightedPurchaseStatus() {
+  const roll = Math.random()
+  if (roll < 0.1) return "PLACED"
+  if (roll < 2.2) return "RECEIVED"
+
 }
 
 export function generatePartNumber(){

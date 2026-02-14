@@ -2,13 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { LoadDemoData } from "@/lib/actions/populate";
+import { Loader2 } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
 export default function LoadDemoDataButton(){
         const [isPending, startTransition] = useTransition()
 
-    return <Button  className="cursor-pointer hover:bg-primary" onClick={()=>{
+    return <Button disabled={isPending}  className="cursor-pointer hover:bg-primary" onClick={()=>{
         startTransition(async()=>{
             const res = await LoadDemoData();
             if (res.success){
@@ -23,5 +24,11 @@ export default function LoadDemoDataButton(){
                 toast.error(res.message)
             }
         })
-    }} >{isPending ? "Loading..." : "Load Data"}</Button>
+    }} > {isPending ? (
+                                <>
+                                <Loader2 className="size-4 animate-spin"/>
+                                <span>Populating...</span>
+                                </>
+                            ): (<span>Load demo data</span>)}</Button>
 }
+

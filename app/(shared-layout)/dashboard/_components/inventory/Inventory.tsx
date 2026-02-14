@@ -20,19 +20,19 @@ export default async function Inventory() {
 
 
 
-    function rowStyle(count: number, reorderPoint: number, stockId: string) {
+    function StatusBadge(count: number, reorderPoint: number, stockId: string) {
 
         const inComingStock = purchaseStockIds.some(
             (p) => p.stockId === stockId
         );
 
         if (inComingStock) {
-            return 'bg-blue-300 hover:bg-blue-300/90 text-black font-medium'
+            return  <Badge className="bg-blue-300">Purchased</Badge>
 
         } else if (count <= reorderPoint / 2) {
-            return 'bg-red-300 hover:bg-red-300/90 text-black font-medium'
-        } else if (count <= reorderPoint) {
-            return 'bg-orange-300 hover:bg-orange-300/90 text-black font-medium'
+            return   <Badge className="bg-red-400">Critical</Badge>
+        } else if (count < reorderPoint) {
+            return     <Badge className="bg-orange-300">Low</Badge>
         } 
 
     }
@@ -40,7 +40,7 @@ export default async function Inventory() {
     if (!chartData || chartData.length == 0) return
 
     return (
-        <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-2 grid gap-10">
+        <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-2 grid gap-5">
             <div>
                 <h1 className="font-semibold text-xl py-3 text-center md:text-left">Inventory Overview</h1>
                 <StockCountChart data={chartData} />
@@ -60,8 +60,8 @@ export default async function Inventory() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                {['Stock', 'SOH', 'ROP', 'Vendor', 'Actions'].map((head, key) => {
-                                    return <TableHead className={`${head == "Actions" ? "text-center" : ""}`} key={key}>{head}</TableHead>
+                                {['Stock', 'QTY', 'Status', 'Vendor', 'Actions'].map((head, key) => {
+                                    return <TableHead className={`${head == "Actions" || head == "Status" ? "text-center" : ""}`} key={key}>{head}</TableHead>
                                 })}
 
 
@@ -71,12 +71,13 @@ export default async function Inventory() {
                         <TableBody>
                             {lowestStockedItems.map((item) => {
 
-                                return <TableRow className={cn(rowStyle(item.quantity, item.reorderPoint, item.id))} key={item.id}>
+                                return <TableRow className={'font-medium'} key={item.id}>
 
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell>{item.quantity}</TableCell>
-                                    <TableCell>{item.reorderPoint}</TableCell>
+                                    <TableCell className="text-center">{StatusBadge(item.quantity, item.reorderPoint, item.id)}</TableCell>
                                     <TableCell>{item.vendor.name}</TableCell>
+                       
                                     <TableCell className="flex justify-center gap-2">
                                         <InventoryDropDown stockId={item.id} />
 

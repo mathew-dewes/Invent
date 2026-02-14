@@ -11,7 +11,7 @@ export default function StockStatusBadge({ quantity, reorderPoint }: {
         if (quantity === 0) {
     return { style: "bg-red-400", label: "Ordered" }
         } else if (quantity <= reorderPoint  && quantity > 0) {
-            return { style: "bg-orange-400", label: "Low Stock" }
+            return { style: "bg-yellow-200", label: "Low Stock" }
         } else if (quantity === 0) {
             return { style: "bg-red-400", label: "Out of stock" }
         } else {
@@ -20,7 +20,7 @@ export default function StockStatusBadge({ quantity, reorderPoint }: {
     };
 
     return <div>
-        <Badge className={cn(status().style)}>
+        <Badge className={cn(status().style,"font-semibold")}>
             {status().label}</Badge>
     </div>
 }

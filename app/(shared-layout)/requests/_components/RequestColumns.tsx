@@ -150,9 +150,9 @@ export const Requestcolumns: ColumnDef<Request>[] = [
       const status = row.original.status;
 
       const style = () => {
-        if (status == "OPEN" && requestQuantity > stockQuantity) {
+        if (status == "PENDING" && requestQuantity > stockQuantity) {
           return 'text-red-400'
-        } else if (status !== "OPEN") {
+        } else if (status !== "PENDING") {
           return 'text-white'
         } else {
           return 'text-green-400'
@@ -249,7 +249,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
             </DropdownMenuItem>
 
-            <DropdownMenuItem hidden={requestStatus == "COMPLETE" || requestStatus == "OPEN"} asChild>
+            <DropdownMenuItem hidden={requestStatus == "COMPLETE" || requestStatus == "PENDING"} asChild>
               <form action={
                 () => {
                 
@@ -275,14 +275,14 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <Link className={`${requestStatus !== "OPEN" ? "hidden" : ""}`} href={`/requests/${requestId}/edit`}><DropdownMenuItem>Edit request</DropdownMenuItem></Link>
+            <Link className={`${requestStatus !== "PENDING" ? "hidden" : ""}`} href={`/requests/${requestId}/edit`}><DropdownMenuItem>Edit request</DropdownMenuItem></Link>
 
             <DropdownMenuItem>
               <form action={
                 () => {
                   startTransition(async () => {
 
-                    if (requestStatus !== "OPEN") {
+                    if (requestStatus !== "PENDING") {
 
                       const res = await cancelAndReturnRequest(requestId);
                       if (res.success) {
@@ -301,7 +301,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
                 }
               }>
                 <input type="hidden" name="requestId" value={requestId} />
-                <button type="submit">{requestStatus !== "OPEN" ? "Cancel and return" : "Cancel request"}</button>
+                <button type="submit">{requestStatus !== "PENDING" ? "Cancel and return" : "Cancel request"}</button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>

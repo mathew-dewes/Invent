@@ -13,7 +13,7 @@ import Link from "next/link"
 import { startTransition } from "react"
 import { toast } from "sonner"
 
-export function OpenRequestsDropDown({requestId}:
+export function PendingRequestDropDown({requestId}:
     {requestId: string}
 ) {
   return (
