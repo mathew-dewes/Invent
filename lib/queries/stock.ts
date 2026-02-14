@@ -224,30 +224,6 @@ try {
 
 }
 
-export async function getStockHealthPercentages(){
-    const userId = await getUserId();
-    const stock = await prisma.stock.findMany({
-        where:{userId},
-        select:{
-            quantity: true,
-            reorderPoint: true
-        }
-    });
-
-    
-
-    const total = stock.length;
-
-    const healthy = stock.filter(
-        s => s.quantity >= s.reorderPoint
-    ).length;
-
-
-const stockHealthPercent = total === 0 ? 0 : Math.round((healthy / total) * 100);
-
-
-return stockHealthPercent
-}
 
 export async function getStockNameAndQuantityById(stockId: string){
     const userId = await getUserId();
@@ -307,29 +283,24 @@ export async function getInventoryChartData(){
 
     const userId = await getUserId();
 
-    const stockItems = await prisma.stock.findMany({
-        where: {userId},
-            select: {
+  const stockItems = await prisma.stock.findMany({
+    where: { userId },
+    select: {
       name: true,
       quantity: true,
+      reorderPoint: true,
     },
-    orderBy:{
-        quantity: "asc"
+    orderBy: {
+      quantity: "asc",
     },
-    take: 5
-    });
+    take: 5,
+  });
 
-    const stockMap = new Map<string, number>();
-
-    for (const stock of stockItems){
-        const current = stockMap.get(stock.name) ?? 0;
-        stockMap.set(stock.name, current + stock.quantity);
-    };
-
-   const data = Array.from(stockMap.entries()).map(([name, count]) => ({
-    name,
-    count,
-  }))
+  const data = stockItems.map((stock) => ({
+    name: stock.name,
+    count: stock.quantity,
+    reorderPoint: stock.reorderPoint,
+  }));
 
   return data;
 
@@ -395,5 +366,31 @@ export async function getStockNames(){
     });
 
     return stockNames
+};
+
+
+export async function getLowestStockedItems(){
+    const userId = await getUserId();
+
+    const items = await prisma.stock.findMany({
+        where:{userId},
+        select:{
+            id:true,
+            name:true, 
+            quantity: true, 
+            reorderPoint: true, 
+            vendor:{
+                select:{
+                    name:true
+                }
+            }
+        },
+        orderBy:{
+            quantity:"asc"
+        },
+        take: 10
+    });
+
+    return items;
 }
    

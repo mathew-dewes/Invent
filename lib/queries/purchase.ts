@@ -269,6 +269,18 @@ export async function getIncomingPurchases(){
     return purchases
 };
 
+export async function getIncomingPurchaseStockIds(){
+    const userId = await getUserId();
+    const purchaseIds = await prisma.purchase.findMany({
+        where:{userId, status: "PLACED"},
+        select: {
+            stockId:true
+        }
+    });
+    
+    return purchaseIds;
+}
+
 export async function getIncomingPurchasesCount(){
     const userId = await getUserId();
 

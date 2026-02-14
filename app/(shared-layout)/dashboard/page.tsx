@@ -23,8 +23,14 @@ export default function page() {
                 <div className="grid grid-cols-2 gap-6">
                     <WalkThrough />
                     <ActionBar />
-                          <Inventory />
-                  
+                    {/* New dashboard components */}
+                    {/* Iventory */}
+                    {/* Requests - Pending / Ready */}
+                    {/* IncomingPurchases - Purchases orders */}
+                    {/* Current Spend */}
+                    {/* Highest Spending Cost Centre */}
+                    {/* Most requested items */}
+                    <Inventory />
                     <CriticalStock />
                     <ReadyRequests />
                     <OpenRequests />

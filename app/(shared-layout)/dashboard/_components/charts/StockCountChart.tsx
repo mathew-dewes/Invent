@@ -16,7 +16,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-import { convertToMoney } from "@/lib/helpers"
+
 
 export const description = "A bar chart"
 
@@ -30,16 +30,18 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function StockCountChart({ data }:
-  { data: { name: string, count: number }[] }
+  { data: { name: string, count: number, reorderPoint: number }[]}
 ) {
+
+  const lowStockItems = data.filter((item) => item.count < item.reorderPoint);
   return (
     <Card>
       <CardHeader>
         <CardTitle>Lowest stocked items</CardTitle>
-        <CardDescription>11 units are below their reorder point</CardDescription>
+        <CardDescription>{lowStockItems.length} stock items are below their reorder point</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="aspect-auto h-60 w-full">
+        <ChartContainer config={chartConfig} className="aspect-auto h-80 w-full">
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -59,10 +61,15 @@ export function StockCountChart({ data }:
             <Bar dataKey="count" fill="#4ade80" radius={8}>
               {data.map((entry, index) => {
 
-                let fill = "#4ade80"
-                if (entry.count > 20) fill = "#4ade80"
-                else if (entry.count > 10) fill = "#fb923c"
-                else fill = "#ef4444"
+                let fill = "#4ade80";
+
+                if (entry.count <= entry.reorderPoint / 2){
+                  fill = '#f87171'
+                } else if (entry.count < entry.reorderPoint){
+                  fill = "#fdba74"
+                }
+                
+               
 
 
                 return <Cell key={`cell-${index}`} fill={fill} />
@@ -75,7 +82,7 @@ export function StockCountChart({ data }:
       </CardContent>
       <CardFooter >
         <div className="leading-none font-medium text-sm">
-          Stock value: {convertToMoney(11)}
+          Lorem ipsum dolor sit amet.
         </div>
       </CardFooter>
     </Card>
