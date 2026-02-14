@@ -6,9 +6,9 @@ export const loginSchema = z.object({
 });
 
 export const signUpSchema = z.object({
-    name: z.string().min(3).max(30),
+    name: z.string().min(5, 'Full name must be 5 or more characters').max(30, 'Full name must be 30 or less characters'),
     email: z.email(),
-    password: z.string().min(8).max(30)
+    password: z.string().min(5, 'Password must be 5 or more characters').max(30, 'Password must be 30 or less characters')
 });
 
 export const stockSchema = z.object({

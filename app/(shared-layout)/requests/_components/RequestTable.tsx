@@ -236,7 +236,7 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
           await delay(500)
           table.setRowSelection({})
         }} className="mt-2 flex gap-5">
-          {query == "OPEN" && <MarkAllReadyButton requestIds={selectedRequestIds} />}
+          {query == "PENDING" && <MarkAllReadyButton requestIds={selectedRequestIds} />}
           {query == "READY" && <MarkAllCompleteButton selectedStockIds={selectedStockIds} />}
 
 

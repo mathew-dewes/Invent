@@ -38,7 +38,7 @@ export async function createRequestLedger(requestId: string){
             }
         });
 
-        console.log(request);
+   
         
 
         if (!request) return;

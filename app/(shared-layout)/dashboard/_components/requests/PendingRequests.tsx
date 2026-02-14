@@ -1,9 +1,9 @@
 
 import { getLatestOpenRequests, getOpenRequestCount } from "@/lib/queries/request";
-import OpenRequestsCard from "./OpenRequestsCard";
+import PendingRequestCard from "./PendingRequestsCard";
 
 
-export default async function OpenRequests(){
+export default async function PendingRequests(){
 
     const [openRequests, requestCount] = await Promise.all([getLatestOpenRequests(), getOpenRequestCount()])
       const noConcern = openRequests.length == 0;
@@ -14,7 +14,7 @@ export default async function OpenRequests(){
        
         
 
-            <OpenRequestsCard tableData={openRequests} requestCount={requestCount} />
+            <PendingRequestCard tableData={openRequests} requestCount={requestCount} />
          
         
         

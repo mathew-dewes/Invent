@@ -7,7 +7,6 @@ import prisma from "../prisma";
 import { revalidatePath } from "next/cache";
 import { generateRequestNumber } from "./helper";
 import { createRequestLedger } from "./ledger";
-import { redirect } from "next/navigation";
 
 
 
@@ -35,7 +34,7 @@ export async function createRequest(values: z.infer<typeof requestSchema>) {
                 stockId,
                 quantity: Number(quantity),
                 costCentreId,
-                status: "OPEN",
+                status: "PENDING",
                 requestNumber,
                 userId,
                 note: notes

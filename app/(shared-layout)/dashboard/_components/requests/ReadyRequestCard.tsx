@@ -23,7 +23,7 @@ type Props = {
 
 export default function ReadyRequestCard({ tableData, requestCount }: Props) {
     return (
-        <Card className="h-full">
+        <Card>
             <CardHeader>
                 <CardTitle>
                   <div className="flex items-center gap-1.5">

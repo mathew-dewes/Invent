@@ -1,9 +1,5 @@
 import { Suspense } from "react";
-import CriticalStock from "./_components/criticalStock/CriticalStock";
-import ReadyRequests from "./_components/readyRequests/ReadyRequests";
-import OpenRequests from "./_components/openRequests/OpenRequests";
 import CompletedRequests from "./_components/completedRequests/CompletedRequests";
-import IncomingPurchases from "./_components/incomingPurchases/IncomingPurchases";
 import Inventory from "./_components/inventory/Inventory";
 import ActionBar from "./_components/action/ActionBar";
 import CostAnalysis from "./_components/costAnalysis/CostAnalysis";
@@ -12,6 +8,8 @@ import WalkThrough from "./_components/walkthrough/WalkThrough";
 import StockPerformance from "./_components/StockPerformance/StockPerformance";
 import { DashboardSkeleton } from "@/components/web/skeletons/DashboardSkeleton";
 import PurchaseSummary from "./_components/PurchaseSummary/PurchaseSummary";
+
+import Requests from "./_components/requests/Requests";
 
 
 export default function page() {
@@ -26,15 +24,12 @@ export default function page() {
                     {/* New dashboard components */}
                     {/* Iventory */}
                     {/* Requests - Pending / Ready */}
-                    {/* IncomingPurchases - Purchases orders */}
                     {/* Current Spend */}
                     {/* Highest Spending Cost Centre */}
                     {/* Most requested items */}
                     <Inventory />
-                    <CriticalStock />
-                    <ReadyRequests />
-                    <OpenRequests />
-                    <IncomingPurchases />
+                    <Requests/>
+            
               
                     <PurchaseSummary />
                     <CostAnalysis />

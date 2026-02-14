@@ -200,7 +200,7 @@ model CostCentre {
 
 
 enum RequestStatus {
-  OPEN
+  PENDING
   READY
   COMPLETE
 }

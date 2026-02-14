@@ -12,13 +12,13 @@ export default function RequestStatusBadge({ status }: {
 function requestStatus(){
      if (status == "COMPLETE"){
         return {style: "bg-green-400", label: "Complete"}
-} else if (status == "OPEN") {
-     return {style: "bg-yellow-200 text-black", label: "Open"}
+} else if (status == "PENDING") {
+     return {style: "bg-yellow-200 text-black", label: "Pending"}
 } else {
      return {style: "bg-blue-400", label: "Ready"}
 }
 };
     return <div>
-        <Badge className={cn(requestStatus().style, " font-semibold")}>{requestStatus().label}</Badge>
+        <Badge className={cn(requestStatus().style, "font-semibold")}>{requestStatus().label}</Badge>
     </div>
 }

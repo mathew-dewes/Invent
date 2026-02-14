@@ -2,7 +2,7 @@
 
 
 import { PurchaseStatus, RequestStatus } from "@/generated/prisma/enums";
-import { aisleLocation, demoCostCentres, demoCustomers, demoStock, demoVendors, generatePartNumber, pickRandom, randomDateWithin, randomInt, weightedStatus } from "../helpers";
+import { aisleLocation, demoCostCentres, demoCustomers, demoStock, demoVendors, generatePartNumber, pickRandom, randomDateWithin, randomInt, weightedPurchaseStatus, weightedRequestStatus } from "../helpers";
 import prisma from "../prisma";
 import { getUserId } from "./auth";
 import { revalidatePath } from "next/cache";
@@ -78,7 +78,7 @@ export async function createBaseTables() {
                 vendorId: pickRandom(vendors).id,
                 userId,
                 unitCost: randomInt(20, 150),
-                quantity: randomInt(5, 60),
+                quantity: randomInt(30, 60),
 
             }))
         })
@@ -121,7 +121,7 @@ export async function createRequests() {
             customer: pickRandom(demoCustomers),
             requestNumber: 5000 + i,
             quantity: randomInt(1, 5),
-            status: weightedStatus() as RequestStatus,
+            status: weightedRequestStatus() as RequestStatus,
             stockId: stock.id,
             costCentreId: costCentre.id,
             userId,
@@ -145,7 +145,7 @@ export async function createRequests() {
         const randomFutureDate = new Date(randomInt(created, now));
         let finalStatus = request.status;
 
-        if (finalStatus !== "OPEN") {
+        if (finalStatus !== "PENDING") {
 
             const stockUpdate = await prisma.stock.updateMany({
                 where: {
@@ -159,7 +159,7 @@ export async function createRequests() {
             });
 
             if (stockUpdate.count === 0) {
-                finalStatus = "OPEN"
+                finalStatus = "PENDING"
             }
 
         };
@@ -171,10 +171,22 @@ export async function createRequests() {
         const ledgerDate = finalStatus === "COMPLETE" ? randomFutureDate : request.createdAt;
 
         const stock = await prisma.stock.findUnique({
-            where: { id: request.stockId }
+            where: { id: request.stockId },
+            select:{
+                name:true,
+                unitCost: true,
+                vendor:{
+                    select:{
+                        name: true
+                    }
+                }
+            }
         });
         const costCentre = await prisma.costCentre.findUnique({
             where: { id: request.costCentreId },
+            select:{
+                name:true
+            }
         });
         await prisma.costLedger.create({
             data: {
@@ -191,7 +203,8 @@ export async function createRequests() {
                 month: ledgerDate.getMonth() + 1,
                 year: ledgerDate.getFullYear(),
                 createdAt: ledgerDate,
-                userId
+                userId,
+                vendorName: stock?.vendor.name?? "Unknown"
 
             }
         });
@@ -240,7 +253,7 @@ export async function createPurchases() {
 
             purchaseData.push({
                 purchaseNumber: 1000 + i,
-                status: pickRandom(["PLACED", "RECEIVED"]) as PurchaseStatus,
+                status: weightedPurchaseStatus() as PurchaseStatus,
                 quantity: qty,
                 totalCost: qty * Number(stock.unitCost),
                 stockId: stock.id,
