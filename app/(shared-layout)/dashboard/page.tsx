@@ -9,7 +9,9 @@ import StockPerformance from "./_components/StockPerformance/StockPerformance";
 import { DashboardSkeleton } from "@/components/web/skeletons/DashboardSkeleton";
 
 
-import Requests from "./_components/requests/Requests";
+// import Requests from "./_components/requests/Requests";
+import Purchases from "./_components/purchases/Purchases";
+import RequestOverview from "./_components/RequestOverview/RequestOverview";
 
 
 export default function page() {
@@ -27,11 +29,15 @@ export default function page() {
                     {/* Current Spend */}
                     {/* Highest Spending Cost Centre */}
                     {/* Most requested items */}
+                    <RequestOverview/>
+                    {/* <Requests/> */}
                     <Inventory />
-                    <Requests/>
+                    <Purchases/>
                     <CostAnalysis />
                     <StockPerformance />
                     <CompletedRequests />
+              
+       
 
 
               

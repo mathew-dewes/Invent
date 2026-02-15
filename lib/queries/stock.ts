@@ -293,7 +293,7 @@ export async function getInventoryChartData(){
     orderBy: {
       quantity: "asc",
     },
-    take: 5,
+    take: 4,
   });
 
   const data = stockItems.map((stock) => ({
