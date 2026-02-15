@@ -147,6 +147,7 @@ model Purchase {
   user User @relation(fields: [userId], references: [id])
   stockItem Stock  @relation(fields: [stockId], references: [id])
 
+
 }
 
 model CostLedger {

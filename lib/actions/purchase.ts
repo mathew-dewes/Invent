@@ -175,7 +175,8 @@ export async function markReceived(purchaseId: string) {
             await tx.purchase.update({
                 where: { userId, id: purchase.id },
                 data: {
-                    status: "RECEIVED"
+                    status: "RECEIVED",
+              
                 }
             });
 
