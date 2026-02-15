@@ -126,6 +126,7 @@ export async function createRequests() {
             costCentreId: costCentre.id,
             userId,
             createdAt: randomDateWithin(90),
+            
         });
 
     };
@@ -172,11 +173,11 @@ export async function createRequests() {
 
         const stock = await prisma.stock.findUnique({
             where: { id: request.stockId },
-            select:{
-                name:true,
+            select: {
+                name: true,
                 unitCost: true,
-                vendor:{
-                    select:{
+                vendor: {
+                    select: {
                         name: true
                     }
                 }
@@ -184,8 +185,8 @@ export async function createRequests() {
         });
         const costCentre = await prisma.costCentre.findUnique({
             where: { id: request.costCentreId },
-            select:{
-                name:true
+            select: {
+                name: true
             }
         });
         await prisma.costLedger.create({
@@ -204,7 +205,8 @@ export async function createRequests() {
                 year: ledgerDate.getFullYear(),
                 createdAt: ledgerDate,
                 userId,
-                vendorName: stock?.vendor.name?? "Unknown"
+                vendorName: stock?.vendor.name ?? "Unknown",
+                customerName: request.customer
 
             }
         });
@@ -243,17 +245,43 @@ export async function createPurchases() {
 
     const purchaseData = [];
 
+
     try {
+        const placedStockIds = new Set<string>();
+
+        const existingPlaced = await prisma.purchase.findMany({
+            where: {
+                userId,
+                status: "PLACED",
+            },
+            select: {
+                stockId: true
+            }
+        });
+
+        existingPlaced.forEach((p) => placedStockIds.add(p.stockId));
+
 
         for (let i = 0; i < 20; i++) {
+
             const stock = pickRandom(stockItems);
             const vendor = pickRandom(vendors);
             const qty = randomInt(5, 25)
             const purchaseDate = randomDateWithin(180);
+            const status = weightedPurchaseStatus() as PurchaseStatus;
+
+            if (status === "PLACED") {
+                if (placedStockIds.has(stock.id)) {
+                    continue; // skip duplicate PLACED
+                }
+
+                placedStockIds.add(stock.id);
+            }
+
 
             purchaseData.push({
                 purchaseNumber: 1000 + i,
-                status: weightedPurchaseStatus() as PurchaseStatus,
+                status,
                 quantity: qty,
                 totalCost: qty * Number(stock.unitCost),
                 stockId: stock.id,
@@ -264,17 +292,18 @@ export async function createPurchases() {
 
         };
 
+
+
         await prisma.purchase.createMany({
             data: purchaseData
         });
 
-        const purchaseArray = await prisma.purchase.findMany({
-            where: { userId }
+        const receivedPurchases = await prisma.purchase.findMany({
+            where: { userId, status: "RECEIVED" }
         });
 
-        for (const purchase of purchaseArray) {
+        for (const purchase of receivedPurchases) {
 
-            if (purchase.status !== "RECEIVED") continue;
             await prisma.stock.update({
                 where: { id: purchase.stockId, userId },
                 data: { quantity: { increment: purchase.quantity } }
@@ -318,7 +347,7 @@ export async function createPurchases() {
 
 
     } catch (error) {
-        console.log(error);
+        console.log("❌ createPurchases failed:", error);
 
     }
 }

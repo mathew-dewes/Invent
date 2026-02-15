@@ -32,15 +32,27 @@ export default function ReadyRequestCard({ tableData, requestCount }: Props) {
      
           </div>
                   </CardTitle>
+                  
                 <CardDescription>
-                   <p>Items picked and ready to collect</p>
+                    {requestCount === 0 ? 
+                    
+                    <div>
+                        <p>All tools have been collected. Well done!</p>
+
+                    </div> : 
+                            <div>
+                  <p>Items picked and ready to collect</p>
                    <p className="mt-1">Viewing {requestCount >= 5 ? "5" : requestCount} of {requestCount}  most recent ready requests</p>
+                    </div>}
+                    
+                 
+ 
                 </CardDescription>
             </CardHeader>
             <CardContent>
 
                 <Table>
-                    <TableHeader>
+                    <TableHeader hidden={requestCount == 0}>
                         <TableRow>
                             {['Customer', 'Item', 'QTY'].map((head, key) => {
                                 return <TableHead className={head === "Location" ? "text-right" : ""} key={key}>{head}</TableHead>
@@ -77,7 +89,7 @@ export default function ReadyRequestCard({ tableData, requestCount }: Props) {
 
 
             </CardContent>
-            <CardFooter>
+            <CardFooter hidden={requestCount == 0}>
             
                          <Link className={buttonVariants({variant:"default", size:"sm"})} href={'/requests?status=READY'}>View Requests</Link>
                        

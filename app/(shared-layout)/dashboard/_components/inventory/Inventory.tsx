@@ -5,7 +5,6 @@ import { StockCountChart } from "../charts/StockCountChart";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { InventoryDropDown } from "./InventoryDropDown";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { getIncomingPurchaseStockIds } from "@/lib/queries/purchase";
 
@@ -28,6 +27,8 @@ export default async function Inventory() {
 
         if (inComingStock) {
             return  <Badge className="bg-blue-300">Purchased</Badge>
+        
+             
 
         } else if (count <= reorderPoint / 2) {
             return   <Badge className="bg-red-400">Critical</Badge>
@@ -36,6 +37,14 @@ export default async function Inventory() {
         } 
 
     }
+
+    function incomingPurchase(stockId: string){
+           return purchaseStockIds.some(
+            (p) => p.stockId === stockId
+        );
+    };
+
+    
 
     if (!chartData || chartData.length == 0) return
 
@@ -49,7 +58,7 @@ export default async function Inventory() {
                     <Badge className="bg-red-400">Critical</Badge>
                     <Badge className="bg-orange-300">Low</Badge>
                     <Badge className="bg-green-300">Good</Badge>
-                    <Badge className="bg-blue-300">Incoming Purchase</Badge>
+                    <Badge className="bg-blue-300">Purchase</Badge>
 
                 </div>
             </div>
@@ -79,7 +88,7 @@ export default async function Inventory() {
                                     <TableCell>{item.vendor.name}</TableCell>
                        
                                     <TableCell className="flex justify-center gap-2">
-                                        <InventoryDropDown stockId={item.id} />
+                                        <InventoryDropDown incomingPurchase={incomingPurchase(item.id)} stockId={item.id} />
 
 
                                     </TableCell>

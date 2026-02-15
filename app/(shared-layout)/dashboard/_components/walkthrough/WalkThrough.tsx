@@ -7,6 +7,9 @@ export default async function WalkThrough(){
 
   const requests = await getRequestCount();
 
+
+  if (requests > 0) return
+
  
 
 

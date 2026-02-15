@@ -32,7 +32,7 @@ export async function getAllStock(userId: string ,level?: string) {
         },
 
         orderBy: {
-            createdAt: "desc",
+            quantity: "asc",
         
         }
 

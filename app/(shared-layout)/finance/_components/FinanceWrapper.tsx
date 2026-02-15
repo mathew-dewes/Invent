@@ -12,6 +12,9 @@ const [finances, financeTypeCount] = await Promise.all([getFinanceData(filter, t
 
 
 
+
+
+
     return   <FinanceTable queryCounts={financeTypeCount} data={finances} columns={Financecolumns} filter={{label: "reference", source: "reference"}} />
        
 }

@@ -47,9 +47,23 @@ export default function PurchaseForm({stock, reorderStockId}:
                 startTransition(async () => {
                     
             try {
-               await createPurchase(values)
-        toast.success(`Purchase was placed successfully`);
-        router.push('/purchases')
+               const res = await createPurchase(values);
+
+               if (res?.success){
+                toast.success(res.message);
+                router.push('/purchases');
+
+             } else if (res.errorType == "Existing") {
+                toast.error(res?.message);
+                toast.error('Purchase failed')
+         
+               } else {
+                    toast.error(res?.message)
+               }
+
+               
+
+    
         
             } catch (error) {
             console.log(error);

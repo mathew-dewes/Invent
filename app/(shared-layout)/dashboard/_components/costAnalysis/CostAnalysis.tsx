@@ -1,9 +1,14 @@
 import { getCostCentreSpend } from "@/lib/queries/finance";
 import { TopSpendingCostCentresChart } from "./TopSpendingCostCentresChart";
+import { getPurchaseChartData } from "@/lib/queries/purchase";
+import { TotalSpendChart } from "../charts/TotalSpendChart";
 
 export default async function CostAnalysis(){
 
     const spend = await getCostCentreSpend();
+    
+        const data = await getPurchaseChartData();
+    
     
     
     const totalSpend = spend.reduce((acc, item)=>{
@@ -18,11 +23,15 @@ export default async function CostAnalysis(){
 
     
     return (
-        <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 md:col-span-1">
+        <div className="border-2 p-5 rounded-xl bg-secondary col-span-2">
           <div>
                <h1 className="font-semibold text-xl py-3 ml-1 text-center md:text-left">Cost Analysis</h1>
-     
-                <TopSpendingCostCentresChart data={spend} totalSpend={totalSpend}/>
+                <div className="grid grid-cols-2 gap-5">
+        <TotalSpendChart data={data}/>
+        <TopSpendingCostCentresChart data={spend} totalSpend={totalSpend}/>
+    
+                </div>
+        
                     </div>
         </div>
     )

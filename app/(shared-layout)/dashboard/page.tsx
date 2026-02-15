@@ -7,7 +7,7 @@ import CostAnalysis from "./_components/costAnalysis/CostAnalysis";
 import WalkThrough from "./_components/walkthrough/WalkThrough";
 import StockPerformance from "./_components/StockPerformance/StockPerformance";
 import { DashboardSkeleton } from "@/components/web/skeletons/DashboardSkeleton";
-import PurchaseSummary from "./_components/PurchaseSummary/PurchaseSummary";
+
 
 import Requests from "./_components/requests/Requests";
 
@@ -22,22 +22,19 @@ export default function page() {
                     <WalkThrough />
                     <ActionBar />
                     {/* New dashboard components */}
-                    {/* Iventory */}
+                    {/* Inventory */}
                     {/* Requests - Pending / Ready */}
                     {/* Current Spend */}
                     {/* Highest Spending Cost Centre */}
                     {/* Most requested items */}
                     <Inventory />
                     <Requests/>
-            
-              
-                    <PurchaseSummary />
                     <CostAnalysis />
-
+                    <StockPerformance />
                     <CompletedRequests />
 
 
-                    <StockPerformance />
+              
              
 
 
