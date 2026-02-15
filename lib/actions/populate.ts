@@ -126,6 +126,7 @@ export async function createRequests() {
             costCentreId: costCentre.id,
             userId,
             createdAt: randomDateWithin(90),
+            
         });
 
     };
@@ -204,7 +205,8 @@ export async function createRequests() {
                 year: ledgerDate.getFullYear(),
                 createdAt: ledgerDate,
                 userId,
-                vendorName: stock?.vendor.name ?? "Unknown"
+                vendorName: stock?.vendor.name ?? "Unknown",
+                customerName: request.customer
 
             }
         });

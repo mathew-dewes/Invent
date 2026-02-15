@@ -128,6 +128,7 @@ export type Finance = {
   unitCost?: string;
   month?: number;
   year?: number;
+  customerName?: string | null
   costCentre: {
     name: string
   } | null

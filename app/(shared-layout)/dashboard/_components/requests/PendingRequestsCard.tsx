@@ -28,6 +28,8 @@ requestCount: number,
 const headings = ['Placed', 'Item', 'QTY', 'Customer']
 
 export default function PendingRequestCard({ tableData, requestCount }: Props) {
+
+
     return (
         <Card className="w-full">
             <CardHeader>
@@ -39,14 +41,24 @@ export default function PendingRequestCard({ tableData, requestCount }: Props) {
           </div>
                   </CardTitle>
                 <CardDescription>
+                    {requestCount === 0 ? 
+                    
+                    <div>
+                        <p>All requests are completed. Well done!</p>
+
+                    </div> : 
+                         <div>
                     <p>Tool requests to pick</p>
                       <p className="mt-1">Viewing {requestCount >= 5 ? "5" : requestCount} of {requestCount}  most recent requests</p>
+                    </div>}
+               
+            
                 </CardDescription>
             </CardHeader>
             <CardContent>
 
                 <Table>
-                    <TableHeader>
+                    <TableHeader hidden={requestCount == 0}>
                         <TableRow>
                             {headings.map((head, key) => {
                                 return <TableHead className={head === "Location" ? "text-right" : ""} key={key}>{head}</TableHead>
@@ -82,7 +94,7 @@ export default function PendingRequestCard({ tableData, requestCount }: Props) {
 
 
             </CardContent>
-            <CardFooter>
+            <CardFooter hidden={requestCount == 0}>
                 
             
                          <Link className={buttonVariants({variant:"default", size:"sm"})} href={'/requests?status=PENDING'}>View Requests</Link>

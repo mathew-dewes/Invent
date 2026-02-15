@@ -33,11 +33,27 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
 
         const stockItem = await prisma.stock.findUnique({
             where: { id: item, userId },
-            include: { vendor: true },
+            select: {
+                unitCost: true,
+                vendorId: true,
+                id: true,
+                name: true,
+
+            }
 
         });
 
-        if (!stockItem) return
+        const existingPurchase = await prisma.purchase.findFirst({
+            where: { userId, stockId: stockItem?.id, status: "PLACED" }
+        });
+
+        if (existingPurchase) return {
+            success: false, message: `${stockItem?.name} has an active purchase`, errorType: "Existing",
+        }
+
+        if (!stockItem) return {
+            success: false, message: `Stock item doesn't exist`
+        }
 
         const totalCost = Number(stockItem!.unitCost) * Number(quantity);
 
@@ -54,18 +70,25 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
                 vendorId: stockItem!.vendorId
             },
             select: {
-                id: true
+                id: true,
+                quantity: true
             }
         });
 
-        await createPurchaseLedger(purchase.id)
+        await createPurchaseLedger(purchase.id);
+
+        return {
+            success: true, message: `${purchase.quantity} x ${stockItem.name}(s) was purchased`
+        }
 
 
 
 
     } catch (error) {
-        console.error('Create vendor error:', error);
-        throw error;
+        console.error('Create purchase error:', error);
+        return {
+            success: false, message: `There was an error`
+        }
 
     }
 }
@@ -104,7 +127,7 @@ export async function updatePurchase(values: z.infer<typeof purchaseSchema>, pur
                 totalCost,
                 userId,
                 notes,
-    
+
             },
             where: { id: purchaseId }
         })
@@ -176,7 +199,7 @@ export async function markReceived(purchaseId: string) {
                 where: { userId, id: purchase.id },
                 data: {
                     status: "RECEIVED",
-              
+
                 }
             });
 
@@ -260,5 +283,81 @@ export async function markAllReceived(purchaseIds: string[]) {
         };
 
     }
+
+}
+
+
+export async function confirmPurchase(stockId: string) {
+    const userId = await getUserId();
+
+    const existingPurchase = await prisma.purchase.findFirst({
+        where: { stockId, userId, status: "PLACED" },
+        select: {
+            id: true,
+            quantity:true, 
+            stockItem:{
+                select:{
+                    name: true
+                }
+            }
+        }
+
+    });
+
+    if (!existingPurchase) return {
+        success: false, message: "Purchase does not exist"
+    }
+
+    try {
+        await prisma.$transaction(async (tx) => {
+            const purchase = await tx.purchase.findUnique({
+                where: { id: existingPurchase?.id, userId },
+                select: {
+                    id: true, quantity: true, stockId: true,
+                    stockItem: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            });
+
+            if (!purchase) {
+                return {
+                    success: false, message: "Purchase does not exist"
+                }
+            };
+
+            await tx.stock.update({
+                where: { userId, id: purchase.stockId },
+                data: {
+                    quantity: {
+                        increment: purchase.quantity
+                    }
+                }
+            });
+
+            await tx.purchase.update({
+                where: { userId, id: purchase.id },
+                data: {
+                    status: "RECEIVED",
+
+                }
+            });
+
+
+        });
+
+        revalidatePath('/requests');
+        return {success: true, message: `${existingPurchase.stockItem.name} x ${existingPurchase.quantity} was received`}
+    } catch (error) {
+
+        console.log(error);
+
+        return {success: false, message: "There was an error"}
+        
+
+    }
+
 
 }

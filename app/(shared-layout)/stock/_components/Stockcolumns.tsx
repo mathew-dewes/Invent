@@ -105,6 +105,7 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
    
       return (
         <DropdownMenu>
+          
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
@@ -113,6 +114,9 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                   <DropdownMenuItem>
+              <Link href={`/purchases/new?reorder=${stockId}`}>Purchase stock</Link>
+              </DropdownMenuItem> 
 
             <DropdownMenuItem>
               <Link href={`/stock/${stockId}/edit`}>Edit details</Link>
@@ -122,9 +126,7 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
             </DropdownMenuItem>
   
 
-            <DropdownMenuItem>
-              <Link href={`/purchases/new?reorder=${stockId}`}>Purchase stock</Link>
-              </DropdownMenuItem> 
+     
 
             <DropdownMenuSeparator />
 

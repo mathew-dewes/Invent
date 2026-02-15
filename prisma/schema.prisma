@@ -165,6 +165,7 @@ model CostLedger {
   vendorName String?
 
   costCentreId String?
+  customerName String?
 
   costCentreName String?
   costCentre CostCentre? @relation(fields: [costCentreId], references: [id])

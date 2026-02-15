@@ -5,6 +5,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Finance } from "@/lib/types"
 import { useSearchParams } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { ArrowUpDown } from "lucide-react"
 
 
 const HideCheckboxes = () =>{
@@ -75,6 +77,10 @@ export const Financecolumns: ColumnDef<Finance>[] = [
     accessorKey: "stockName",
     header: "Stock Item",
   },
+    {
+    accessorKey: "customerName",
+    header: "Customer",
+  },
       {
     accessorKey: "vendorName",
 
@@ -101,6 +107,8 @@ export const Financecolumns: ColumnDef<Finance>[] = [
     accessorKey: "unitCost",
       header: () => <div>Unit Cost</div>,
     cell: ({ row }) => {
+      console.log(row.original);
+      
       const amount = parseFloat(row.getValue("unitCost"))
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -112,7 +120,13 @@ export const Financecolumns: ColumnDef<Finance>[] = [
   },
    {
     accessorKey: "totalCost",
-      header: () => <div>Total Cost</div>,
+      header: ({column}) => <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Total Cost
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("totalCost"))
       const formatted = new Intl.NumberFormat("en-US", {

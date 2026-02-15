@@ -33,11 +33,13 @@ export async function getFinanceData(filter?: FinanceType, timeFrame?:TimeFrame)
             quantity:true,
             unitCost:true,
             totalCost:true,
+            customerName: true,
             costCentre:{
                 select:{
                     name:true
                 }
-            }
+            },
+            
         },
     
         

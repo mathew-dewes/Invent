@@ -61,7 +61,8 @@ export async function createRequestLedger(requestId: string){
                 userId,
                 sourceId: requestId,
                 reference,
-                vendorName: request.stockItem.vendor.name
+                vendorName: request.stockItem.vendor.name,
+                customerName: request.customer
 },
 select:{totalCost:true, costCentreName:true}
         });

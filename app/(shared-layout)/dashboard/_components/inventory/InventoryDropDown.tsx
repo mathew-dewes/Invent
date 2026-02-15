@@ -8,13 +8,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { confirmPurchase } from "@/lib/actions/purchase"
 
 import Link from "next/link"
 import { startTransition } from "react"
 import { toast } from "sonner"
 
-export function InventoryDropDown({stockId}:
-    {stockId: string}
+export function InventoryDropDown({stockId, incomingPurchase}:
+    {stockId: string, incomingPurchase: boolean}
 ) {
   return (
     <DropdownMenu>
@@ -23,12 +24,17 @@ export function InventoryDropDown({stockId}:
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem hidden={!incomingPurchase}>
     <form action={
                 () => {
                   startTransition(async () => {
+            const res = await confirmPurchase(stockId);
 
-            console.log(stockId);
+            if (res.success){
+              toast.success(res.message)
+            } else {
+              toast.error(res.message)
+            }
             
                   })
 
@@ -38,11 +44,14 @@ export function InventoryDropDown({stockId}:
                 <button type="submit">Confirm Purchase</button>
               </form>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem hidden={incomingPurchase}>
    <Link href={'/purchases/new?reorder=' + stockId}>Create Purchase</Link>
           </DropdownMenuItem>
-                 <DropdownMenuItem>
+                 <DropdownMenuItem hidden={!incomingPurchase}>
             View Purchase
+          </DropdownMenuItem>
+                   <DropdownMenuItem>
+            Update quantity
           </DropdownMenuItem>
           <DropdownMenuItem>
             Copy vendor email
