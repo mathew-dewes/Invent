@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { RequestStatus } from "@/generated/prisma/enums";
+import { MarkComplete, markReady } from "@/lib/actions/request";
 
 import Link from "next/link"
 import { startTransition } from "react"
@@ -29,7 +30,13 @@ export function RequestActionDropdown({requestId, status}:
                 () => {
                   startTransition(async () => {
 
-                    toast.success(requestId)
+                      const res = await markReady(requestId);
+
+                    if (res.success){
+                      toast.success(res.message)
+                    } else {
+                      toast.error(res.message)
+                    }
 
            
 
@@ -47,7 +54,14 @@ export function RequestActionDropdown({requestId, status}:
                 () => {
                   startTransition(async () => {
 
-                    toast.success(requestId)
+
+                    const res = await MarkComplete(requestId);
+
+                    if (res.success){
+                      toast.success(res.message)
+                    } else {
+                      toast.error(res.message)
+                    }
 
            
 

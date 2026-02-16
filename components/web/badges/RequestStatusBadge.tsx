@@ -11,11 +11,11 @@ export default function RequestStatusBadge({ status }: {
 
 function requestStatus(){
      if (status == "COMPLETE"){
-        return {style: "bg-green-400", label: "Complete"}
+        return {style: "bg-green-300", label: "Complete"}
 } else if (status == "PENDING") {
      return {style: "bg-yellow-200 text-black", label: "Pending"}
 } else {
-     return {style: "bg-blue-400", label: "Ready"}
+     return {style: "bg-blue-300", label: "Ready"}
 }
 };
     return <div>

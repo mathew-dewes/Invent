@@ -7,7 +7,7 @@ import WalkThrough from "./_components/walkthrough/WalkThrough";
 import StockPerformance from "./_components/StockPerformance/StockPerformance";
 import { DashboardSkeleton } from "@/components/web/skeletons/DashboardSkeleton";
 import Purchases from "./_components/purchases/Purchases";
-import RequestOverview from "./_components/RequestOverview/RequestOverview";
+import Requests from "./_components/Requests/Requests";
 
 
 export default function page() {
@@ -19,7 +19,7 @@ export default function page() {
                 <div className="grid grid-cols-2 gap-6">
                     <WalkThrough />
                     <ActionBar />
-                    <RequestOverview/>
+                    <Requests/>
                     <Inventory />
                     <Purchases/>
                     <CostAnalysis />

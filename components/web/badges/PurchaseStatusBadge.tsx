@@ -16,9 +16,9 @@ export default function PurchaseStatusBadge({ status }: {
 
 function purchaseStatus(){
      if (status == "RECEIVED"){
-        return {style: "bg-green-400", label: "Received"}
+        return {style: "bg-green-300", label: "Received"}
 } else {
-         return {style: "bg-blue-400", label: "Placed"}
+         return {style: "bg-blue-300", label: "Placed"}
 }
 };
     return <div>
