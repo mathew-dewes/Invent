@@ -8,7 +8,7 @@ import { RequestActionDropdown } from "./RequestActionDropdown";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 
-export default async function RequestOverview() {
+export default async function Requests() {
 
     const [requests, data, statusCount] = await Promise.all([getRecentRequests(), getRequestChartData(), getWeeklyRequestsByStatusCount()])
 
@@ -37,7 +37,7 @@ export default async function RequestOverview() {
     
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-10 grid gap-5">
-            <div className="col-span-4">
+            <div className="md:col-span-4 col-span-10">
                 <h1 className="font-semibold text-xl py-3 text-center md:text-left">Requests</h1>
                 <StackedRequestChart statusCount={statusCount} data={data} />
                     <div className="flex gap-2 mt-5">
@@ -49,7 +49,7 @@ export default async function RequestOverview() {
                 </div>
             </div>
 
-            <Card className="col-span-6">
+            <Card className="md:col-span-6 col-span-10">
                 <CardHeader>
                     <CardTitle>Recent Requests</CardTitle>
                 </CardHeader>

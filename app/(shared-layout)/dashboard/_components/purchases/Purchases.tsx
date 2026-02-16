@@ -31,12 +31,12 @@ const statusBadge = (status: PurchaseStatus) =>{
             
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-2 grid gap-5">
-            <div>
+            <div className="col-span-2 md:col-span-1">
      <h1 className="font-semibold text-xl py-3 text-center md:text-left">Purchases</h1>
              <TotalSpendChart data={data}/>
 
             </div>
-                        <Card>
+                        <Card className="col-span-2 md:col-span-1">
                             <CardHeader>
                                 <CardTitle>Recent Purchases</CardTitle>
                             </CardHeader>

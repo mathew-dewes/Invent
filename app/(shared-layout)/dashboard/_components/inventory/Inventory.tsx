@@ -54,7 +54,7 @@ export default async function Inventory() {
 
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-10 grid gap-5">
-            <div className="col-span-4">
+            <div className="md:col-span-4 col-span-10">
                 <h1 className="font-semibold text-xl py-3 text-center md:text-left">Stock</h1>
                 <StockCountChart data={chartData} />
                 <div className="flex gap-2 mt-5">
@@ -67,7 +67,7 @@ export default async function Inventory() {
                 </div>
             </div>
 
-            <Card className="col-span-6">
+            <Card className="md:col-span-6 col-span-10">
 
                 <CardContent>
                     <Table>

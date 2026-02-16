@@ -32,14 +32,14 @@ export default async function CostAnalysis(){
     
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-2 grid gap-5">
-          <div>
+          <div className="col-span-2 md:col-span-1">
                <h1 className="font-semibold text-xl py-3 ml-1 text-center md:text-left">Cost Analysis</h1>
         <TopSpendingCostCentresChart data={spend} totalSpend={totalSpend}/>
     
           
         
                     </div>
-                                                           <Card>
+                                                           <Card className="col-span-2 md:col-span-1">
                             <CardHeader>
                                 <CardTitle>Cost Centres</CardTitle>
                             </CardHeader>
