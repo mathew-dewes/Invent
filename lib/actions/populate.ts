@@ -2,7 +2,7 @@
 
 
 import { FinanceType, PurchaseStatus, RequestStatus } from "@/generated/prisma/enums";
-import { aisleLocation, demoCostCentres, demoCustomers, demoStock, demoVendors, generatePartNumber, pickRandom, randomDateWithin, randomInt, weightedPurchaseStatus, weightedRequestStatus } from "../helpers";
+import { aisleLocation, demoCostCentres, demoCustomers, demoStock, demoVendors, generatePartNumber, pickRandom, randomDateBetween, randomDateWithin, randomInt, weightedPurchaseStatus, weightedRequestStatus } from "../helpers";
 import prisma from "../prisma";
 import { getUserId } from "./auth";
 import { revalidatePath } from "next/cache";
@@ -16,7 +16,7 @@ export async function LoadDemoData() {
 
         await createBaseTables();
         await createRequests();
-        // await createPurchases();
+        await createPurchases();
 
 
         revalidatePath('/dashboard');
@@ -120,17 +120,29 @@ export async function createRequests() {
         const stock = pickRandom(stockItems);
         const costCentre = pickRandom(costCentres);
 
+        const status = weightedRequestStatus() as RequestStatus;
+
+        const createdAtDate = () =>{
+            if (status == "COMPLETE"){
+                return randomDateBetween(3,60)
+            } else if (status == "PENDING"){
+                return randomDateWithin(1)
+            } else if (status == "READY") {
+                return randomDateWithin(2)
+            }
+        }
+
 
 
         requestData.push({
             customer: pickRandom(demoCustomers),
             requestNumber: 5000 + i,
             quantity: randomInt(1, 5),
-            status: weightedRequestStatus() as RequestStatus,
+            status,
             stockId: stock.id,
             costCentreId: costCentre.id,
             userId,
-            createdAt: randomDateWithin(90),
+            createdAt: createdAtDate(),
 
         });
 
@@ -263,30 +275,18 @@ export async function createPurchases() {
     try {
         const placedStockIds = new Set<string>();
 
-        const existingPlaced = await prisma.purchase.findMany({
-            where: {
-                userId,
-                status: "PLACED",
-            },
-            select: {
-                stockId: true
-            }
-        });
-
-        existingPlaced.forEach((p) => placedStockIds.add(p.stockId));
-
 
         for (let i = 0; i < 20; i++) {
 
             const stock = pickRandom(stockItems);
             const vendor = pickRandom(vendors);
             const qty = randomInt(5, 25)
-            const purchaseDate = randomDateWithin(180);
+            const purchaseDate = randomDateBetween(3, 90);
             const status = weightedPurchaseStatus() as PurchaseStatus;
 
             if (status === "PLACED") {
                 if (placedStockIds.has(stock.id)) {
-                    continue; // skip duplicate PLACED
+                    continue; 
                 }
 
                 placedStockIds.add(stock.id);
@@ -306,36 +306,31 @@ export async function createPurchases() {
 
         };
 
-
-
         await prisma.purchase.createMany({
-            data: purchaseData
+            data: purchaseData,
+            skipDuplicates:true,
         });
 
         const receivedPurchases = await prisma.purchase.findMany({
             where: { userId, status: "RECEIVED" }
         });
 
+        const stockMap = new Map(stockItems.map((s) => [s.id, s]));
+        const vendorMap = new Map(vendors.map((s) => [s.id, s]));
+          const ledgerRows = [];
+
         for (const purchase of receivedPurchases) {
 
             await prisma.stock.update({
-                where: { id: purchase.stockId, userId },
+                where: { id: purchase.stockId },
                 data: { quantity: { increment: purchase.quantity } }
             });
 
-            const stock = await prisma.stock.findUnique({
-                where: { id: purchase.stockId },
-            });
+                const stock = stockMap.get(purchase.stockId);
+                const vendor = vendorMap.get(purchase.vendorId);
 
-            const vendor = await prisma.vendor.findUnique({
-                where: { id: purchase.vendorId },
-            });
-
-
-
-            await prisma.costLedger.create({
-                data: {
-                    sourceType: "PURCHASE",
+                ledgerRows.push({
+                    sourceType: "PURCHASE" as FinanceType,
                     sourceId: purchase.id,
                     reference: `PUR-${purchase.purchaseNumber}`,
                     stockId: purchase.stockId,
@@ -349,10 +344,15 @@ export async function createPurchases() {
                     year: purchase.createdAt.getFullYear(),
                     createdAt: purchase.createdAt,
                     userId
-                }
-            })
+                })
+
 
         }
+
+       await prisma.costLedger.createMany({
+        data: ledgerRows,
+        skipDuplicates: true
+       })
 
 
 
