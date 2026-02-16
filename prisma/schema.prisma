@@ -108,6 +108,8 @@ model Stock {
   requests     Request[]
   purchases    Purchase[]
   costLedger CostLedger[]
+
+  @@unique([userId, id])
 }
 
 model Request {
@@ -127,6 +129,7 @@ model Request {
   costCentreId String
 
   costCentre CostCentre @relation(fields: [costCentreId], references: [id])
+  
 }
 
 model Purchase {

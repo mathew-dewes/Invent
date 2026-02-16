@@ -168,18 +168,30 @@ export function randomDateWithin(daysBack: number) {
   return date
 }
 
+
+export function randomDateBetween(start: number, end: number) {
+  const now = new Date()
+
+  const randomDaysAgo = randomInt(start, end)
+
+  now.setDate(now.getDate() - randomDaysAgo)
+  now.setHours(randomInt(7, 18), randomInt(0, 59))
+
+  return now
+}
+
 export function weightedRequestDate() {
   const roll = Math.random()
 
-  if (roll < 0.6) return randomDateWithin(14)   // 60% last 2 weeks
-  if (roll < 0.9) return randomDateWithin(60)   // 30% last 2 months
-  return randomDateWithin(180)                  // 10% older
+  if (roll < 0.6) return randomDateWithin(14)   
+  if (roll < 0.9) return randomDateWithin(60)  
+  return randomDateWithin(180)                  
 };
 
 export function weightedRequestStatus() {
   const roll = Math.random()
-  if (roll < 2.2) return "COMPLETE"
-  if (roll < 0.6) return "READY"
+  if (roll < 0.8) return "COMPLETE"
+  if (roll < 0.9) return "READY"
   return "PENDING"
 }
 export function weightedPurchaseStatus() {

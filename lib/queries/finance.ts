@@ -202,6 +202,7 @@ export async function getCostCentreChartData(){
     
     take: 5
   });
+  
 
       const serialised = spend.map((item) => ({
         ...item,
@@ -262,7 +263,7 @@ export async function getTopSpendingCostCentres(){
         id: item.id,
         name: item.name,
         code: item.code,
-        highestCustomer: item.requests.sort((a, b) => b.quantity - a.quantity)[0].customer,
+        
 
         totalCost: item.ledger.reduce(
             (sum, entry) => sum + entry.totalCost.toNumber(),
