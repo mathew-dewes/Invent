@@ -21,7 +21,7 @@ export async function getRequests(filter?: RequestStatus) {
             id: true,
             requestNumber: true,
             createdAt: true,
-            completedAt:true,
+            completedAt: true,
             customer: true,
             stockItem: {
                 select: {
@@ -29,13 +29,13 @@ export async function getRequests(filter?: RequestStatus) {
                     name: true,
                     quantity: true,
                     reorderPoint: true,
-                    
+
                 }
             },
             quantity: true,
             status: true,
             costCentre: {
-                select:{
+                select: {
                     name: true
                 }
             },
@@ -76,7 +76,7 @@ export async function getRequests(filter?: RequestStatus) {
 export async function getRequestChartData() {
     const userId = await getUserId();
     const start = new Date();
-    start.setDate(start.getDate() - 90);
+    start.setDate(start.getDate() - 7);
     start.setHours(0, 0, 0, 0);
 
     const end = new Date();
@@ -85,34 +85,40 @@ export async function getRequestChartData() {
     const requests = await prisma.request.findMany({
         where: {
             userId,
-            completedAt: {
+            createdAt: {
                 gte: start, lte: end
             }
         },
         select: {
-            completedAt: true,
+            createdAt:true,
             status: true
         }
     });
 
-    const map = new Map<string, { date: string; requests: number }>();
+    const map = new Map<string, { date: string; complete: number, ready: number, pending: number }>();
 
     for (const request of requests) {
-        const dateKey = getNZDateKey(request.completedAt!);
+        const dateKey = getNZDateKey(request.createdAt!);
         const existing = map.get(dateKey) ?? {
             date: dateKey,
-      
-            requests: 0
+            complete: 0,
+            ready: 0,
+            pending: 0
         };
 
         if (request.status == "COMPLETE") {
-            existing.requests += 1;
-        } 
+            existing.complete += 1;
+        } else if (request.status == "PENDING") {
+            existing.pending += 1;
+        } else if (request.status == "READY") {
+            existing.ready += 1;
+        }
+
 
         map.set(dateKey, existing)
     };
 
-    const result: { date: string; requests: number }[] = [];
+    const result: { date: string; complete: number, ready: number, pending: number }[] = [];
     const current = new Date(start);
 
     while (getNZDateKey(current) <= getNZDateKey(end)) {
@@ -121,8 +127,9 @@ export async function getRequestChartData() {
         result.push(
             map.get(key) ?? {
                 date: key,
-    
-                requests: 0
+                complete: 0,
+                ready: 0,
+                pending: 0
             }
         );
         current.setDate(current.getDate() + 1);
@@ -142,6 +149,33 @@ export async function getRequestsByStatusCount() {
             status: true
         },
         where: { userId }
+    });
+
+
+    const queryCounts = {
+        PENDING: requests.filter(q => q.status === "PENDING").length,
+        READY: requests.filter(q => q.status === "READY").length,
+        COMPLETE: requests.filter(q => q.status === "COMPLETE").length
+    }
+
+    return queryCounts
+}
+export async function getWeeklyRequestsByStatusCount() {
+    const userId = await getUserId();
+      const start = new Date();
+    start.setDate(start.getDate() - 7);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    const requests = await prisma.request.findMany({
+        select: {
+            status: true
+        },
+        where: { userId,   createdAt: {
+                gte: start, lte: end
+            } }
     });
 
 
@@ -207,12 +241,12 @@ export async function getLatestOpenRequests() {
             stockItem: {
                 select: {
                     name: true,
-            
+
 
                 }
             }
         },
-        orderBy:{
+        orderBy: {
             createdAt: "desc"
         },
         take: 5
@@ -221,13 +255,13 @@ export async function getLatestOpenRequests() {
     return requests;
 };
 
-export async function getOpenRequestCount(){
+export async function getOpenRequestCount() {
     const userId = await getUserId();
-    
+
     const count = await prisma.request.count({
-        where:{
+        where: {
             userId,
-            status:"PENDING"
+            status: "PENDING"
         }
     });
 
@@ -251,7 +285,7 @@ export async function getLatestReadyRequests() {
             quantity: true
 
         },
-        orderBy:{
+        orderBy: {
             createdAt: "desc"
         },
         take: 5
@@ -261,11 +295,11 @@ export async function getLatestReadyRequests() {
 };
 
 
-export async function getReadyRequestCount(){
+export async function getReadyRequestCount() {
     const userId = await getUserId();
 
     const count = await prisma.request.count({
-        where:{userId, status: "READY"}
+        where: { userId, status: "READY" }
     });
 
     return count;
@@ -274,41 +308,41 @@ export async function getReadyRequestCount(){
 
 
 
-export async function getMonthlyHighestSpendingChartData(){
+export async function getMonthlyHighestSpendingChartData() {
     const userId = await getUserId();
 
     const customers = await prisma.request.findMany({
-        where:{userId, status:"COMPLETE"},
-        select:{
-            customer:true,
-            stockItem:{
-                select:{
-                    unitCost:true,
+        where: { userId, status: "COMPLETE" },
+        select: {
+            customer: true,
+            stockItem: {
+                select: {
+                    unitCost: true,
                 }
             },
-            quantity:true
+            quantity: true
         }
     });
 
-  const spendMap = new Map<string, number>();
+    const spendMap = new Map<string, number>();
 
 
-    for (const request of customers){
-    const unitCost = Number(request.stockItem?.unitCost ?? 0);
-    const spend = unitCost * request.quantity;
-    
-    spendMap.set(request.customer, (spendMap.get(request.customer) ?? 0) + spend
-    );
+    for (const request of customers) {
+        const unitCost = Number(request.stockItem?.unitCost ?? 0);
+        const spend = unitCost * request.quantity;
+
+        spendMap.set(request.customer, (spendMap.get(request.customer) ?? 0) + spend
+        );
 
 
     };
-    
-  return Array.from(spendMap.entries()).map(
-    ([customer, spend]) => ({
-      customer,
-      spend
-    })
-  ).sort((a, b) => b.spend - a.spend);
+
+    return Array.from(spendMap.entries()).map(
+        ([customer, spend]) => ({
+            customer,
+            spend
+        })
+    ).sort((a, b) => b.spend - a.spend);
 
 
 
@@ -316,52 +350,54 @@ export async function getMonthlyHighestSpendingChartData(){
 
 };
 
-export async function getHighestSpendingCustomersCostCentreAndSpend(){
+export async function getHighestSpendingCustomersCostCentreAndSpend() {
     const userId = await getUserId();
 
     const requests = await prisma.request.findMany(
-        {where: {userId, status:"COMPLETE"},
-    select:{
-        customer:true,
-        costCentre:true,
-        stockItem:{
-            select:{
-                unitCost:true
+        {
+            where: { userId, status: "COMPLETE" },
+            select: {
+                customer: true,
+                costCentre: true,
+                stockItem: {
+                    select: {
+                        unitCost: true
+                    }
+                },
+                quantity: true
             }
-        },
-        quantity: true
-    }}
-    
+        }
+
     );
 
     const spendMap = new Map<string, { costCentre: string; spend: number }
->();
+    >();
 
-for (const request of requests){
-  const unitCost = Number(request.stockItem?.unitCost ?? 0);
-  const spend = unitCost * request.quantity;
+    for (const request of requests) {
+        const unitCost = Number(request.stockItem?.unitCost ?? 0);
+        const spend = unitCost * request.quantity;
 
-  const current = spendMap.get(request.customer) ?? {
-    spend: 0,
-  };
+        const current = spendMap.get(request.customer) ?? {
+            spend: 0,
+        };
 
-  spendMap.set(request.customer, {
-    spend: current.spend + spend,
-    costCentre: request.costCentre.name
-  })
-}
+        spendMap.set(request.customer, {
+            spend: current.spend + spend,
+            costCentre: request.costCentre.name
+        })
+    }
 
     return Array.from(spendMap.entries()).map(
-  ([customer, data]) => ({
-    customer,
-    costCentre: data.costCentre,
-    spend: data.spend,
+        ([customer, data]) => ({
+            customer,
+            costCentre: data.costCentre,
+            spend: data.spend,
 
-  })
-).sort((a, b) => b.spend - a.spend).slice(0, 10);
+        })
+    ).sort((a, b) => b.spend - a.spend).slice(0, 10);
 };
 
-export async function getMostRequestedChartData(){
+export async function getMostRequestedChartData() {
 
     const userId = await getUserId();
     const start = new Date();
@@ -369,66 +405,99 @@ export async function getMostRequestedChartData(){
     start.setHours(0, 0, 0, 0);
 
     const requests = await prisma.request.findMany(
-        {where:{userId, createdAt:{gte: start}},
-    select:{
-        stockItem:{
-            select:{
-                name:true,
+        {
+            where: { userId, createdAt: { gte: start }, status: "COMPLETE" },
+            select: {
+                stockItem: {
+                    select: {
+                        name: true,
 
+                    }
+                },
+                quantity: true,
+                
             }
-        },
-        quantity:true
-    }}
+        }
     );
 
-        const requestsMap = new Map<string, { stock: string; requests: number }>();
+    const requestsMap = new Map<string, { stock: string; requests: number }>();
 
-        for (const request of requests){
-            const current = requestsMap.get(request.stockItem.name) ?? {
-                requests: 0
-            };
-
-            requestsMap.set(request.stockItem.name, {
-                requests: current.requests + request.quantity,
-                stock: request.stockItem.name
-            })
+    for (const request of requests) {
+        const current = requestsMap.get(request.stockItem.name) ?? {
+            requests: 0
         };
 
-            return Array.from(requestsMap.entries()).map(
-  ([stock, data]) => ({
-    stock,
-    requests: data.requests,
-  
+        requestsMap.set(request.stockItem.name, {
+            requests: current.requests + request.quantity,
+            stock: request.stockItem.name
+        })
+    };
 
-  })
-).sort((a, b) => b.requests - a.requests).slice(0, 10)
+    return Array.from(requestsMap.entries()).map(
+        ([stock, data]) => ({
+            stock,
+            requests: data.requests,
+
+
+        })
+    ).sort((a, b) => b.requests - a.requests).slice(0, 10)
 
 
 }
 
 
-export async function getRequestCount(){
+export async function getRequestCount() {
     const userId = await getUserId();
 
     return await prisma.request.count({
-        where:{userId}
+        where: { userId }
     })
 }
 
 
-export async function getRequestFormData(requestId: string){
+export async function getRequestFormData(requestId: string) {
     const userId = await getUserId();
 
     const request = await prisma.request.findUnique({
-        where:{userId, id: requestId},
-        select:{
+        where: { userId, id: requestId },
+        select: {
             customer: true,
-            stockId:true,
-            quantity:true,
-            costCentreId:true,
+            stockId: true,
+            quantity: true,
+            costCentreId: true,
             note: true
         }
     });
 
     return request;
-}
+};
+
+
+export async function getRecentRequests() {
+    const userId = await getUserId();
+
+    const requests = await prisma.request.findMany({
+        where: { userId },
+        select: {
+            id: true,
+            quantity: true,
+            createdAt: true,
+            customer: true,
+            status: true,
+            stockItem: {
+                select: {
+                    name: true
+                }
+            }
+        },
+        take: 10,
+        orderBy: {
+            createdAt: "desc"
+        }
+    });
+
+    return requests;
+};
+
+
+

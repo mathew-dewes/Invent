@@ -50,7 +50,7 @@ export function MostRequestedItemsChart({data, issuedStock}:
             data={data}
             layout="vertical"
             margin={{
-              right: 20,
+              right: 30,
             }}
           >
             <CartesianGrid horizontal={false} />
@@ -71,7 +71,7 @@ export function MostRequestedItemsChart({data, issuedStock}:
             <Bar
               dataKey="requests"
               layout="vertical"
-              fill="#4ade80"
+              fill="#86efac"
               radius={4}
               barSize={45}
             >

@@ -77,7 +77,7 @@ export function TotalSpendChart({data}:
     <Card className="mt-3">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
-          <CardTitle>Total Daily Spend</CardTitle>
+          <CardTitle>Daily Spend</CardTitle>
           <CardDescription>
             Within the last {timeFrameLabel()}
           </CardDescription>
@@ -167,8 +167,8 @@ export function TotalSpendChart({data}:
             <Area
               dataKey="spend"
               type="natural"
-              fill="#4ade80"
-              stroke="#4ade80"
+              fill="#86efac"
+              stroke="#86efac"
               stackId="a"
             />
             <ChartLegend content={<ChartLegendContent />} />

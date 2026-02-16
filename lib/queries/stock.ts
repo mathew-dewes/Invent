@@ -293,7 +293,7 @@ export async function getInventoryChartData(){
     orderBy: {
       quantity: "asc",
     },
-    take: 5,
+    take: 4,
   });
 
   const data = stockItems.map((stock) => ({
@@ -392,5 +392,52 @@ export async function getLowestStockedItems(){
     });
 
     return items;
+};
+
+export async function getHighestPerformingItems(){
+    const userId = await getUserId();
+        const start = new Date();
+    start.setDate(start.getDate() - 30);
+    start.setHours(0, 0, 0, 0);
+
+    const stock = await prisma.stock.findMany({
+        where:{userId, requests:{
+      },
+            createdAt: { gte: start }},
+        select:{
+            id:true,
+            unitCost:true,
+            name:true,
+            requests:{
+                where:{status:"COMPLETE",
+                    createdAt:{
+                        gte: start
+                    }
+                },
+                select:{
+                    quantity:true
+                }
+            },
+            },
+          
+            
+    });
+
+      const ranked = stock.map((item) => {
+      const totalIssued = item.requests.reduce(
+        (sum, req) => sum + req.quantity, 0)
+    const totalRevenue = Number(item.unitCost) * totalIssued;
+
+      return {
+        ...item,
+        totalIssued,
+        totalRevenue
+      }
+    })
+    .sort((a, b) => b.totalIssued - a.totalIssued)
+
+  return ranked
+
+   
 }
    

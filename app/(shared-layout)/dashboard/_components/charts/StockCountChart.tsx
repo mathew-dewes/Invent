@@ -61,12 +61,12 @@ export function StockCountChart({ data }:
             <Bar dataKey="count" fill="#4ade80" radius={8}>
               {data.map((entry, index) => {
 
-                let fill = "#4ade80";
+                let fill = "#86efac";
 
                 if (entry.count <= entry.reorderPoint / 2){
                   fill = '#f87171'
                 } else if (entry.count < entry.reorderPoint){
-                  fill = "#fdba74"
+                  fill = "#fef08a"
                 }
                 
                

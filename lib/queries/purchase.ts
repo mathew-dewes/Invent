@@ -128,146 +128,6 @@ export async function getPurchaseStatusCount() {
 
 }
 
-export async function getPuchaseCardData() {
-    const userId = await getUserId();
-    const request = await prisma.purchase.findMany({
-        where: { userId },
-        select: {
-            status: true,
-            quantity: true,
-            stockItem: {
-                select: {
-                    name: true,
-                    vendor: {
-                        select: {
-                            name: true
-                        }
-                    }
-
-                }
-            }
-        }
-    });
-
-    return request;
-}
-
-
-export async function getDelayedPurchases() {
-
-    const threeDaysAgo = new Date(Date.now() - 72 * 60 * 60 * 1000);
-    const userId = await getUserId();
-    const purchases = await prisma.purchase.findMany({
-        where: {
-            userId, createdAt: {
-                lte: threeDaysAgo,
-            }, status: { not: "RECEIVED" }
-        },
-        select: {
-            id: true,
-            quantity: true,
-            stockItem: {
-                select: {
-                    name: true,
-
-                }
-            },
-            vendor: {
-                select: {
-                    name: true
-                }
-            },
-            createdAt: true
-        },
-
-    });
-
-    return purchases;
-};
-
-
-
-export async function getPurchaseHealthPercentage(){
-    const userId = await getUserId();
-
-    const purchases = await prisma.purchase.findMany({
-        where:{userId},
-        select:{
-            status:true
-        }
-    });
-
-      if (purchases.length === 0) {
-    return {
-      health: 100,
-      breakdown: {
-        received: 0,
-        placed: 0,
-    
-      },
-    };
-  }
-
-
-
-    const received = purchases.filter(
-        p => p.status =="RECEIVED"
-    ).length;
-
-    const placed = purchases.filter(
-        p => p.status == "PLACED"
-    ).length;
-
-     const WEIGHTS = {
-    RECEIVED: 1,
-    PLACED: 0.75,
-  
-  } as const;
-   const totalScore = purchases.reduce((sum, p) => {
-    return sum + WEIGHTS[p.status];
-  }, 0);
-    const health = Math.round((totalScore / purchases.length) * 100);
-
-
- return {
-  health,
-  breakdown: {
-    received,
-    placed,
-   
-  },
-};
-};
-
-export async function getIncomingPurchases(){
-    const userId = await getUserId();
-
-    const purchases = await prisma.purchase.findMany({
-        where:{userId,status: "PLACED"},
-        select:{
-            id: true,
-            createdAt:true,
-            quantity:true,
-            status:true,
-            purchaseNumber:true,
-            vendor:{
-                select:{
-                    name:true,
-                    email:true
-                }
-            },
-            stockItem:{
-                select:{
-                    id:true,
-                    name:true
-                }
-            }
-        },
-        take: 5
-    });
-
-    return purchases
-};
 
 export async function getIncomingPurchaseStockIds(){
     const userId = await getUserId();
@@ -342,4 +202,37 @@ export async function getPurchaseChartData(){
     };
 
     return result
+};
+
+
+export async function getRecentPurchases(){
+    const userId = await getUserId();
+
+    const purchases = await prisma.purchase.findMany({
+        where:{userId},
+        select:{
+            id: true,
+            createdAt:true,
+            totalCost:true,
+            stockItem:{
+                select:{
+                    name: true
+                },
+                
+            },
+            quantity: true,
+            status: true,
+            vendor:{
+                select:{
+                    name: true
+                }
+            }
+        },
+        take: 15,
+        orderBy:{
+            createdAt:"desc"
+        }
+    });
+
+    return purchases;
 }
