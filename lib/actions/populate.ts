@@ -1,7 +1,7 @@
 "use server";
 
 
-import { PurchaseStatus, RequestStatus } from "@/generated/prisma/enums";
+import { FinanceType, PurchaseStatus, RequestStatus } from "@/generated/prisma/enums";
 import { aisleLocation, demoCostCentres, demoCustomers, demoStock, demoVendors, generatePartNumber, pickRandom, randomDateWithin, randomInt, weightedPurchaseStatus, weightedRequestStatus } from "../helpers";
 import prisma from "../prisma";
 import { getUserId } from "./auth";
@@ -16,7 +16,7 @@ export async function LoadDemoData() {
 
         await createBaseTables();
         await createRequests();
-        await createPurchases();
+        // await createPurchases();
 
 
         revalidatePath('/dashboard');
@@ -35,61 +35,49 @@ export async function LoadDemoData() {
 
 export async function createBaseTables() {
 
-    const userId = await getUserId()
+    const userId = await getUserId();
 
     try {
 
-        await prisma.costCentre.createMany({
-            data: demoCostCentres.map((cc, i) => ({
-                code: "CC" + (100 + i),
-                name: cc,
-                userId,
-            }))
-        });
+        return prisma.$transaction(async (tx) => {
 
+            await tx.costCentre.createMany({
+                data: demoCostCentres.map((cc, i) => ({
+                    code: "CC" + (100 + i),
+                    name: cc,
+                    userId,
+                }))
+            });
+            await tx.vendor.createMany({
+                data: demoVendors.map((vendor, i) => ({
+                    name: vendor,
+                    email: `${vendor.toLowerCase().replace(/\s/g, "")}@demo.co.nz`,
+                    contactName: "Accounts Team",
+                    userId,
+                    PONumber: 20000 + i
+                }))
+            });
 
+            const vendors = await tx.vendor.findMany({
+                where: { userId },
+            });
 
-        // Load vendors
+            await tx.stock.createMany({
+                data: demoStock.map((stock) => ({
+                    name: stock.name,
+                    brand: stock.brand,
+                    partNumber: generatePartNumber(),
+                    reorderPoint: 20,
+                    location: pickRandom(aisleLocation),
+                    vendorId: pickRandom(vendors).id,
+                    userId,
+                    unitCost: randomInt(20, 150),
+                    quantity: randomInt(30, 60),
 
-        await prisma.vendor.createMany({
-            data: demoVendors.map((vendor, i) => ({
-                name: vendor,
-                email: `${vendor.toLowerCase().replace(/\s/g, "")}@demo.co.nz`,
-                contactName: "Accounts Team",
-                userId,
-                PONumber: 20000 + i
-            }))
-        });
+                }))
+            })
 
-        const vendors = await prisma.vendor.findMany({
-            where: { userId },
-        });
-
-
-        // Load stock
-
-        await prisma.stock.createMany({
-            data: demoStock.map((stock) => ({
-                name: stock.name,
-                brand: stock.brand,
-                partNumber: generatePartNumber(),
-                reorderPoint: 20,
-                location: pickRandom(aisleLocation),
-                vendorId: pickRandom(vendors).id,
-                userId,
-                unitCost: randomInt(20, 150),
-                quantity: randomInt(30, 60),
-
-            }))
         })
-
-
-
-
-
-
-
-
 
 
 
@@ -103,14 +91,31 @@ export async function createBaseTables() {
 
 export async function createRequests() {
     const userId = await getUserId();
-    const stockItems = await prisma.stock.findMany({ where: { userId } });
-    const costCentres = await prisma.costCentre.findMany({ where: { userId } });
+
+
+    const stockItems = await prisma.stock.findMany(
+        {
+            where: { userId },
+            select: {
+                id: true,
+                name: true,
+                unitCost: true,
+                vendor: {
+                    select: {
+                        name: true
+                    }
+                }
+            }
+        });
+
+    const costCentres = await prisma.costCentre.findMany(
+        { where: { userId } });
 
     const requestData = [];
 
 
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
 
         const stock = pickRandom(stockItems);
         const costCentre = pickRandom(costCentres);
@@ -126,93 +131,102 @@ export async function createRequests() {
             costCentreId: costCentre.id,
             userId,
             createdAt: randomDateWithin(90),
-            
+
         });
 
     };
 
     await prisma.request.createMany({
-        data: requestData
+        data: requestData,
+        skipDuplicates: true
     });
 
-    const requestsArray = await prisma.request.findMany({
+    const requests = await prisma.request.findMany({
         where: { userId, requestNumber: { gte: 5000, lte: 5100 }, },
     });
 
-    for (const request of requestsArray) {
+
+
+    const stockMap = new Map(stockItems.map((s) => [s.id, s]));
+    const costCentreMap = new Map(costCentres.map((c) => [c.id, c]));
+    const requestUpdates = [];
+    const ledgerRows = [];
+
+    const decrements = new Map<string, number>();
+
+    for (const request of requests) {
 
         const created = request.createdAt.getTime();
         const now = Date.now();
         const randomFutureDate = new Date(randomInt(created, now));
-        let finalStatus = request.status;
+
+        const finalStatus = request.status;
 
         if (finalStatus !== "PENDING") {
 
-            const stockUpdate = await prisma.stock.updateMany({
-                where: {
-                    id: request.stockId,
-                    quantity: { gte: request.quantity },
-
-                },
-                data: {
-                    quantity: { decrement: request.quantity }
-                }
-            });
-
-            if (stockUpdate.count === 0) {
-                finalStatus = "PENDING"
-            }
+            decrements.set(
+                request.stockId,
+                (decrements.get(request.stockId) ?? 0) + request.quantity
+            );
 
         };
 
         const completedAt = finalStatus === "COMPLETE" ? randomFutureDate : null;
 
-        await prisma.request.update({ where: { userId, id: request.id }, data: { completedAt, status: finalStatus } });
+        requestUpdates.push(
+            prisma.request.update({
+                where: { id: request.id },
+                data: { completedAt, status: finalStatus },
+            })
+        );
 
         const ledgerDate = finalStatus === "COMPLETE" ? randomFutureDate : request.createdAt;
+        const stock = stockMap.get(request.stockId);
+        const costCentre = costCentreMap.get(request.costCentreId);
 
-        const stock = await prisma.stock.findUnique({
-            where: { id: request.stockId },
-            select: {
-                name: true,
-                unitCost: true,
-                vendor: {
-                    select: {
-                        name: true
-                    }
-                }
-            }
-        });
-        const costCentre = await prisma.costCentre.findUnique({
-            where: { id: request.costCentreId },
-            select: {
-                name: true
-            }
-        });
-        await prisma.costLedger.create({
-            data: {
-                sourceType: "REQUEST",
-                sourceId: request.id,
-                reference: `REQ-${request.requestNumber}`,
-                stockId: request.stockId,
-                stockName: stock?.name ?? "Unknown",
-                costCentreId: request.costCentreId,
-                costCentreName: costCentre?.name ?? "Unknown",
-                quantity: request.quantity,
-                unitCost: stock?.unitCost ?? 0,
-                totalCost: request.quantity * Number(stock?.unitCost ?? 0),
-                month: ledgerDate.getMonth() + 1,
-                year: ledgerDate.getFullYear(),
-                createdAt: ledgerDate,
-                userId,
-                vendorName: stock?.vendor.name ?? "Unknown",
-                customerName: request.customer
+        ledgerRows.push({
+            sourceType: "REQUEST" as FinanceType,
+            sourceId: request.id,
+            reference: `REQ-${request.requestNumber}`,
 
-            }
+            stockId: request.stockId,
+            stockName: stock?.name ?? "Unknown",
+
+            costCentreId: request.costCentreId,
+            costCentreName: costCentre?.name ?? "Unknown",
+
+            quantity: request.quantity,
+            unitCost: stock?.unitCost ?? 0,
+            totalCost: request.quantity * Number(stock?.unitCost ?? 0),
+
+            month: ledgerDate.getMonth() + 1,
+            year: ledgerDate.getFullYear(),
+            createdAt: ledgerDate,
+
+            userId,
+            vendorName: stock?.vendor.name ?? "Unknown",
+            customerName: request.customer,
         });
 
 
     }
+
+    await prisma.$transaction(
+        Array.from(decrements.entries()).map(([stockId, qty]) =>
+            prisma.stock.update({
+                where: { id: stockId },
+                data: { quantity: { decrement: qty } }
+            })
+        )
+    );
+
+    await prisma.$transaction(requestUpdates);
+
+
+    await prisma.costLedger.createMany({
+        data: ledgerRows,
+        skipDuplicates: true
+    });
 
     return { success: true, message: "Requests added" };
 
@@ -378,7 +392,9 @@ export async function clearDemoData() {
         })
         await prisma.vendor.deleteMany({
             where: { userId }
-        })
+        });
+
+        revalidatePath('/dashboard');
 
 
         return { success: true, message: "Data deleted" }
@@ -389,6 +405,42 @@ export async function clearDemoData() {
         return { success: false, message: "Delete failed" }
 
 
+    }
+
+
+};
+
+export async function hasData() {
+    const userId = await getUserId();
+
+    const requests = await prisma.request.count({
+        where: { userId }
+    });
+
+    const purchases = await prisma.purchase.count({
+        where: { userId }
+    });
+    const centres = await prisma.costCentre.count({
+        where: { userId }
+    });
+
+    const vendors = await prisma.vendor.count({
+        where: { userId }
+    });
+
+    const stock = await prisma.stock.count({
+        where: { userId }
+    });
+
+    const ledger = await prisma.costLedger.count({
+        where: { userId }
+    });
+
+    if (requests == 0 && ledger == 0 && stock == 0 && vendors == 0 && centres == 0 && purchases == 0) {
+        return false
+
+    } else {
+        return true
     }
 
 

@@ -8,12 +8,14 @@ import Link from "next/link";
 
 export default async function CostAnalysis(){
 
+
+
     const spend = await getCostCentreChartData();
     const costCentres = await getTopSpendingCostCentres();
 
     
     
-    
+    if (spend.length == 0) return
     
     
     const totalSpend = spend.reduce((acc, item)=>{
@@ -27,7 +29,7 @@ export default async function CostAnalysis(){
     
 
 
-    if (spend.length == 0) return
+    
 
     
     return (
@@ -48,7 +50,7 @@ export default async function CostAnalysis(){
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                {['Cost Centre','Code','Key spender', 'Spend'].map((head, key) => {
+                                {['Cost Centre','Code', 'Spend'].map((head, key) => {
                                     return <TableHead className={`${head == "Actions" || head == "Status" ? "text-center" : ""}`} key={key}>{head}</TableHead>
                                 })}
 
@@ -63,7 +65,7 @@ export default async function CostAnalysis(){
                                     <TableCell>{centre.name}</TableCell>
                                     <TableCell>{centre.code}</TableCell>
                          
-                                    <TableCell>{centre.highestCustomer}</TableCell>
+                            
                              
                                     <TableCell>{convertToMoney(centre.totalCost)}</TableCell>
                
