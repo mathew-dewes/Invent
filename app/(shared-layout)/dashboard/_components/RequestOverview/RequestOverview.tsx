@@ -5,7 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { getRecentRequests, getRequestChartData, getWeeklyRequestsByStatusCount } from "@/lib/queries/request";
 import { RequestStatus } from "@/generated/prisma/enums";
 import { RequestActionDropdown } from "./RequestActionDropdown";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function RequestOverview() {
 
@@ -76,8 +77,8 @@ export default async function RequestOverview() {
                                 <TableCell>{request.customer}</TableCell>
                         
 
-                                <TableCell className="flex justify-center gap-2">
-                                    <RequestActionDropdown requestId={request.id}/>
+                                <TableCell hidden={request.status == "COMPLETE"} className="flex justify-center gap-2">
+                                    <RequestActionDropdown status={request.status} requestId={request.id}/>
 
 
                                 </TableCell>
@@ -104,7 +105,8 @@ export default async function RequestOverview() {
                 </CardContent>
 
     <CardFooter>
-                    <Button>View All</Button>
+        <Link className={buttonVariants()} href={'/requests'}>View All</Link>
+                
                 </CardFooter>
 
 

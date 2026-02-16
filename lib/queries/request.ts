@@ -406,7 +406,7 @@ export async function getMostRequestedChartData() {
 
     const requests = await prisma.request.findMany(
         {
-            where: { userId, createdAt: { gte: start } },
+            where: { userId, createdAt: { gte: start }, status: "COMPLETE" },
             select: {
                 stockItem: {
                     select: {
@@ -414,7 +414,8 @@ export async function getMostRequestedChartData() {
 
                     }
                 },
-                quantity: true
+                quantity: true,
+                
             }
         }
     );
@@ -496,4 +497,7 @@ export async function getRecentRequests() {
     });
 
     return requests;
-}
+};
+
+
+

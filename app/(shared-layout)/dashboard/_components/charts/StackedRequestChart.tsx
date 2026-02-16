@@ -100,7 +100,7 @@ export function StackedRequestChart({data, statusCount}:Props) {
                fill="var(--color-ready)"
               fillOpacity={0.4}
                stroke="var(--color-ready"
-              stackId="b"
+              stackId="a"
             />
             <Area
               dataKey="complete"
@@ -108,7 +108,7 @@ export function StackedRequestChart({data, statusCount}:Props) {
               fill="var(--color-complete)"
               fillOpacity={0.4}
                stroke="var(--color-complete)"
-              stackId="c"
+              stackId="a"
             />
         
           
@@ -116,10 +116,15 @@ export function StackedRequestChart({data, statusCount}:Props) {
         </ChartContainer>
       </CardContent>
       <CardFooter>
-        <div className="text-sm flex flex-col gap-1">
+      
+
+        <div className="text-sm flex gap-3">
+
           <p><span className="font-semibold">Completed:</span> {statusCount.COMPLETE}</p>
           <p><span className="font-semibold">Pending:</span> {statusCount.PENDING}</p>
           <p><span className="font-semibold">Ready:</span> {statusCount.READY}</p>
+        
+      
         </div>
   
       </CardFooter>

@@ -167,8 +167,8 @@ export function TotalSpendChart({data}:
             <Area
               dataKey="spend"
               type="natural"
-              fill="#4ade80"
-              stroke="#4ade80"
+              fill="#86efac"
+              stroke="#86efac"
               stackId="a"
             />
             <ChartLegend content={<ChartLegendContent />} />

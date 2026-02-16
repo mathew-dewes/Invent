@@ -66,7 +66,7 @@ export function StockCountChart({ data }:
                 if (entry.count <= entry.reorderPoint / 2){
                   fill = '#f87171'
                 } else if (entry.count < entry.reorderPoint){
-                  fill = "#fdba74"
+                  fill = "#fef08a"
                 }
                 
                

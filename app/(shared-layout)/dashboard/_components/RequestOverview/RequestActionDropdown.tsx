@@ -8,13 +8,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { RequestStatus } from "@/generated/prisma/enums";
 
 import Link from "next/link"
 import { startTransition } from "react"
 import { toast } from "sonner"
 
-export function RequestActionDropdown({requestId}:
-    {requestId: string}
+export function RequestActionDropdown({requestId, status}:
+    {requestId: string, status: RequestStatus}
 ) {
   return (
     <DropdownMenu>
@@ -23,7 +24,7 @@ export function RequestActionDropdown({requestId}:
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem hidden={status == "READY"}>
                           <form action={
                 () => {
                   startTransition(async () => {
@@ -38,13 +39,31 @@ export function RequestActionDropdown({requestId}:
                 }
               }>
           
-                <button type="submit">Mark Ready</button>
+                <button type="submit">Confirm Ready</button>
+              </form>
+            </DropdownMenuItem>
+            <DropdownMenuItem hidden={status != "READY"}>
+                          <form action={
+                () => {
+                  startTransition(async () => {
+
+                    toast.success(requestId)
+
+           
+
+              
+                  })
+
+                }
+              }>
+          
+                <button type="submit">Complete</button>
               </form>
             </DropdownMenuItem>
      
 
-          <Link  href={`/requests/${requestId}/edit`}><DropdownMenuItem>Update details</DropdownMenuItem></Link>
-          <Link  href={`/purchases?status=PLACED`}><DropdownMenuItem>Cancel Request</DropdownMenuItem></Link>
+          <Link hidden={status !== "PENDING"}  href={`/requests/${requestId}/edit`}><DropdownMenuItem>Update details</DropdownMenuItem></Link>
+          <Link  href={`/purchases?status=PLACED`}><DropdownMenuItem>Cancel</DropdownMenuItem></Link>
       
           
         </DropdownMenuGroup>

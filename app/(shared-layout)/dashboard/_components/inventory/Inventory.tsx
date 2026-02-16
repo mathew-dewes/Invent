@@ -7,7 +7,8 @@ import { InventoryDropDown } from "./InventoryDropDown";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { getIncomingPurchaseStockIds } from "@/lib/queries/purchase";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 
 
 
@@ -34,7 +35,7 @@ export default async function Inventory() {
         } else if (count <= reorderPoint / 2) {
             return   <Badge className="bg-red-400">Critical</Badge>
         } else if (count < reorderPoint) {
-            return     <Badge className="bg-orange-300">Low</Badge>
+            return     <Badge className="bg-yellow-200">Low</Badge>
         } else {
             return <Badge className="bg-green-300">Good</Badge>
         }
@@ -54,12 +55,12 @@ export default async function Inventory() {
     return (
         <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-10 grid gap-5">
             <div className="col-span-4">
-                <h1 className="font-semibold text-xl py-3 text-center md:text-left">Inventory Overview</h1>
+                <h1 className="font-semibold text-xl py-3 text-center md:text-left">Stock</h1>
                 <StockCountChart data={chartData} />
                 <div className="flex gap-2 mt-5">
                     <h2 className="font-medium">Key:</h2>
                     <Badge className="bg-red-400">Critical</Badge>
-                    <Badge className="bg-orange-300">Low</Badge>
+                    <Badge className="bg-yellow-200">Low</Badge>
                     <Badge className="bg-green-300">Good</Badge>
                     <Badge className="bg-blue-300">Purchase</Badge>
 
@@ -90,7 +91,7 @@ export default async function Inventory() {
                                     <TableCell className="text-center">{StatusBadge(item.quantity, item.reorderPoint, item.id)}</TableCell>
                                     <TableCell>{item.vendor.name}</TableCell>
                        
-                                    <TableCell className="flex justify-center gap-2">
+                                    <TableCell hidden={item.quantity >= item.reorderPoint && !incomingPurchase(item.id)} className="flex justify-center gap-2">
                                         <InventoryDropDown incomingPurchase={incomingPurchase(item.id)} stockId={item.id} />
 
 
@@ -113,7 +114,8 @@ export default async function Inventory() {
 
                 </CardContent>
                     <CardFooter>
-                    <Button>View All</Button>
+                        <Link className={buttonVariants()} href={'/stock'}>View All</Link>
+            
                 </CardFooter>
 
 

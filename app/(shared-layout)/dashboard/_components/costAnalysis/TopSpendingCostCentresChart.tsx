@@ -78,7 +78,7 @@ export function TopSpendingCostCentresChart({data, totalSpend}:Props
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="_sum" fill="#4ade80" radius={8}>
+            <Bar dataKey="_sum" fill="#86efac" radius={8}>
               <LabelList
                 position="top"
                 offset={12}

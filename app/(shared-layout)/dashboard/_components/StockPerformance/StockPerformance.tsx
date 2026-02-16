@@ -1,15 +1,18 @@
 
-import { getMostRequestedChartData } from "@/lib/queries/request"
+import {getMostRequestedChartData } from "@/lib/queries/request"
 import { MostRequestedItemsChart } from "../charts/MostRequestedItemsChart";
 
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+
+import { getHighestPerformingItems } from "@/lib/queries/stock";
+import { convertToMoney } from "@/lib/helpers";
 
 
 export default async function StockPerformance(){
 
-  const requests = await getMostRequestedChartData();
+    const [requests, topStock] = await Promise.all([getMostRequestedChartData(), getHighestPerformingItems()])
+  
 
   const totalRequests = requests.reduce((acc, item)=>{
     return acc + item.requests
@@ -34,15 +37,15 @@ if (requests.length == 0) return
                             </div>
                                               <Card>
                             <CardHeader>
-                                <CardTitle>Recent Purchases</CardTitle>
+                                <CardTitle>Highest performing stock items</CardTitle>
                             </CardHeader>
 
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                {['Placed', 'Item', 'Status', 'Vendor', 'Actions'].map((head, key) => {
-                                    return <TableHead className={`${head == "Actions" || head == "Status" ? "text-center" : ""}`} key={key}>{head}</TableHead>
+                                {['Item', 'Issued', 'Revenue'].map((head, key) => {
+                                    return <TableHead className={`${head == "Revenue" || head == "Issued" ? "text-center" : ""}`} key={key}>{head}</TableHead>
                                 })}
 
 
@@ -50,24 +53,23 @@ if (requests.length == 0) return
                             </TableRow>
                         </TableHeader>
                         <TableBody>
+                            {topStock.map((stock)=>{
+                            return <TableRow key={stock.id} className={'font-medium'}>
+
+                                    <TableCell>{stock.name}</TableCell>
+                                    <TableCell className="text-center">{stock.totalIssued}</TableCell>
+                                    <TableCell className="text-center">{convertToMoney(stock.totalRevenue)}</TableCell>
+                              
                        
-                        <TableRow className={'font-medium'}>
-
-                                    <TableCell>fe</TableCell>
-                                    <TableCell>fef</TableCell>
-                                    <TableCell className="text-center">fefe</TableCell>
-                                    <TableCell>fef</TableCell>
-                       
-                                    <TableCell className="flex justify-center gap-2">
-                          {/* <PurchaseDropDown/> */}
-
-
-                                    </TableCell>
+                   
 
 
 
 
                                 </TableRow>
+                            })}
+                       
+                  
                     
 
 
@@ -80,9 +82,7 @@ if (requests.length == 0) return
                     </Table>
 
                 </CardContent>
-                    <CardFooter>
-                    <Button>View All</Button>
-                </CardFooter>
+         
 
 
 

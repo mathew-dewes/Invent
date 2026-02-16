@@ -176,7 +176,7 @@ export async function getDaysUntilStockout(){
 };
 
 
-export async function getCostCentreSpend(){
+export async function getCostCentreChartData(){
     const userId = await getUserId();
 
   const now = new Date()
@@ -199,6 +199,7 @@ export async function getCostCentreSpend(){
             totalCost:"desc"
         }
     },
+    
     take: 5
   });
 
@@ -210,4 +211,67 @@ export async function getCostCentreSpend(){
 
   return serialised;
 
+};
+
+export async function getTopSpendingCostCentres(){
+    const userId = await getUserId();
+
+    
+
+    
+
+    const costCentres = await prisma.costCentre.findMany({
+        where:{
+            userId,
+    
+        },
+        select:{
+            id: true,
+            name: true,
+            code:true,
+      
+            _count:{
+                select:{
+                    requests:true
+                }
+            },
+                ledger: {
+                select: {
+                    totalCost: true
+                }
+            },
+            requests:{
+                select:{
+                    customer:true,
+                    quantity:true
+                }
+            }
+        },
+        take: 10,
+        orderBy:{
+          ledger:{
+            _count:"desc"
+          }
+        }
+   
+
+      
+    });
+
+        const serialisedFinances = costCentres.map((item) => ({
+        id: item.id,
+        name: item.name,
+        code: item.code,
+        highestCustomer: item.requests.sort((a, b) => b.quantity - a.quantity)[0].customer,
+
+        totalCost: item.ledger.reduce(
+            (sum, entry) => sum + entry.totalCost.toNumber(),
+            0
+        ),
+
+        requestCount: item._count.requests,
+    }));
+
+    return serialisedFinances
+    .sort((a, b) => b.totalCost - a.totalCost);
 }

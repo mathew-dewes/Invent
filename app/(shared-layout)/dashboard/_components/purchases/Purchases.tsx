@@ -5,7 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { PurchaseStatus } from "@/generated/prisma/enums";
 import { Badge } from "@/components/ui/badge";
 import { convertToMoney } from "@/lib/helpers";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import Link from "next/link";
 
 
 export default async function Purchases(){
@@ -87,7 +88,8 @@ const statusBadge = (status: PurchaseStatus) =>{
 
                 </CardContent>
                 <CardFooter>
-                    <Button>View All</Button>
+                    <Link className={buttonVariants()} href={'/purchases'}>View All</Link>
+        
                 </CardFooter>
 
 
