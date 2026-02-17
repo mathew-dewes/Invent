@@ -48,7 +48,10 @@ export default function RecentCarousel({ activities }: ActivityType) {
 
             hour: "2-digit",
             minute: "2-digit"
-          })
+          });
+
+          console.log(createdAt);
+          
           return <CarouselItem key={index} className="xl:basis-1/3 md:basis-1/2 basis-1/1 text-sm">
             <div className="p-1">
               {activity.sourceType == "REQUEST" ? <Card>

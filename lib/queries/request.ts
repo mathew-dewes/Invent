@@ -7,15 +7,14 @@ import { getNZDateKey } from "../helpers";
 
 export async function getRequests(filter?: RequestStatus) {
     const userId = await getUserId();
+
     const requests = await prisma.request.findMany({
         where: {
             userId,
         },
 
 
-        orderBy: {
-            createdAt: "desc"
-        },
+        orderBy: filter =="COMPLETE" ? {completedAt: "desc"} : {createdAt: "desc"},
 
         select: {
             id: true,

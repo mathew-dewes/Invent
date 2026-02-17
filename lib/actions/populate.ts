@@ -72,7 +72,7 @@ export async function createBaseTables() {
                     vendorId: pickRandom(vendors).id,
                     userId,
                     unitCost: randomInt(20, 150),
-                    quantity: randomInt(30, 60),
+                    quantity: randomInt(10, 30),
 
                 }))
             })
@@ -280,7 +280,7 @@ export async function createPurchases() {
 
             const stock = pickRandom(stockItems);
             const vendor = pickRandom(vendors);
-            const qty = randomInt(5, 25)
+            const qty = randomInt(5, 10)
             const purchaseDate = randomDateBetween(3, 90);
             const status = weightedPurchaseStatus() as PurchaseStatus;
 

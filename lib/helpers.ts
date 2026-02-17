@@ -81,10 +81,20 @@ export function getStartDate(timeFrame?: TimeFrame) {
 
 export function daysAgo(createdAt: Date): string {
   const now = new Date();
-  const diffMs = now.getTime() - createdAt.getTime();
 
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate()
+  );
 
+  const startOfCreatedDay = new Date(
+    createdAt.getFullYear(),
+    createdAt.getMonth(),
+    createdAt.getDate()
+  );
 
+  const diffMs = startOfToday.getTime() - startOfCreatedDay.getTime();
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
   if (days === 0) return "Today";

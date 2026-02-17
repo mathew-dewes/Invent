@@ -243,7 +243,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
                 }
               }>
 
-                <button type="submit">Mark Ready</button>
+                <button type="submit">Confirm Ready</button>
               </form>
 
 
@@ -269,7 +269,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
                 }
               }>
                 <input type="hidden" name="requestId" value={requestId} />
-                <button type="submit">Mark as Complete</button>
+                <button type="submit">Complete</button>
               </form>
 
 
