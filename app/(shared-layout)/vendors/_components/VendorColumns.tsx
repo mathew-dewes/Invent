@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
@@ -70,11 +69,10 @@ export const VendorColumns: ColumnDef<Vendor>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <Link href={`/vendors/${vendorId}/edit`}>
             <DropdownMenuItem>
-              Edit vendor
+              Edit details
             </DropdownMenuItem></Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+
+
           </DropdownMenuContent>
         </DropdownMenu>
       )

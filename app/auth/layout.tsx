@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 
 export default function AuthLayout({children}:{children: ReactNode}){
     return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="mt-50 flex items-center justify-center">
             <div className="absolute top-5 left-5">
                 <Link href={'/'} className={buttonVariants({variant: "secondary"})}>
                 <ArrowLeft className="size-4"/>

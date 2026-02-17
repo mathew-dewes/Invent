@@ -59,9 +59,7 @@ export default function HomePage() {
         className="relative rounded-t-xl z-20 aspect-video w-full object-cover"
       />
       <CardHeader>
-        <CardAction>
-          <Badge variant="secondary">Featured</Badge>
-        </CardAction>
+ 
         <CardTitle>App Proposal</CardTitle>
         <CardDescription>
           A practical talk on component APIs, accessibility, and shipping
