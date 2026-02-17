@@ -142,12 +142,13 @@ export function Navbar() {
 
                 {links.map((link, key) => {
 
-                    const isActive = activeLink(link.href);
+                    const isActive = pathname == link.href;
 
                     if (isActive) {
                         return <Link key={key} href={"#"}>
                             
-                            <Button 
+                            <Button
+                            onClick={closeMenu} 
                             size={"sm"} 
                             className={cn(`${activeLink(link.href) ? "bg-green-400" : ""}`)} 
                             variant={"default"} 
@@ -167,7 +168,8 @@ export function Navbar() {
                                 }
                             
                                 closeMenu()
-                            }}>{link.label}</Button>
+                            }}>
+                                {link.label}</Button>
                         </Link>
                     }
 

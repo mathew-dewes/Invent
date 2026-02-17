@@ -108,7 +108,7 @@ export default function RequestForm({ stock, costCentres }: Props
                         />
 
 
-                        <div className="flex gap-5">
+                        <div className="sm:flex gap-10">
                             <Controller name="quantity" control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field>
@@ -122,7 +122,7 @@ export default function RequestForm({ stock, costCentres }: Props
                             />
                                <Controller name="costCentreId" control={form.control}
                             render={({ field, fieldState }) => (
-                                <Field >
+                                <Field className="mt-5 sm:mt-0" >
                                     <FieldLabel>Cost Centre</FieldLabel>
                                     <Select 
 

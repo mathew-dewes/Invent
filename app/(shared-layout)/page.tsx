@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
+
 
 
 export default function HomePage() {
