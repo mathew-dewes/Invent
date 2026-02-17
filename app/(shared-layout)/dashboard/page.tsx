@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Inventory from "./_components/inventory/Inventory";
 import ActionBar from "./_components/action/ActionBar";
 import CostAnalysis from "./_components/costAnalysis/CostAnalysis";
 
@@ -8,6 +7,7 @@ import StockPerformance from "./_components/StockPerformance/StockPerformance";
 import { DashboardSkeleton } from "@/components/web/skeletons/DashboardSkeleton";
 import Purchases from "./_components/purchases/Purchases";
 import Requests from "./_components/Requests/Requests";
+import Stock from "./_components/Stock/Stock";
 
 
 export default function page() {
@@ -20,7 +20,7 @@ export default function page() {
        
                     <ActionBar />
                     <Requests/>
-                    <Inventory />
+                    <Stock />
                     <Purchases/>
                     <CostAnalysis />
                     <StockPerformance />

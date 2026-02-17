@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { LoadDemoData } from "@/lib/actions/populate";
 import { authClient } from "@/lib/auth-client";
 import { signUpSchema } from "@/lib/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,10 +44,11 @@ export default function SignUpPage() {
             name: values.name,
             password: values.password,
                  fetchOptions:{
-                            onSuccess:()=>{
-                                toast.success("Logout successful");
-                                refetch();           // 🔥 update session immediately
-                                router.refresh();    // refresh server components
+                            onSuccess:async ()=>{
+                                await LoadDemoData()
+                                toast.success("Account created");
+                                refetch();       
+                                router.refresh();
                                 router.push('/dashboard');
                             },
                             onError: (error)=>{
@@ -71,7 +73,7 @@ export default function SignUpPage() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Sign up</CardTitle>
+                <CardTitle>Register</CardTitle>
                 <CardDescription>Create an account to get started</CardDescription>
             </CardHeader>
 
@@ -110,7 +112,7 @@ export default function SignUpPage() {
                             {isPending ? (
                                 <>
                                 <Loader2 className="size-4 animate-spin"/>
-                                <span>Loading...</span>
+                                <span>Creating account...</span>
                                 </>
                             ): (<span>Sign up</span>)}
                         </Button>

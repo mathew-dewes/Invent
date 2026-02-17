@@ -162,7 +162,7 @@ export function Navbar() {
                              onClick={async()=>{
                                 if (link.label == "Dashboard"){
                                 setShowLoader(true)
-                                await delay(2000)
+                                await delay(1000)
                                 setShowLoader(false)
                                 }
                             
@@ -177,7 +177,20 @@ export function Navbar() {
 
 
 
-                <Button size={"sm"} variant={"default"}>Logout</Button>
+                  <Button onClick={() => authClient.signOut({
+                            fetchOptions: {
+                                onSuccess: () => {
+                                    toast.success("Logged out successfully!");
+                                    refetch()
+                                    router.refresh();
+                                    router.push('/');
+
+                                },
+                                onError: (error) => {
+                                    toast.error(error.error.message)
+                                }
+                            }
+                        })}>Logout</Button>
 
             </ul>
 

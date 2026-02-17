@@ -100,6 +100,7 @@ export async function createRequests() {
                 id: true,
                 name: true,
                 unitCost: true,
+                quantity: true,
                 vendor: {
                     select: {
                         name: true
@@ -122,10 +123,10 @@ export async function createRequests() {
 
         const status = weightedRequestStatus() as RequestStatus;
 
-        const createdAtDate = () =>{
-            if (status == "COMPLETE"){
-                return randomDateBetween(3,60)
-            } else if (status == "PENDING"){
+        const createdAtDate = () => {
+            if (status == "COMPLETE") {
+                return randomDateBetween(3, 60)
+            } else if (status == "PENDING") {
                 return randomDateWithin(1)
             } else if (status == "READY") {
                 return randomDateWithin(2)
@@ -165,16 +166,33 @@ export async function createRequests() {
     const ledgerRows = [];
 
     const decrements = new Map<string, number>();
+    const remainingStock = new Map<string, number>();
 
     for (const request of requests) {
 
         const created = request.createdAt.getTime();
         const now = Date.now();
         const randomFutureDate = new Date(randomInt(created, now));
+        const stock = stockMap.get(request.stockId);
 
-        const finalStatus = request.status;
+
+        if (!remainingStock.has(request.stockId)) {
+            remainingStock.set(request.stockId, stock?.quantity ?? 0);
+        }
+
+        const available = remainingStock.get(request.stockId)!;
+
+        let finalStatus = request.status;
+
+        if (request.quantity > available) {
+            finalStatus = "PENDING";
+        }
+
+
+
 
         if (finalStatus !== "PENDING") {
+                remainingStock.set(request.stockId, available - request.quantity);
 
             decrements.set(
                 request.stockId,
@@ -193,7 +211,6 @@ export async function createRequests() {
         );
 
         const ledgerDate = finalStatus === "COMPLETE" ? randomFutureDate : request.createdAt;
-        const stock = stockMap.get(request.stockId);
         const costCentre = costCentreMap.get(request.costCentreId);
 
         ledgerRows.push({
@@ -226,7 +243,7 @@ export async function createRequests() {
     await prisma.$transaction(
         Array.from(decrements.entries()).map(([stockId, qty]) =>
             prisma.stock.update({
-                where: { id: stockId },
+                where: { id: stockId, quantity: { gte: qty } },
                 data: { quantity: { decrement: qty } }
             })
         )
@@ -286,7 +303,7 @@ export async function createPurchases() {
 
             if (status === "PLACED") {
                 if (placedStockIds.has(stock.id)) {
-                    continue; 
+                    continue;
                 }
 
                 placedStockIds.add(stock.id);
@@ -308,7 +325,7 @@ export async function createPurchases() {
 
         await prisma.purchase.createMany({
             data: purchaseData,
-            skipDuplicates:true,
+            skipDuplicates: true,
         });
 
         const receivedPurchases = await prisma.purchase.findMany({
@@ -317,7 +334,7 @@ export async function createPurchases() {
 
         const stockMap = new Map(stockItems.map((s) => [s.id, s]));
         const vendorMap = new Map(vendors.map((s) => [s.id, s]));
-          const ledgerRows = [];
+        const ledgerRows = [];
 
         for (const purchase of receivedPurchases) {
 
@@ -326,33 +343,33 @@ export async function createPurchases() {
                 data: { quantity: { increment: purchase.quantity } }
             });
 
-                const stock = stockMap.get(purchase.stockId);
-                const vendor = vendorMap.get(purchase.vendorId);
+            const stock = stockMap.get(purchase.stockId);
+            const vendor = vendorMap.get(purchase.vendorId);
 
-                ledgerRows.push({
-                    sourceType: "PURCHASE" as FinanceType,
-                    sourceId: purchase.id,
-                    reference: `PUR-${purchase.purchaseNumber}`,
-                    stockId: purchase.stockId,
-                    stockName: stock?.name ?? "Unknown",
-                    vendorId: purchase.vendorId,
-                    vendorName: vendor?.name ?? "Unknown",
-                    quantity: purchase.quantity,
-                    unitCost: stock?.unitCost ?? 0,
-                    totalCost: purchase.quantity * Number(stock?.unitCost ?? 0),
-                    month: purchase.createdAt.getMonth() + 1,
-                    year: purchase.createdAt.getFullYear(),
-                    createdAt: purchase.createdAt,
-                    userId
-                })
+            ledgerRows.push({
+                sourceType: "PURCHASE" as FinanceType,
+                sourceId: purchase.id,
+                reference: `PUR-${purchase.purchaseNumber}`,
+                stockId: purchase.stockId,
+                stockName: stock?.name ?? "Unknown",
+                vendorId: purchase.vendorId,
+                vendorName: vendor?.name ?? "Unknown",
+                quantity: purchase.quantity,
+                unitCost: stock?.unitCost ?? 0,
+                totalCost: purchase.quantity * Number(stock?.unitCost ?? 0),
+                month: purchase.createdAt.getMonth() + 1,
+                year: purchase.createdAt.getFullYear(),
+                createdAt: purchase.createdAt,
+                userId
+            })
 
 
         }
 
-       await prisma.costLedger.createMany({
-        data: ledgerRows,
-        skipDuplicates: true
-       })
+        await prisma.costLedger.createMany({
+            data: ledgerRows,
+            skipDuplicates: true
+        })
 
 
 
