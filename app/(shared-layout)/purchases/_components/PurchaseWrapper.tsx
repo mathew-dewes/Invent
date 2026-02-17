@@ -11,6 +11,6 @@ export default async function PurchaseWrapper({filter}:
 
        
      
-    return  <PurchaseTable queryCounts={statusCounts} data={purchases} columns={Purchasecolumns} filter={{label: "Purchase No", query: "purchaseNumber"}} />
+    return  <PurchaseTable queryCounts={statusCounts} data={purchases} columns={Purchasecolumns} filter={"purchaseNumber"} />
     
 }

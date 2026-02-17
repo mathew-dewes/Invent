@@ -17,13 +17,14 @@ export default function page() {
 
             <Suspense fallback={<DashboardSkeleton/>}>
                 <div className="grid grid-cols-2 gap-6">
-                    <WalkThrough />
+       
                     <ActionBar />
                     <Requests/>
                     <Inventory />
                     <Purchases/>
                     <CostAnalysis />
                     <StockPerformance />
+                    <WalkThrough />
                 </div>
 
             </Suspense>

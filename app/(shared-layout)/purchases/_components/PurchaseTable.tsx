@@ -36,7 +36,7 @@ import { MobilePurchaseFilters } from "./MobilePurchaseFilters"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[],
-  filter: {label: string, query: string},
+  filter: string,
   search?: string
   queryCounts?: Record<string, number>
 
@@ -102,10 +102,10 @@ export function PurchaseTable<TData extends ParsedDataTypes, TValue>({
           <div className="md:flex gap-3 w-3/4">
       <div className="flex gap-3">
             <Input
-              placeholder={`Filter ${filter.label}...`}
-              value={(table.getColumn(filter.query)?.getFilterValue() as string)}
+              placeholder={`Filter Purchase No...`}
+              value={(table.getColumn(filter)?.getFilterValue() as string)}
               onChange={(event) =>
-                table.getColumn(filter.query)?.setFilterValue(event.target.value)
+                table.getColumn(filter)?.setFilterValue(event.target.value)
               }
               className="max-w-sm text-sm"
             />

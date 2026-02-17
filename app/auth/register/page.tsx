@@ -82,7 +82,7 @@ export default function SignUpPage() {
                             render={({ field, fieldState }) => (
                                 <Field>
                                     <FieldLabel>Full Name</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="John Doe" {...field} />
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter Full Name" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />}
                                 </Field>
@@ -91,7 +91,7 @@ export default function SignUpPage() {
                             render={({ field, fieldState }) => (
                                 <Field>
                                     <FieldLabel>Email</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="john@doe.com" type="email" {...field} />
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter Email Address" type="email" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />}
                                 </Field>
@@ -100,13 +100,13 @@ export default function SignUpPage() {
                             render={({ field, fieldState }) => (
                                 <Field>
                                     <FieldLabel>Password</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="*****" type="password" {...field} />
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter Password (Min 5 characters)" type="password" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />}
                                 </Field>
                             )} />
 
-                        <Button disabled={isPending}>
+                        <Button className="mt-4" disabled={isPending}>
                             {isPending ? (
                                 <>
                                 <Loader2 className="size-4 animate-spin"/>

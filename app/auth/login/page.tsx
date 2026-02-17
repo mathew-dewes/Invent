@@ -70,7 +70,7 @@ export default function LoginPage() {
                             render={({ field, fieldState }) => (
                                 <Field>
                                     <FieldLabel>Email</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="john@doe.com" type="email" {...field} />
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter email address" type="email" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />}
                                 </Field>
@@ -79,13 +79,13 @@ export default function LoginPage() {
                             render={({ field, fieldState }) => (
                                 <Field>
                                     <FieldLabel>Password</FieldLabel>
-                                    <Input aria-invalid={fieldState.invalid} placeholder="*****" type="password" {...field} />
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter Password" type="password" {...field} />
                                     {fieldState.invalid &&
                                         <FieldError errors={[fieldState.error]} />}
                                 </Field>
                             )} />
 
-                        <Button disabled={isPending}>
+                        <Button className="mt-4" disabled={isPending}>
                             {isPending ? (
                                 <>
                                 <Loader2 className="size-4 animate-spin"/>
