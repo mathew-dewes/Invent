@@ -142,12 +142,13 @@ export function Navbar() {
 
                 {links.map((link, key) => {
 
-                    const isActive = activeLink(link.href);
+                    const isActive = pathname == link.href;
 
                     if (isActive) {
                         return <Link key={key} href={"#"}>
                             
-                            <Button 
+                            <Button
+                            onClick={closeMenu} 
                             size={"sm"} 
                             className={cn(`${activeLink(link.href) ? "bg-green-400" : ""}`)} 
                             variant={"default"} 
@@ -162,12 +163,13 @@ export function Navbar() {
                              onClick={async()=>{
                                 if (link.label == "Dashboard"){
                                 setShowLoader(true)
-                                await delay(2000)
+                                await delay(1000)
                                 setShowLoader(false)
                                 }
                             
                                 closeMenu()
-                            }}>{link.label}</Button>
+                            }}>
+                                {link.label}</Button>
                         </Link>
                     }
 
@@ -177,7 +179,20 @@ export function Navbar() {
 
 
 
-                <Button size={"sm"} variant={"default"}>Logout</Button>
+                  <Button onClick={() => authClient.signOut({
+                            fetchOptions: {
+                                onSuccess: () => {
+                                    toast.success("Logged out successfully!");
+                                    refetch()
+                                    router.refresh();
+                                    router.push('/');
+
+                                },
+                                onError: (error) => {
+                                    toast.error(error.error.message)
+                                }
+                            }
+                        })}>Logout</Button>
 
             </ul>
 

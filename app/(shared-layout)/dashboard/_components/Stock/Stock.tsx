@@ -13,7 +13,7 @@ import Link from "next/link";
 
 
 
-export default async function Inventory() {
+export default async function Stock() {
 
     const [chartData, lowestStockedItems, purchaseStockIds] = await Promise.all([getInventoryChartData(), getLowestStockedItems(), getIncomingPurchaseStockIds()]);
 

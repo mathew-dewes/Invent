@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -80,11 +79,7 @@ export function StockCountChart({ data }:
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter >
-        <div className="leading-none font-medium text-sm">
-          Lorem ipsum dolor sit amet.
-        </div>
-      </CardFooter>
+    
     </Card>
   )
 }

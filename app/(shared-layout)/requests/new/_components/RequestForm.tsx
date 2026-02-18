@@ -48,17 +48,17 @@ export default function RequestForm({ stock, costCentres }: Props
 
      
         startTransition(async () => {
-            try {
-                await createRequest(values);
-                toast.success(`Request was placed successfully`);
-                router.push('/requests?status=OPEN')
+       
+                const res = await createRequest(values);
 
-            } catch (error) {
-                console.log(error);
-                toast.error("There was error. Please advise admin")
-            }
+                if (res.success){
+                    toast.success(res.message);
+                    router.push('/requests?status=PENDING')
+                } else {
+                    toast.error(res.message)
+                }
 
-
+        
 
         })
 
@@ -108,7 +108,7 @@ export default function RequestForm({ stock, costCentres }: Props
                         />
 
 
-                        <div className="flex gap-5">
+                        <div className="sm:flex gap-10">
                             <Controller name="quantity" control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field>
@@ -122,7 +122,7 @@ export default function RequestForm({ stock, costCentres }: Props
                             />
                                <Controller name="costCentreId" control={form.control}
                             render={({ field, fieldState }) => (
-                                <Field >
+                                <Field className="mt-5 sm:mt-0" >
                                     <FieldLabel>Cost Centre</FieldLabel>
                                     <Select 
 

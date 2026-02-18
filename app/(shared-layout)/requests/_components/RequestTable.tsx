@@ -31,7 +31,6 @@ import { useSearchParams } from "next/navigation"
 import { RequestStatus } from "@/generated/prisma/enums"
 import { MarkAllReadyButton } from "./MarkAllReadyButton"
 import { MarkAllCompleteButton } from "./MarkAllCompleteButton"
-import { ClearDataButton } from "./ClearRequests"
 import { MobileRequestFilters } from "./MobileRequestFilters"
 
 
@@ -228,7 +227,7 @@ export function RequestTable<TData extends ParsedDataTypes, TValue>({
         </Button>
       </div>
 
-      <ClearDataButton hidden={data.length == 0 || isSelected} />
+   
 
       <div className={`${!isSelected ? "hidden" : ""}`}>
         <p>Update (All) selected:</p>

@@ -23,6 +23,7 @@ model User {
   requests      Request[]
   purchases Purchase[]
   costLedger CostLedger[]
+  costCentres CostCentre[]
 
   @@unique([email])
   @@map("user")
@@ -82,13 +83,14 @@ model Vendor {
   email       String
   contactName String
   userId      String
-  PONumber Int @unique
+  PONumber Int
   stock       Stock[]
   purchase    Purchase[]
-  user        User       @relation(fields: [userId], references: [id])
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   ledger CostLedger[]
 
   @@unique([userId, name])
+  @@unique([userId, PONumber])
 }
 
 model Stock {
@@ -101,7 +103,7 @@ model Stock {
   vendorId     String
   userId       String
   vendor       Vendor     @relation(fields: [vendorId], references: [id])
-  user         User       @relation(fields: [userId], references: [id])
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   brand        String
   unitCost     Decimal    @db.Decimal(10, 2)
   reorderPoint Int
@@ -117,18 +119,20 @@ model Request {
   createdAt     DateTime      @default(now())
   completedAt DateTime?
   customer      String
-  requestNumber Int           @unique
+  requestNumber Int
   quantity      Int
   status        RequestStatus
   note          String?
   stockItem     Stock         @relation(fields: [stockId], references: [id])
-  user          User          @relation(fields: [userId], references: [id])
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   stockId       String
   userId        String
 
   costCentreId String
 
   costCentre CostCentre @relation(fields: [costCentreId], references: [id])
+
+  @@unique([userId, requestNumber])
   
 }
 
@@ -136,7 +140,7 @@ model Purchase {
   id             String   @id @default(cuid())
   createdAt      DateTime @default(now())
   completedAt DateTime?
-  purchaseNumber Int @unique
+  purchaseNumber Int
   status PurchaseStatus
   notes String?
 
@@ -147,8 +151,10 @@ model Purchase {
   vendorId String
 
   vendor Vendor @relation(fields: [vendorId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   stockItem Stock  @relation(fields: [stockId], references: [id])
+
+  @@unique([purchaseNumber, userId])
 
 
 }
@@ -184,7 +190,7 @@ model CostLedger {
   year Int
 
   vendor Vendor? @relation(fields: [vendorId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade) 
   stock Stock @relation(fields: [stockId], references: [id])
 
 
@@ -193,13 +199,16 @@ model CostLedger {
 
 model CostCentre {
   id String @id @default(cuid())
-  code String @unique
+  code String
   name String
   userId String
   createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade) 
 
   requests Request[]
   ledger CostLedger[]
+
+  @@unique([code, userId])
 }
 
 

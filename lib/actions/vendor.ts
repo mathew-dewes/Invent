@@ -77,6 +77,21 @@ export async function updateVendor(values: z.infer<typeof vendorSchema>, vendorI
     throw error;
         
     }
+};
+
+export async function removeVendor(vendorId: string){
+    const userId = await getUserId();
+
+    const vendor = await prisma.vendor.delete({
+        where:{id: vendorId, userId},
+        select:{
+            name: true
+        }
+    });
+
+    revalidatePath('/vendors')
+
+    return {success: true, message: vendor.name + " was removed"}
 }
 
 

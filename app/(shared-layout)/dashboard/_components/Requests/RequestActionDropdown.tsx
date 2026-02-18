@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { RequestStatus } from "@/generated/prisma/enums";
-import { MarkComplete, markReady } from "@/lib/actions/request";
+import { cancelAndReturnRequest, cancelRequest, MarkComplete, markReady } from "@/lib/actions/request";
 
 import Link from "next/link"
 import { startTransition } from "react"
@@ -77,7 +77,33 @@ export function RequestActionDropdown({requestId, status}:
      
 
           <Link hidden={status !== "PENDING"}  href={`/requests/${requestId}/edit`}><DropdownMenuItem>Update details</DropdownMenuItem></Link>
-          <Link  href={`/purchases?status=PLACED`}><DropdownMenuItem>Cancel</DropdownMenuItem></Link>
+           <DropdownMenuItem>
+                        <form action={
+                          () => {
+                            startTransition(async () => {
+          
+                              if (status !== "PENDING") {
+          
+                                const res = await cancelAndReturnRequest(requestId);
+                                if (res.success) {
+                                  toast.success(res.message);
+                                  toast.success("Request #" + res.requestNumber + " was removed")
+                                }
+                              } else {
+                                const res = await cancelRequest(requestId);
+                                if (res.success) {
+                                  toast.success(res.message)
+                                }
+          
+                              }
+                            })
+          
+                          }
+                        }>
+                          <input type="hidden" name="requestId" value={requestId} />
+                          <button type="submit">{status !== "PENDING" ? "Cancel and return" : "Cancel request"}</button>
+                        </form>
+                      </DropdownMenuItem>
       
           
         </DropdownMenuGroup>

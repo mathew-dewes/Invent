@@ -24,11 +24,11 @@ export async function createRequest(values: z.infer<typeof requestSchema>) {
             throw new Error('Validation failed');
         };
 
-        const requestNumber = await generateRequestNumber();
+        const requestNumber = await generateRequestNumber(userId);
 
         const { customer, costCentreId, quantity, stockItem: stockId, notes } = parsed.data;
 
-        await prisma.request.create({
+        const request = await prisma.request.create({
             data: {
                 customer,
                 stockId,
@@ -38,16 +38,24 @@ export async function createRequest(values: z.infer<typeof requestSchema>) {
                 requestNumber,
                 userId,
                 note: notes
+            },
+            select:{
+                requestNumber:true,
+                customer:true
             }
-        })
-
-
+            
+        });
+        
         revalidatePath('/requests');
+
+        return {success: true, message: "Request #" + request.requestNumber + " was created for " + request.customer}
+
+
 
 
     } catch (error) {
         console.error('Create request error:', error);
-        throw error;
+        return {success: false, message: "There was an error"}
 
     }
 
@@ -206,6 +214,8 @@ export async function markAllReady(requestIds: string[]) {
                         id: true,
                         quantity: true,
                         stockId: true,
+                        requestNumber:true,
+                        customer:true,
                         stockItem: {
                             select: {
                                 name: true
@@ -242,7 +252,7 @@ export async function markAllReady(requestIds: string[]) {
                     data: { status: "READY" }
                 });
 
-                updatedRequests.push(request.stockItem.name + " stock updated");
+                updatedRequests.push("Request #" + request.requestNumber + " for " + request.customer + " is ready");
 
             };
 
@@ -253,7 +263,6 @@ export async function markAllReady(requestIds: string[]) {
 
         return {
             success: true,
-            message: "Update successful",
             updatedRequests
         };
 
@@ -322,28 +331,66 @@ export async function MarkComplete(requestId: string) {
 export async function markAllComplete(stockIds: string[]) {
 
     const userId = await getUserId();
+   
 
     try {
+    
+        const requests: 
+        {
+            requestNumber: number, 
+            customer: string, 
+            stockItem: string, 
+            requestQuantity: number,
+            chargeCost: number, 
+            costCentre: string}[] = [];
 
         stockIds.map(async (stockId) => {
             const request = await prisma.request.findFirst({
                 where: { stockId, userId },
                 select: {
-                    id: true
+                    id: true,
+                    requestNumber:true,
+                    customer: true,
+                    quantity:true,
+                    costCentre:{
+                        select:{
+                            name: true
+                        }
+                    },
+                    stockItem:{
+                        select:{
+                            name:true,
+                            unitCost: true
+                         
+                        }
+                    }
                 }
             });
 
             if (!request) return;
 
+     
+
+            requests.push({
+                requestNumber: request.requestNumber, 
+                customer: request.customer, 
+                requestQuantity: request.quantity, 
+                stockItem: request.stockItem.name,
+                costCentre: request.costCentre.name,
+                chargeCost: Number(request.stockItem.unitCost) * request.quantity
+            
+            })
+
             await createRequestLedger(request.id)
         })
 
-        await prisma.request.updateMany({
+   await prisma.request.updateMany({
             where: { userId, stockId: { in: stockIds } },
             data: {
                 status: "COMPLETE",
                 completedAt: new Date()
             },
+            
 
 
 
@@ -354,7 +401,7 @@ export async function markAllComplete(stockIds: string[]) {
         revalidatePath('/requests')
 
         return {
-            success: true, message: stockIds.length + " requests were marked complete"
+            success: true, requests
         }
 
 

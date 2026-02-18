@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
@@ -14,6 +13,9 @@ import { MoreHorizontal } from "lucide-react"
 
 import { Vendor } from "@/lib/types"
 import Link from "next/link"
+import { startTransition } from "react"
+import { removeVendor } from "@/lib/actions/vendor"
+import { toast } from "sonner"
 
 
 export const VendorColumns: ColumnDef<Vendor>[] = [
@@ -55,9 +57,8 @@ export const VendorColumns: ColumnDef<Vendor>[] = [
     id: "actions",
     cell: ({ row }) => {
       const vendorId = row.original.id;
-      console.log(vendorId);
-      
- 
+
+     
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -70,11 +71,28 @@ export const VendorColumns: ColumnDef<Vendor>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <Link href={`/vendors/${vendorId}/edit`}>
             <DropdownMenuItem>
-              Edit vendor
+              Edit details
             </DropdownMenuItem></Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+         
+            <DropdownMenuItem>
+              <form action={
+                async()=>{
+                  startTransition(async()=>{
+                    const res = await removeVendor(vendorId);
+                    if (res.success){
+                      toast.success(res.message)
+                    } else {
+                      toast.error('There was an error')
+                    }
+                  })
+                }
+              }>
+                <button type="submit">Delete vendor</button>
+              </form>
+    
+            </DropdownMenuItem>
+
+
           </DropdownMenuContent>
         </DropdownMenu>
       )

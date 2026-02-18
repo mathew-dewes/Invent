@@ -5,76 +5,62 @@ export function DashboardSkeleton() {
   return (
 
     <div className="col-span-2">
-
-
-
-
-        
-    <div className="flex w-full flex-col gap-3">
-      {Array.from({ length: 7 }).map((_, index) => (
-        <div className="flex gap-4" key={index}>
-          <Skeleton className="h-8 flex-1" />
-          <Skeleton className="h-8 w-24" />
-          <Skeleton className="h-8 w-20" />
-        </div>
-      ))}
-    </div>
-
-    <div className="grid md:grid-cols-2 grid-cols-1 gap-10 mt-15">
-    <Card className="w-full">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-15">
+    <Card className="w-full col-span-2">
       <CardHeader>
         <Skeleton className="h-4 w-2/3" />
         <Skeleton className="h-4 w-1/2" />
       </CardHeader>
       <CardContent>
-        <Skeleton className="aspect-video w-full md:h-150" />
+        <Skeleton className="aspect-video w-full md:h-45" />
       </CardContent>
     </Card>
-    <Card className="w-full">
+    <Card className="w-full col-span-2">
       <CardHeader>
         <Skeleton className="h-4 w-2/3" />
         <Skeleton className="h-4 w-1/2" />
       </CardHeader>
       <CardContent>
-        <Skeleton className="aspect-video w-full md:h-150" />
+        <Skeleton className="aspect-video w-full md:h-120" />
       </CardContent>
     </Card>
-    <Card className="w-full">
+    <Card className="w-full col-span-2">
       <CardHeader>
         <Skeleton className="h-4 w-2/3" />
         <Skeleton className="h-4 w-1/2" />
       </CardHeader>
       <CardContent>
-        <Skeleton className="aspect-video w-full md:h-150" />
+        <Skeleton className="aspect-video w-full md:h-120" />
       </CardContent>
     </Card>
-    <Card className="w-full">
+    <Card className="w-full col-span-2">
       <CardHeader>
         <Skeleton className="h-4 w-2/3" />
         <Skeleton className="h-4 w-1/2" />
       </CardHeader>
       <CardContent>
-        <Skeleton className="aspect-video w-full md:h-150" />
+        <Skeleton className="aspect-video w-full md:h-120" />
       </CardContent>
     </Card>
-    <Card className="w-full">
+    <Card className="w-full col-span-2">
       <CardHeader>
         <Skeleton className="h-4 w-2/3" />
         <Skeleton className="h-4 w-1/2" />
       </CardHeader>
       <CardContent>
-        <Skeleton className="aspect-video w-full md:h-150" />
+        <Skeleton className="aspect-video w-full md:h-120" />
       </CardContent>
     </Card>
-    <Card className="w-full">
+    <Card className="w-full col-span-2">
       <CardHeader>
         <Skeleton className="h-4 w-2/3" />
         <Skeleton className="h-4 w-1/2" />
       </CardHeader>
       <CardContent>
-        <Skeleton className="aspect-video w-full md:h-150" />
+        <Skeleton className="aspect-video w-full md:h-120" />
       </CardContent>
     </Card>
+   
     </div>
 
 

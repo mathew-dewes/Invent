@@ -69,4 +69,31 @@ export async function updateCostCentre(values: z.infer<typeof costCentreSchema>,
           return {success: false, message: "Cost centre update failed"}
         
     }
+};
+
+export async function deleteCostCentre(costCentreId: string){
+    const userId = await getUserId();
+
+    try {
+            const centre = await prisma.costCentre.delete({
+        where:{
+            userId, id: costCentreId
+        }, 
+        select:{
+            name: true
+        }
+    });
+
+    revalidatePath('/cost-centre')
+
+    return {success: true, message: centre.name + " was removed"}
+
+    } catch (error) {
+
+        console.log(error);
+        return {success: false, message: "There was an error"}
+        
+    }
+
+
 }

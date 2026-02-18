@@ -71,7 +71,7 @@ export async function updateStock(values: z.infer<typeof stockSchema>, stockId: 
 
         const { name, brand, location, quantity, vendorId, unitCost, partNumber, reorderPoint } = parsed.data;
 
-        await prisma.stock.update({
+        const stock = await prisma.stock.update({
             data: {
                 name,
                 brand,
@@ -87,10 +87,13 @@ export async function updateStock(values: z.infer<typeof stockSchema>, stockId: 
 
         revalidatePath('/stock');
 
+        return {success: true, message: stock.name + " was updated"}
+
 
     } catch (error) {
         console.error('Update stock error:', error);
-        throw error;
+             return {success: false, message: "There was a database error"}
+
 
     }
 

@@ -131,7 +131,7 @@ export default function StockForm({vendors}:
                                 </Field>
                             )} />
 
-                        <div className="flex gap-10">
+                        <div className="sm:flex gap-10">
                             <Controller name="location" control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field>
@@ -145,7 +145,7 @@ export default function StockForm({vendors}:
                             />
                             <Controller name="unitCost" control={form.control}
                                 render={({ field, fieldState }) => (
-                                    <Field>
+                                    <Field className="mt-5 sm:mt-0">
                                         <FieldLabel>Unit cost</FieldLabel>
                                         <Input  type="number" aria-invalid={fieldState.invalid} placeholder="$ cost per unit" {...field} />
                                         {fieldState.invalid &&
@@ -156,7 +156,7 @@ export default function StockForm({vendors}:
                             />
                         </div>
 
-                        <div className="flex gap-10">
+                        <div className="sm:flex gap-10">
                             <Controller name="quantity" control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field>
@@ -170,7 +170,7 @@ export default function StockForm({vendors}:
                             />
                                 <Controller name="reorderPoint" control={form.control}
                             render={({ field, fieldState }) => (
-                                <Field>
+                                <Field className="mt-5 sm:mt-0">
                                     <FieldLabel>Reorder point</FieldLabel>
                                     <Input type="number" aria-invalid={fieldState.invalid} placeholder="Stock item category" {...field} />
                                     {fieldState.invalid &&
