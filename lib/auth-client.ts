@@ -2,6 +2,6 @@ import { createAuthClient } from "better-auth/react" // make sure to import from
 
 export const authClient =  createAuthClient({
     //you can pass client configuration here
-baseURL: process.env["DATABASE_URL"],
+baseURL: process.env["BASE_URL"],
 
 })
