@@ -53,7 +53,7 @@ export default async function Stock() {
     if (!chartData || chartData.length == 0) return
 
     return (
-        <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-10 grid gap-5">
+        <div className="border-2 p-3 md:p-5  rounded-xl bg-secondary col-span-2 grid-cols-10 grid gap-5">
             <div className="md:col-span-4 col-span-10">
                 <h1 className="font-semibold text-xl py-3 text-center md:text-left">Stock</h1>
                 <StockCountChart data={chartData} />

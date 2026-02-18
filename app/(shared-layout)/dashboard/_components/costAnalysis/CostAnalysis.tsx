@@ -8,10 +8,7 @@ import Link from "next/link";
 
 export default async function CostAnalysis(){
 
-
-
-    const spend = await getCostCentreChartData();
-    const costCentres = await getTopSpendingCostCentres();
+    const [spend, costCentres ] = await Promise.all([getCostCentreChartData(), getTopSpendingCostCentres()])
 
     
     
@@ -33,7 +30,7 @@ export default async function CostAnalysis(){
 
     
     return (
-        <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-2 grid gap-5">
+        <div className="border-2 p-3 md:p-5 rounded-xl bg-secondary col-span-2 grid-cols-2 grid gap-5">
           <div className="col-span-2 md:col-span-1">
                <h1 className="font-semibold text-xl py-3 ml-1 text-center md:text-left">Cost Analysis</h1>
         <TopSpendingCostCentresChart data={spend} totalSpend={totalSpend}/>
