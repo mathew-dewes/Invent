@@ -12,6 +12,9 @@ import { Button } from "@/components/ui/button"
 import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
 import { CostCentre } from "@/lib/types"
+import { startTransition } from "react"
+import { deleteCostCentre } from "@/lib/actions/costCentre"
+import { toast } from "sonner"
 
 
 export const CostCentreColumns: ColumnDef<CostCentre>[] = [
@@ -82,6 +85,24 @@ export const CostCentreColumns: ColumnDef<CostCentre>[] = [
             <DropdownMenuItem>
               Edit details
             </DropdownMenuItem></Link>
+     
+            <DropdownMenuItem>
+                      <form action={
+                async()=>{
+                  startTransition(async()=>{
+                    const res = await deleteCostCentre(costCentreId);
+
+                    if (res.success){
+                      toast.success(res.message)
+                    } else {
+                      toast.error(res.message)
+                    }
+                  })
+                }
+              }>
+                <button type="submit">Delete centre</button>
+              </form>
+            </DropdownMenuItem>
 
 
           </DropdownMenuContent>

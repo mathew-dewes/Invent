@@ -26,7 +26,7 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
             console.error('Validation errors:', parsed.error);
             throw new Error('Validation failed');
         };
-        const purchaseNumber = await generatePurchaseNumber();
+        const purchaseNumber = await generatePurchaseNumber(userId);
 
         const { item, quantity, notes } = parsed.data;
 
@@ -38,6 +38,7 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
                 vendorId: true,
                 id: true,
                 name: true,
+
 
             }
 
@@ -67,18 +68,31 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
                 userId,
                 status: "PLACED",
                 notes,
-                vendorId: stockItem!.vendorId
+                vendorId: stockItem!.vendorId,
             },
             select: {
                 id: true,
-                quantity: true
+                quantity: true,
+                purchaseNumber:true,
+                vendor:{
+                    select:{
+                        name: true
+                    }
+                }
+                
             }
         });
 
         await createPurchaseLedger(purchase.id);
 
         return {
-            success: true, message: `${purchase.quantity} x ${stockItem.name}(s) was purchased`
+            success: true, 
+            message: `${purchase.quantity} x ${stockItem.name}(s) was purchased`, 
+            purchaseNumber: purchase.purchaseNumber, 
+            stockItem: stockItem.name, 
+            purchaseQuantity: quantity,
+            totalCost: Number(stockItem.unitCost) * Number(quantity),
+            vendor: purchase.vendor.name
         }
 
 
@@ -144,7 +158,7 @@ export async function updatePurchase(values: z.infer<typeof purchaseSchema>, pur
 
 
 
-export async function generatePurchaseNumber(): Promise<number> {
+export async function generatePurchaseNumber(userId: string): Promise<number> {
     let unique = false;
     let purchaseNumber = 0;
 
@@ -152,7 +166,7 @@ export async function generatePurchaseNumber(): Promise<number> {
         purchaseNumber = Math.floor(Math.random() * 9999) + 1
 
         const existing = await prisma.purchase.findUnique({
-            where: { purchaseNumber }
+            where: { purchaseNumber_userId:{purchaseNumber, userId} }
         });
 
         if (!existing) unique = true;

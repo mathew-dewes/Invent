@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import Image from "next/image";
+
 
 
 
@@ -52,24 +52,6 @@ export default function HomePage() {
         </div>
 
   
-                      <Card className="relative mx-auto w-full max-w-sm pt-0 mt-20">
-      <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
-      <Image width={120} height={120} src="https://avatar.vercel.sh/shadcn1"
-        alt="Event cover"
-        className="relative rounded-t-xl z-20 aspect-video w-full object-cover"
-      />
-      <CardHeader>
- 
-        <CardTitle>App Proposal</CardTitle>
-        <CardDescription>
-          A practical talk on component APIs, accessibility, and shipping
-          faster.
-        </CardDescription>
-      </CardHeader>
-      <CardFooter>
-        <Button className="w-full">View Presentation</Button>
-      </CardFooter>
-    </Card>
         </div>
 
             </div>

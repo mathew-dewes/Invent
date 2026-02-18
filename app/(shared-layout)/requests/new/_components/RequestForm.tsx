@@ -48,17 +48,17 @@ export default function RequestForm({ stock, costCentres }: Props
 
      
         startTransition(async () => {
-            try {
-                await createRequest(values);
-                toast.success(`Request was placed successfully`);
-                router.push('/requests?status=OPEN')
+       
+                const res = await createRequest(values);
 
-            } catch (error) {
-                console.log(error);
-                toast.error("There was error. Please advise admin")
-            }
+                if (res.success){
+                    toast.success(res.message);
+                    router.push('/requests?status=PENDING')
+                } else {
+                    toast.error(res.message)
+                }
 
-
+        
 
         })
 

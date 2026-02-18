@@ -41,16 +41,17 @@ export default function EditStockForm({vendors, values, stockId}:
     function onSubmit(values: z.infer<typeof stockSchema>) {
         
         startTransition(async () => {
-            try {
-        await updateStock(values, stockId);
-        toast.success(`Record has been updated`);
+   
+        const res = await updateStock(values, stockId);
+        if (res.success){
+      toast.success(res.message);
+        } else {
+            toast.error(res.message)
+        }
+  
         router.push('/stock')
         
-            } catch (error) {
-            console.log(error);
-            toast.error("There was error. Please advise admin")
-            }
-       
+           
 
 
         })

@@ -28,12 +28,12 @@ export function MarkAllReadyButton({ requestIds }: {requestIds: string[]}) {
                         if (!res.success){
                             toast.error(res.message);
                             return;
-                        }
+                        };
                         res.updatedRequests?.forEach(request => {
                             toast.success(request)
                         });
                         
-                    toast.success(res.message);
+    
                         router.push('/requests?status=READY')
                     
         
@@ -41,6 +41,6 @@ export function MarkAllReadyButton({ requestIds }: {requestIds: string[]}) {
 
                 })
             }}
-        >Mark Ready</Button>
+        >Confirm Ready</Button>
     )
 }

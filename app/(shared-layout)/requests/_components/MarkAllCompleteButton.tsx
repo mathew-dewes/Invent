@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { markAllComplete } from "@/lib/actions/request";
+import { convertToMoney } from "@/lib/helpers";
 
 import { useRouter } from "next/navigation";
 import { startTransition } from "react";
@@ -24,7 +25,12 @@ export function MarkAllCompleteButton({selectedStockIds}:{selectedStockIds: stri
                     const res = await markAllComplete(selectedStockIds);
 
                     if (res?.success){
-                        toast.success(res.message);
+                        res.requests.forEach(request => {
+                            toast.success("Request #" + request.requestNumber + " completed");
+                            toast.success(request.stockItem + " x " + request.requestQuantity + " issued to " + request.customer );
+                            toast.info(request.costCentre + " was charged " + convertToMoney(request.chargeCost))
+                        });
+                
                         router.push('requests?status=COMPLETE')
                     }
            
@@ -41,6 +47,6 @@ export function MarkAllCompleteButton({selectedStockIds}:{selectedStockIds: stri
 
                 })
             }}
-        >Mark Complete</Button>
+        >Complete</Button>
     )
 }

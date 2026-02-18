@@ -12,7 +12,7 @@ export function setStatusColor(status: StockStatus | RequestStatus | PurchaseSta
    let style;
           switch (status) {
   
-              case "OPEN":
+              case "PENDING":
          
               style = "bg-orange-400"
               break;
@@ -50,7 +50,7 @@ export function generateStatusColor(status: RequestStatus | StockOverviewType | 
                 break;
             case "Below reorder point":
 
-            case "OPEN":
+            case "PENDING":
        
             case "Critical items":
                 color = 'bg-orange-400'

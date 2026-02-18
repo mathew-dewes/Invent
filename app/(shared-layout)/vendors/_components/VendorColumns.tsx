@@ -13,6 +13,9 @@ import { MoreHorizontal } from "lucide-react"
 
 import { Vendor } from "@/lib/types"
 import Link from "next/link"
+import { startTransition } from "react"
+import { removeVendor } from "@/lib/actions/vendor"
+import { toast } from "sonner"
 
 
 export const VendorColumns: ColumnDef<Vendor>[] = [
@@ -54,9 +57,8 @@ export const VendorColumns: ColumnDef<Vendor>[] = [
     id: "actions",
     cell: ({ row }) => {
       const vendorId = row.original.id;
-      console.log(vendorId);
-      
- 
+
+     
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -71,6 +73,24 @@ export const VendorColumns: ColumnDef<Vendor>[] = [
             <DropdownMenuItem>
               Edit details
             </DropdownMenuItem></Link>
+         
+            <DropdownMenuItem>
+              <form action={
+                async()=>{
+                  startTransition(async()=>{
+                    const res = await removeVendor(vendorId);
+                    if (res.success){
+                      toast.success(res.message)
+                    } else {
+                      toast.error('There was an error')
+                    }
+                  })
+                }
+              }>
+                <button type="submit">Delete vendor</button>
+              </form>
+    
+            </DropdownMenuItem>
 
 
           </DropdownMenuContent>
