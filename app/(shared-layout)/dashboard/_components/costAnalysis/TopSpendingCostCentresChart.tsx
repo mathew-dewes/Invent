@@ -66,6 +66,13 @@ export function TopSpendingCostCentresChart({data, totalSpend}:Props
               tickLine={false}
               tickMargin={10}
               axisLine={false}
+                              tick={{ fontSize: 12 }}
+     
+            
+  
+                   tickFormatter={(value) =>
+    value.length > 10 ? value.slice(0, 10) + "…" : value
+  }
           
             />
             <ChartTooltip
