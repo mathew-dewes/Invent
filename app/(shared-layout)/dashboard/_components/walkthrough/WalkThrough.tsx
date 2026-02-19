@@ -11,7 +11,7 @@ export default async function WalkThrough() {
 
 
   return (
-    <div className="border-2 p-5 rounded-xl bg-secondary col-span-2">
+    <div className="border-2 p-3 md:p-5 rounded-xl bg-secondary col-span-2">
       <div>
         <h1 className="font-semibold text-xl py-3 ml-1">Walk through</h1>
         <div>

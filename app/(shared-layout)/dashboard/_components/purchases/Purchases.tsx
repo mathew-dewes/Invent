@@ -23,14 +23,14 @@ export default async function Purchases(){
 
 const statusBadge = (status: PurchaseStatus) =>{
     if (status == "PLACED"){
-        return <Badge className="bg-blue-300">Placed</Badge>
+        return <Badge className="bg-blue-300 text-black">Placed</Badge>
     } else {
-        return <Badge className="bg-green-300">Received</Badge>
+        return <Badge className="bg-green-300 text-black">Received</Badge>
     }
 }
             
     return (
-        <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-2 grid gap-5">
+        <div className="border-2 p-3 md:p-5  rounded-xl bg-secondary col-span-2 grid-cols-2 grid gap-5">
             <div className="col-span-2 md:col-span-1">
      <h1 className="font-semibold text-xl py-3 text-center md:text-left">Purchases</h1>
              <TotalSpendChart data={data}/>

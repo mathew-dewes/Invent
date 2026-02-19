@@ -17,11 +17,11 @@ export default async function Requests() {
 
     const statusBadge = (status: RequestStatus) =>{
         if (status == "READY"){
-            return <Badge className="bg-blue-300">Ready</Badge>
+            return <Badge className="bg-blue-300 text-black">Ready</Badge>
         } else if (status == "PENDING") {
-            return <Badge className="bg-yellow-200">Pending</Badge>
+            return <Badge className="bg-yellow-200 text-black">Pending</Badge>
         } else {
-            return <Badge className="bg-green-300">Complete</Badge>
+            return <Badge className="bg-green-300 text-black">Complete</Badge>
         }
     }
 
@@ -36,15 +36,15 @@ export default async function Requests() {
 
     
     return (
-        <div className="border-2 p-5 rounded-xl bg-secondary col-span-2 grid-cols-10 grid gap-5">
+        <div className="border-2 p-3 md:p-5 rounded-xl bg-secondary col-span-2 grid-cols-10 grid gap-5">
             <div className="md:col-span-4 col-span-10">
                 <h1 className="font-semibold text-xl py-3 text-center md:text-left">Requests</h1>
                 <StackedRequestChart statusCount={statusCount} data={data} />
                     <div className="flex gap-2 mt-5">
                     <h2 className="font-medium">Key:</h2>
-                    <Badge className="bg-yellow-200">Pending</Badge>
-                    <Badge className="bg-blue-300">Ready</Badge>
-                    <Badge className="bg-green-300">Complete</Badge>
+                    <Badge className="bg-yellow-200 text-black">Pending</Badge>
+                    <Badge className="bg-blue-300 text-black">Ready</Badge>
+                    <Badge className="bg-green-300 text-black">Complete</Badge>
 
                 </div>
             </div>
@@ -73,7 +73,7 @@ export default async function Requests() {
                                 <TableCell>{formattedDate(request.createdAt)}</TableCell>
                                 <TableCell>{request.stockItem.name}</TableCell>
                                 <TableCell className="text-center">{request.quantity}</TableCell>
-                                        <TableCell className="flex justify-center">{statusBadge(request.status)}</TableCell>
+                                        <TableCell className="flex justify-center ">{statusBadge(request.status)}</TableCell>
                                 <TableCell>{request.customer}</TableCell>
                         
 

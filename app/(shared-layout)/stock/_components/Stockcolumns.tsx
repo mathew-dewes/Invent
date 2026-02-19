@@ -34,9 +34,8 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
 
     cell:({row}) => {
       const quantity = row.original.quantity
-      // const itemOrdered = !!row.original.purchases?.find((i) => i.status == "PLACED");
       const reorderPoint = row.original.reorderPoint;
-      // const lowStock = quantity >= reorderPoint;
+
    
       
     return (

@@ -8,7 +8,7 @@ export default function ActionBar(){
 
    
     return (
-        <div className="col-span-2 border-2 p-5 rounded-xl bg-secondary">
+        <div className="col-span-2 border-2 p-3 md:p-5  rounded-xl bg-secondary">
             <div className="mb-3 flex lg:hidden">
             <UserWithStockInfo/>
             </div>

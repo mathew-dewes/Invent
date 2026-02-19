@@ -125,7 +125,7 @@ export function Navbar() {
                 onClick={closeMenu}
                 className={`z-9999 lg:hidden absolute right-3 
             ${openMenu ? "hidden" : ""}`}><span className="sr-only">Menu</span>
-                <Menu size={35} color="white" /></button>
+                <Menu size={35} className="text-black dark:text-white" /></button>
             <button
                 style={{ display: session ? "" : "none" }}
                 aria-controls="primary-navigation"
@@ -133,12 +133,17 @@ export function Navbar() {
                 onClick={() => setOpenMenu((prev) => !prev)}
                 className={`top-4 z-9999 lg:hidden mr-4 fixed right-3 
             ${openMenu ? "" : "hidden"}`}><span className="sr-only">Menu</span>
-                <X size={35} color="black" /></button>
+                <X size={35}  className="text-black"/></button>
 
             <ul style={{ display: session ? "" : "none" }} className={`gap-5 flex items-start lg:hidden fixed bg-slate-300 text-black inset-0 ml-[35%]  sm:ml-[60%] flex-col  px-15 py-20 transform z-20 transition ease-out duration-500
                 ${openMenu ? "translate-x-0" : "translate-x-full"}`}>
 
                             <DashboardLoader showLoader={showLoader}/>
+                            <div className="absolute top-4">
+           <ThemeToggle />
+
+                            </div>
+                      
 
                 {links.map((link, key) => {
 
@@ -153,7 +158,7 @@ export function Navbar() {
                             className={cn(`${activeLink(link.href) ? "bg-green-400" : ""}`)} 
                             variant={"default"} 
                         >
-                                     <Navigation className="size-3" fill="solid" />
+                                     <Navigation className="size-3 fill-white dark:fill-black" />
                                 {link.label}</Button>
                         </Link>
                     } else {

@@ -195,10 +195,8 @@ export const Requestcolumns: ColumnDef<Request>[] = [
     cell: ({ row }) => {
 
       const requestId = row.original.id;
-      // const stockId = row.original.stockItem.id;
-      // const requestQuantity = row.original.quantity;
       const requestStatus = row.original.status;
-      // const stockQuantity = row.original.stockItem?.quantity ?? 0;
+   
 
 
 

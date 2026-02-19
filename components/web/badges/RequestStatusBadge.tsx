@@ -19,6 +19,6 @@ function requestStatus(){
 }
 };
     return <div>
-        <Badge className={cn(requestStatus().style, "font-semibold")}>{requestStatus().label}</Badge>
+        <Badge className={cn(requestStatus().style, "font-semibold text-black")}>{requestStatus().label}</Badge>
     </div>
 }
