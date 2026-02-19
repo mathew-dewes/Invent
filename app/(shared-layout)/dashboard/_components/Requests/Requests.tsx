@@ -17,11 +17,11 @@ export default async function Requests() {
 
     const statusBadge = (status: RequestStatus) =>{
         if (status == "READY"){
-            return <Badge className="bg-blue-300">Ready</Badge>
+            return <Badge className="bg-blue-300 text-black">Ready</Badge>
         } else if (status == "PENDING") {
-            return <Badge className="bg-yellow-200">Pending</Badge>
+            return <Badge className="bg-yellow-200 text-black">Pending</Badge>
         } else {
-            return <Badge className="bg-green-300">Complete</Badge>
+            return <Badge className="bg-green-300 text-black">Complete</Badge>
         }
     }
 
@@ -42,9 +42,9 @@ export default async function Requests() {
                 <StackedRequestChart statusCount={statusCount} data={data} />
                     <div className="flex gap-2 mt-5">
                     <h2 className="font-medium">Key:</h2>
-                    <Badge className="bg-yellow-200">Pending</Badge>
-                    <Badge className="bg-blue-300">Ready</Badge>
-                    <Badge className="bg-green-300">Complete</Badge>
+                    <Badge className="bg-yellow-200 text-black">Pending</Badge>
+                    <Badge className="bg-blue-300 text-black">Ready</Badge>
+                    <Badge className="bg-green-300 text-black">Complete</Badge>
 
                 </div>
             </div>
@@ -73,7 +73,7 @@ export default async function Requests() {
                                 <TableCell>{formattedDate(request.createdAt)}</TableCell>
                                 <TableCell>{request.stockItem.name}</TableCell>
                                 <TableCell className="text-center">{request.quantity}</TableCell>
-                                        <TableCell className="flex justify-center">{statusBadge(request.status)}</TableCell>
+                                        <TableCell className="flex justify-center ">{statusBadge(request.status)}</TableCell>
                                 <TableCell>{request.customer}</TableCell>
                         
 

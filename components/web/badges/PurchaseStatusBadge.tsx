@@ -22,6 +22,6 @@ function purchaseStatus(){
 }
 };
     return <div>
-        <Badge className={cn(purchaseStatus().style, "uppercase font-semibold" )}>{purchaseStatus().label}</Badge>
+        <Badge className={cn(purchaseStatus().style, "uppercase font-semibold text-black" )}>{purchaseStatus().label}</Badge>
     </div>
 }

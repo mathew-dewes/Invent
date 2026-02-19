@@ -65,7 +65,7 @@ export const Financecolumns: ColumnDef<Finance>[] = [
     {
     accessorKey: "sourceType",
     cell:({row}) => 
-      <Badge variant={"secondary"}>{row.getValue("sourceType")}</Badge>,
+      <Badge className="bg-gray-900 dark:bg-secondary text-white ">{row.getValue("sourceType")}</Badge>,
     header: "Type",
   },
      {

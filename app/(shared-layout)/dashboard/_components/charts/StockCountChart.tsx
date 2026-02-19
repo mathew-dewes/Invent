@@ -47,7 +47,7 @@ export function StockCountChart({ data }:
               dataKey="name"
               type="category"
               tickLine={false}
-                tick={{ fontSize: 12 }}
+                tick={{ fontSize: 10 }}
      
             
               axisLine={false}

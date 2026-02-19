@@ -23,9 +23,9 @@ export default async function Purchases(){
 
 const statusBadge = (status: PurchaseStatus) =>{
     if (status == "PLACED"){
-        return <Badge className="bg-blue-300">Placed</Badge>
+        return <Badge className="bg-blue-300 text-black">Placed</Badge>
     } else {
-        return <Badge className="bg-green-300">Received</Badge>
+        return <Badge className="bg-green-300 text-black">Received</Badge>
     }
 }
             

@@ -200,7 +200,7 @@ export async function getCostCentreChartData(){
         }
     },
     
-    take: 5
+    take: 4
   });
   
 
