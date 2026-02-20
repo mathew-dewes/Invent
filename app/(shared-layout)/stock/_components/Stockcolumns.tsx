@@ -16,6 +16,8 @@ import { Stock } from "@/lib/types"
 import { startTransition } from "react"
 import Link from "next/link"
 import StockStatusBadge from "@/components/web/badges/StockStatusBadge"
+import { deleteStock } from "@/lib/actions/stock"
+import { toast } from "sonner"
 
 
 export const Stockcolumns: ColumnDef<Stock>[] = [
@@ -133,11 +135,16 @@ export const Stockcolumns: ColumnDef<Stock>[] = [
 
 
               <form action={
-                (formData: FormData)=>{
+                ()=>{
                   startTransition(async()=>{
-                    console.log(formData);
-                   return
-                  //  Create delete function\
+           
+                  const res = await deleteStock(stockId);
+
+                  if (res.success){
+                    toast.success(res.message)
+                  } else {
+                    toast.error(res.message)
+                  }
                
                   
                   })

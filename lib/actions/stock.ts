@@ -122,4 +122,31 @@ export async function updateStockCount(stockId: string, updateAmount: number){
     }
 
 
+};
+
+export async function deleteStock(stockId: string){
+    const userId = await getUserId();
+
+    try {
+            const stock = await prisma.stock.delete({
+        where:{userId, id: stockId},
+        select:{
+            name: true
+        }
+    });
+
+    
+    revalidatePath('/stock');
+
+    return {success: true, message: `${stock.name} was deleted`}
+
+    } catch (error) {
+        console.log(error);
+        return {success: false, message: "There was an error"}
+        
+    }
+
+
+
+
 }
