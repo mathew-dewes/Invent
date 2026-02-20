@@ -7,7 +7,6 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createPurchase } from "@/lib/actions/purchase";
-import { convertToMoney } from "@/lib/helpers";
 import { purchaseSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -52,9 +51,6 @@ export default function PurchaseForm({stock, reorderStockId}:
 
                if (res?.success){
                 toast.success(res.message);
-                toast.success("Purchase #" + res.purchaseNumber + " has been placed");
-                toast.success(res.purchaseQuantity + " x " + res.stockItem + " have been orded");
-                toast.success(`Total spend: ${convertToMoney(res.totalCost ?? 0)} to ${res.vendor}`)
                 router.push('/purchases');
 
              } else if (res.errorType == "Existing") {

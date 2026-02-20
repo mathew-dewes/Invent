@@ -20,7 +20,7 @@ export default function StockStatusBadge({ quantity, reorderPoint }: {
     };
 
     return <div>
-        <Badge className={cn(status().style,"font-semibold text-black")}>
+        <Badge className={cn(status().style,"text-black")}>
             {status().label}</Badge>
     </div>
 }

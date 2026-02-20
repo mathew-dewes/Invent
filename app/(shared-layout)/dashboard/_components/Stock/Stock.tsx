@@ -92,7 +92,7 @@ export default async function Stock() {
                                     <TableCell>{item.vendor.name}</TableCell>
                        
                                     <TableCell hidden={item.quantity >= item.reorderPoint && !incomingPurchase(item.id)} className="flex justify-center gap-2">
-                                        <InventoryDropDown incomingPurchase={incomingPurchase(item.id)} stockId={item.id} />
+                                        <InventoryDropDown vendorEmail={item.vendor.email} incomingPurchase={incomingPurchase(item.id)} stockId={item.id} />
 
 
                                     </TableCell>
