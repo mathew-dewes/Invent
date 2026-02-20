@@ -21,7 +21,6 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import RequestStatusBadge from "@/components/web/badges/RequestStatusBadge"
 import { cancelAndReturnRequest, cancelRequest, MarkComplete, markReady } from "@/lib/actions/request"
-import { convertToMoney } from "@/lib/helpers"
 
 
 
@@ -228,8 +227,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
                     if (res?.success){
                       toast.success(res.message);
-                      toast.success(res.updatedStock?.requestCount  + " x " + res.updatedStock?.name + " depleted");
-                      toast.info(res.updatedStock?.name + " stock is now: " + res.updatedStock?.updatedCount);
+     
                       
                     } else {
                       toast.error(res?.message)
@@ -257,8 +255,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
 
                     if (res.success) {
                       toast.success(res.message);
-                      toast.info(`${res.customer} was issued ${res.issued?.toString()} x ${res.stockItem}`);
-                      toast.info(`${res.costCentre} was charged ${convertToMoney(res.chargeAmount ?? 0)}`)
+          
                     } else {
                       toast.error(res.message)
                     }
@@ -285,7 +282,7 @@ export const Requestcolumns: ColumnDef<Request>[] = [
                       const res = await cancelAndReturnRequest(requestId);
                       if (res.success) {
                         toast.success(res.message);
-                        toast.success("Request #" + res.requestNumber + " was removed")
+        
                       }
                     } else {
                       const res = await cancelRequest(requestId);

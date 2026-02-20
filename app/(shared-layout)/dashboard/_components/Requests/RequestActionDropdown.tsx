@@ -87,7 +87,7 @@ export function RequestActionDropdown({requestId, status}:
                                 const res = await cancelAndReturnRequest(requestId);
                                 if (res.success) {
                                   toast.success(res.message);
-                                  toast.success("Request #" + res.requestNumber + " was removed")
+                   
                                 }
                               } else {
                                 const res = await cancelRequest(requestId);

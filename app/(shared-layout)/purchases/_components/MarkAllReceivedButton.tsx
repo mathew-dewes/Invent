@@ -28,7 +28,6 @@ export function MarkAllReceivedButton({selectedPurchaseIds}:{selectedPurchaseIds
                         res.updatedPurchases?.map((message)=>{
                             toast.success(message + " stock received")
                         })
-                        toast.success(res.message);
                         router.push('/purchases?status=RECEIVED')
                     } else {
                         toast.error(res.message)

@@ -87,12 +87,8 @@ export async function createPurchase(values: z.infer<typeof purchaseSchema>) {
 
         return {
             success: true, 
-            message: `${purchase.quantity} x ${stockItem.name}(s) was purchased`, 
-            purchaseNumber: purchase.purchaseNumber, 
-            stockItem: stockItem.name, 
-            purchaseQuantity: quantity,
-            totalCost: Number(stockItem.unitCost) * Number(quantity),
-            vendor: purchase.vendor.name
+            message: `${purchase.quantity} x ${stockItem.name}(s) was purchased from ${purchase.vendor.name}`, 
+        
         }
 
 
@@ -285,7 +281,6 @@ export async function markAllReceived(purchaseIds: string[]) {
 
         return {
             success: true,
-            message: 'Puchases updated',
             updatedPurchases
         }
 

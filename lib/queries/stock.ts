@@ -379,8 +379,10 @@ export async function getLowestStockedItems(){
             name:true, 
             quantity: true, 
             reorderPoint: true, 
+            
             vendor:{
                 select:{
+                    email:true,
                     name:true
                 }
             }

@@ -166,11 +166,6 @@ export async function markReady(requestId: string) {
 
         ]);
 
-        const oldCount = stock.quantity;
-        const requestCount = request.quantity;
-        const updatedCount = oldCount - requestCount;
-        
-        
 
 
 
@@ -180,7 +175,7 @@ export async function markReady(requestId: string) {
         return { 
             success: true,
              message: `Request #${request.requestNumber} is now ready`, 
-             updatedStock:{name: stock.name, requestCount, oldCount, updatedCount},
+
            };
            
 
@@ -303,18 +298,14 @@ export async function MarkComplete(requestId: string) {
             }
         });
 
-        const ledger = await createRequestLedger(requestId);
+      await createRequestLedger(requestId);
         
         revalidatePath('/requests')
 
         return {
-            success: true, 
-            message: `Request #${request.requestNumber} is complete`,
-            customer:request.customer, 
-            issued: request.quantity, 
-            costCentre: ledger?.costCentreName, 
-            chargeAmount: Number(ledger?.totalCost),
-            stockItem: request.stockItem.name
+     
+            message: `Request #${request.requestNumber} is now complete`,
+     
         }
 
 
@@ -446,15 +437,12 @@ export async function cancelAndReturnRequest(requestId: string) {
             }
         });
 
-        const stock = await prisma.stock.update({
+   await prisma.stock.update({
             where: { userId, id: request?.stockId },
             data: {
                 quantity: {
                     increment: request?.quantity
                 }
-            },
-            select: {
-                name: true
             }
         });
 
@@ -471,7 +459,7 @@ export async function cancelAndReturnRequest(requestId: string) {
 
         revalidatePath('/requests')
 
-        return { success: true, message: `${request?.quantity} x ${stock.name} was returned`, requestNumber: request?.requestNumber }
+        return { success: true, message: `Request #${request?.requestNumber} was removed`}
     } catch (error) {
         console.log(error);
         return { success: false, message: `There was an error` }

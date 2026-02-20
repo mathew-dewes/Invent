@@ -14,8 +14,8 @@ import Link from "next/link"
 import { startTransition } from "react"
 import { toast } from "sonner"
 
-export function InventoryDropDown({stockId, incomingPurchase}:
-    {stockId: string, incomingPurchase: boolean}
+export function InventoryDropDown({stockId, incomingPurchase, vendorEmail}:
+    {stockId: string, incomingPurchase: boolean, vendorEmail: string}
 ) {
   return (
     <DropdownMenu>
@@ -50,12 +50,14 @@ export function InventoryDropDown({stockId, incomingPurchase}:
                  <DropdownMenuItem hidden={!incomingPurchase}>
             View Purchase
           </DropdownMenuItem>
-                   <DropdownMenuItem>
-            Update quantity
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Copy vendor email
-          </DropdownMenuItem>
+              <DropdownMenuItem
+              onClick={() => {
+                navigator.clipboard.writeText(vendorEmail);
+              toast.success('Email copied to clipboard')
+              }}
+            >Copy vendor email
+            </DropdownMenuItem>
+
   
 
     
